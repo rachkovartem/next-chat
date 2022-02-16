@@ -13,7 +13,7 @@ export default function Profile (props: any) {
         sx={{marginRight: '20px',
           background: '#a8edea',
           color: '#3b3b3b'}}
-        onClick={() => router.push(`/todolist/${id}`)}
+        onClick={() => router.push(`/main/${id}`)}
         variant="contained"
       >TO LIST
       </Button>

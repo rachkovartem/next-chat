@@ -3,6 +3,7 @@
   "logout": "LOGOUT",
   "register": "REGISTER",
   "password": "Password",
+  "nickname": "Nickname",
   "email": "Email",
   "or": "OR",
   "profile": "Profile",

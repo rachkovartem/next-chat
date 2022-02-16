@@ -16,12 +16,14 @@ const Login = ({locale} : {locale: string}) => {
     const [valid, setValid] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [nickname, setNickName] = useState('')
+    const [onRegistration, setOnRegistration] = useState(false);
     const { login, register, check } = apiServices();
 
     const onLoading = async () => {
         const res = await check()
         if (res.status === 201) {
-            router.push(`/todolist/${res.data.sub}`);
+            router.push(`/main/${res.data.sub}`);
         }
     }
 
@@ -43,6 +45,10 @@ const Login = ({locale} : {locale: string}) => {
         setValid(e.target.validity.valid);
     }
 
+    const onInputNickname = (e: any) => {
+      setNickName(e.target.value)
+    }
+
     const onSubmit = (e: any) => {
         e.preventDefault();
     }
@@ -62,7 +68,7 @@ const Login = ({locale} : {locale: string}) => {
             localStorage.setItem('email', email);
             localStorage.setItem('id', resBody.id);
             setLoginError(false);
-            router.push(`/todolist/${resBody.id}`);
+            router.push(`/main/${resBody.id}`);
         } else {
             dispatch(setLoginServerError(true));
             setLoginError(true);
@@ -71,6 +77,10 @@ const Login = ({locale} : {locale: string}) => {
     }
 
     const onClickRegister = async (e: any) => {
+            if (!onRegistration) {
+              setOnRegistration(true)
+              return
+            }
             setLoginError(false);
 
             const res = await register(email, password);
@@ -86,6 +96,7 @@ const Login = ({locale} : {locale: string}) => {
         }
 
     const errorVisibility = error || loginError ? 'visible' : 'hidden';
+    const displayOnRegistration = onRegistration ? 'inline-flex' : 'none';
 
     return (
       <>
@@ -103,6 +114,16 @@ const Login = ({locale} : {locale: string}) => {
               error={error || loginError}
             />
             <TextField
+              sx={{display: displayOnRegistration}}
+              required={onRegistration}
+              id="outlined-required-nickname"
+              label={t('nickname')}
+              placeholder={t('nickname')}
+              value={nickname}
+              onInput={onInputNickname}
+              type="text"
+            />
+            <TextField
               required
               id="outlined-required-password"
               label={t('password')}
@@ -113,10 +134,34 @@ const Login = ({locale} : {locale: string}) => {
               error={error || loginError}
             />
           </div>
-          <Button sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}} onClick={onClickLogin} variant="contained">{t('login')}</Button>
-          <span  style={{color: '#5d5d5d', padding: '0 10px'}}>{t('or')}</span>
-          <Button sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}} onClick={onClickRegister} variant="contained">{t('register')}</Button>
-          <p style={{color: 'red', visibility: errorVisibility}}>{loginError ? t('userDoesNotExist') : t('userAlreadyExist')}</p>
+          <Button
+            sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}}
+            onClick={onClickLogin}
+            variant="contained"
+          >
+              {t('login')}
+          </Button>
+          <span
+            style={{color: '#5d5d5d', padding: '0 10px'}}
+          >
+              {t('or')}
+          </span>
+          <Button
+            sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}}
+            onClick={onClickRegister}
+            variant="contained"
+          >
+              {t('register')}
+          </Button>
+          <p
+            style={{color: 'red', visibility: errorVisibility}}
+          >
+              {
+                  loginError
+                    ? t('userDoesNotExist')
+                    : t('userAlreadyExist')
+              }
+          </p>
         </form>
       </>
 
