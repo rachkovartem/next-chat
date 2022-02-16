@@ -1,0 +1,17 @@
+{
+  "login": "LOGIN",
+  "logout": "LOGOUT",
+  "register": "REGISTER",
+  "password": "Password",
+  "email": "Email",
+  "or": "OR",
+  "profile": "Profile",
+  "inputPlaceholder": "Enter text...",
+  "filterAll": "All",
+  "filterReady": "Ready",
+  "filterNotReady": "Not Ready",
+  "alreadyExist": "The case is already planned or the input is empty",
+  "noCases": "No cases to do",
+  "userDoesNotExist": "User does not exits or password is wrong!",
+  "userAlreadyExist": "User already exist or email is incorrect!"
+}
