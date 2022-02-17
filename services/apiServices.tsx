@@ -36,11 +36,11 @@ const apiServices = () => {
         .catch(error => error)
     }
 
-  const getAllTasks = async (id: string) => {
-    return api.get('/getAllTasks', {params: {id},})
-      .then(response => response)
-      .catch(error => error)
-  }
+    const getAllUsers = async () => {
+      return api.get('/allUsers')
+        .then(response => response)
+        .catch(error => error)
+    }
 
     api.interceptors.response.use(
       response => Promise.resolve(response),
@@ -63,7 +63,7 @@ const apiServices = () => {
       register,
       check,
       getUserById,
-      getAllTasks
+      getAllUsers,
     }
 }
 

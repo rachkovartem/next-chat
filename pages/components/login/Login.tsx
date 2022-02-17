@@ -23,7 +23,7 @@ const Login = ({locale} : {locale: string}) => {
     const onLoading = async () => {
         const res = await check()
         if (res.status === 201) {
-            router.push(`/main/${res.data.sub}`);
+            router.push(`/room/${res.data.sub}`);
         }
     }
 
@@ -65,10 +65,11 @@ const Login = ({locale} : {locale: string}) => {
         }
         const resBody = await login(email, password);
         if ('id' in resBody) {
-            localStorage.setItem('email', email);
+            localStorage.setItem('email', resBody.email);
             localStorage.setItem('id', resBody.id);
+            localStorage.setItem('username', resBody.username);
             setLoginError(false);
-            router.push(`/main/${resBody.id}`);
+            router.push(`/room/${resBody.id}`);
         } else {
             dispatch(setLoginServerError(true));
             setLoginError(true);
@@ -88,7 +89,6 @@ const Login = ({locale} : {locale: string}) => {
             }
             const res = await register(email, password, username);
             if (res.status === 'successfully') {
-                localStorage.setItem('id', res.id);
                 await onClickLogin();
                 setEmail('');
                 setPassword('');
