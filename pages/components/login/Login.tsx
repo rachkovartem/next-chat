@@ -16,7 +16,7 @@ const Login = ({locale} : {locale: string}) => {
     const [valid, setValid] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [nickname, setNickName] = useState('')
+    const [username, setUsername] = useState('')
     const [onRegistration, setOnRegistration] = useState(false);
     const { login, register, check } = apiServices();
 
@@ -45,8 +45,8 @@ const Login = ({locale} : {locale: string}) => {
         setValid(e.target.validity.valid);
     }
 
-    const onInputNickname = (e: any) => {
-      setNickName(e.target.value)
+    const onInputUsername = (e: any) => {
+      setUsername(e.target.value)
     }
 
     const onSubmit = (e: any) => {
@@ -82,14 +82,17 @@ const Login = ({locale} : {locale: string}) => {
               return
             }
             setLoginError(false);
-
-            const res = await register(email, password);
-
+            if (!password || !email || !password) {
+              setError(true);
+              return
+            }
+            const res = await register(email, password, username);
             if (res.status === 'successfully') {
                 localStorage.setItem('id', res.id);
                 await onClickLogin();
                 setEmail('');
                 setPassword('');
+                setUsername('');
             } else if (res.status === 'already exist') {
                 setError(true)
             }
@@ -116,12 +119,13 @@ const Login = ({locale} : {locale: string}) => {
             <TextField
               sx={{display: displayOnRegistration}}
               required={onRegistration}
-              id="outlined-required-nickname"
-              label={t('nickname')}
-              placeholder={t('nickname')}
-              value={nickname}
-              onInput={onInputNickname}
+              id="outlined-required-username"
+              label={t('username')}
+              placeholder={t('username')}
+              value={username}
+              onInput={onInputUsername}
               type="text"
+              error={error || loginError}
             />
             <TextField
               required
