@@ -23,7 +23,7 @@ const Login = ({locale} : {locale: string}) => {
     const onLoading = async () => {
         const res = await check()
         if (res.status === 201) {
-            router.push(`/room/${res.data.sub}`);
+            router.push(`/profile/${res.data.sub}`);
         }
     }
 
@@ -69,7 +69,7 @@ const Login = ({locale} : {locale: string}) => {
             localStorage.setItem('id', resBody.id);
             localStorage.setItem('username', resBody.username);
             setLoginError(false);
-            router.push(`/room/${resBody.id}`);
+            router.push(`/profile/${resBody.id}`);
         } else {
             dispatch(setLoginServerError(true));
             setLoginError(true);

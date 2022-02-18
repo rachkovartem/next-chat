@@ -42,6 +42,12 @@ const apiServices = () => {
         .catch(error => error)
     }
 
+    const createRoom = async (participants: string[]) => {
+      return api.post('/rooms/createRoom', { participants })
+        .then(response => response)
+        .catch(error => error)
+    }
+
     api.interceptors.response.use(
       response => Promise.resolve(response),
       async (error) => {
@@ -64,7 +70,9 @@ const apiServices = () => {
       check,
       getUserById,
       getAllUsers,
+      createRoom
     }
+
 }
 
 export default apiServices;

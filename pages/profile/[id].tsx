@@ -9,23 +9,19 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 
 export default function Profile (props: any) {
   const router = useRouter();
-  const { id, users } = props;
+  const { id, email, registrationDate, users } = props;
+  const { createRoom } = apiServices();
+
+  const onClickUser = async (id1: string, id2: string) => {
+    const res = await createRoom([id1, id2])
+    if (res.status === 201) {
+      await router.push(`/room/${res.data.roomId}`);
+    }
+  }
 
   return (
     <>
       <Header {...props}/>
-      <div>
-        <Button
-          sx={{marginTop: '10px',
-            marginLeft: '20px',
-            background: '#a8edea',
-            color: '#3b3b3b'}}
-          onClick={() => router.push(`/room/${id}`)}
-          variant="contained"
-        >TO LIST
-        </Button>
-      </div>
-
       <Box
         sx={{
           margin: '50px',
@@ -39,13 +35,16 @@ export default function Profile (props: any) {
           },
         }}
       >
-        {users.map((user: {[key: string]: string}) => (
+        {users
+          .filter((user:{[key: string]: string}) => user.id !== id)
+          .map((user: {[key: string]: string}) => (
           <Paper
             sx={{display: 'flex',
               justifyContent: 'center',
               alignItems: 'center'}}
             key={user.id}
             elevation={3}
+            onClick={() => onClickUser(id, user.id)}
           >
             {user.username}
           </Paper>))}
