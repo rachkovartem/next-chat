@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
 import apiServices from "../../../services/apiServices";
 import {useRouter} from "next/router";
-import {Button, TextField} from "@mui/material";
+import {Button, Fab, InputBase, TextField} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {setLoginServerError} from "../../../redux/actions";
 import {useTranslation} from "next-i18next";
 import {ChangeLocal} from "../changeLocal/ChangeLocal";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 const Login = ({locale} : {locale: string}) => {
     const { t } = useTranslation('common');
@@ -137,6 +138,17 @@ const Login = ({locale} : {locale: string}) => {
               type="password"
               error={error || loginError}
             />
+            <Button
+              sx={{display: displayOnRegistration}}
+              variant="contained"
+              component="label"
+            >
+              <AddAPhotoIcon />
+              <input
+                type="file"
+                hidden
+              />
+            </Button>
           </div>
           <Button
             sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}}
