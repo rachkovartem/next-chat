@@ -5,21 +5,28 @@ import * as React from "react";
 import {useEffect, useState} from "react";
 import {useChat} from "../../../hooks/useChat";
 import {useTranslation} from "next-i18next";
-
+import Stack from '@mui/material/Stack';
+import {ChatInput} from "../chatInput/ChatInput";
+import {useRef} from "react";
 
 export const ChatWindow = ({ roomId }: { roomId: string }) => {
-  const { messages, sendMessage, getMessages, connectToRoom } = useChat();
-  const [userMessage, setUserMessage] = useState('');
+  const { user, messages, getMessages, connectToRoom } = useChat();
   const { t } = useTranslation('common');
 
+  const onLoading = async () => {
+    await connectToRoom(roomId);
+    await getMessages(roomId);
+  }
+
   useEffect(() => {
-    connectToRoom(roomId);
-    getMessages(roomId);
+    onLoading()
   }, [])
 
-  const onClickSend = () => {
-    if (userMessage.length === 0) return
-    sendMessage(roomId, userMessage);
+  const getTime = (timestamp: string) => {
+    const date = new Date(+timestamp);
+    const hours = date.getHours();
+    const minutes = "0" + date.getMinutes();
+    return hours + ':' + minutes.slice(-2)
   }
 
   return <Box
@@ -29,41 +36,74 @@ export const ChatWindow = ({ roomId }: { roomId: string }) => {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      alignItems: 'center',
-      '& .MuiPaper-root': {
-        m: 1,
-        width: '50vw',
-        height: '50vh',
-      },
+      alignItems: 'center'
     }}
   >
     <Paper
       sx={
         {
+          m: 1,
+          marginBottom: 0,
+          borderBottomLeftRadius: 0,
+          borderBottomRightRadius: 0,
+          width: '50vw',
+          height: '50vh',
+          display: 'flex',
+          flexDirection: 'column-reverse',
           overflowY: 'scroll',
-          padding: '10px'
+          padding: '10px',
+          scrollbarColor: '#a8a8a8 #fff',     /* «цвет ползунка» «цвет полосы скроллбара» */
+          scrollbarWidth: 'thin',  /* толщина */
+          '&::-webkit-scrollbar': {
+            width: '3px', /* ширина для вертикального скролла */
+            height: '3px', /* высота для горизонтального скролла */
+            backgroundColor: '#fff',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#a8a8a8',
+            borderRadius: '9px',
+            boxShadow: 'inset 1px 1px 10px #a8a8a8',
+          },
         }
       }
-      elevation={3}>
-      {
-        messages.map(item => <div key={item.messageId}>{item.senderUsername}: {item.message}</div>)
-      }
+      elevation={3}
+    >
+      <Stack
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={0.5}
+      >
+        {
+          messages.map(item =>
+            <Paper
+              sx={{
+                position: 'relative',
+                p: '9px',
+                lineHeight: '1',
+                alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit',
+                backgroundColor: user.id === item.senderId ? '#fff' : '#d5d5d5',
+              }}
+              elevation={2}
+              key={item.messageId}
+            >
+              {item.message}
+              <p style={{
+                margin: 0,
+                paddingRight: '3px',
+                fontSize: '9px',
+                color: '#9b9b9b',
+                position: 'absolute',
+                bottom: 0,
+                right: 0
+              }}
+              >
+                { getTime(item.sendingDate) }
+              </p>
+            </Paper>)
+        }
+      </Stack>
     </Paper>
-    <TextField
-      id="outlined-message"
-      label={t('Enter text...')}
-      placeholder={t('Enter text...')}
-      type="text"
-      value={userMessage}
-      onChange={(e) => setUserMessage(e.target.value)}
-    />
-    <Button
-      sx={{marginRight: '20px',
-        background: '#a8edea',
-        color: '#3b3b3b'}}
-      variant="contained"
-      onClick={onClickSend}
-    >{t('send')}
-    </Button>
+    <ChatInput roomId={roomId}/>
   </Box>
 }

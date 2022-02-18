@@ -14,5 +14,6 @@
   "alreadyExist": "The case is already planned or the input is empty",
   "noCases": "No cases to do",
   "userDoesNotExist": "User does not exits or password is wrong!",
-  "userAlreadyExist": "User already exist or email is incorrect, username is empty!"
+  "userAlreadyExist": "User already exist or email is incorrect, username is empty!",
+  "send": "Send"
 }

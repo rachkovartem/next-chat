@@ -1,4 +1,4 @@
-import {Button} from "@mui/material";
+import {Avatar, Button} from "@mui/material";
 import {useRouter} from "next/router";
 import apiServices from "../../services/apiServices";
 import * as React from 'react';
@@ -20,18 +20,18 @@ export default function Profile (props: any) {
   }
 
   return (
-    <>
+    <div style={{display: 'flex', flexDirection: 'column'}}>
       <Header {...props}/>
       <Box
         sx={{
-          margin: '50px',
+          margin: 'auto',
           display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: '250px',
           alignItems: 'center',
           cursor: 'pointer',
           '& .MuiPaper-root': {
             m: 1,
-            height: 100,
+            height: 50,
           },
         }}
       >
@@ -40,16 +40,17 @@ export default function Profile (props: any) {
           .map((user: {[key: string]: string}) => (
           <Paper
             sx={{display: 'flex',
-              justifyContent: 'center',
+              justifyContent: 'flex-start',
               alignItems: 'center'}}
             key={user.id}
             elevation={3}
             onClick={() => onClickUser(id, user.id)}
           >
-            {user.username}
+            <Avatar sx={{marginLeft: '6px'}} alt="Avatar" src="" />
+            <div style={{marginLeft: '12px'}}>{user.username}</div>
           </Paper>))}
       </Box>
-    </>
+    </div>
   )
 }
 

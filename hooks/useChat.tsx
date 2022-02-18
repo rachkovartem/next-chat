@@ -42,17 +42,17 @@ export const useChat = () => {
     return () => socketRef.current.disconnect()
   }, [])
 
-  const connectToRoom = ( roomId: string ) => {
-    socketRef.current.emit('system:connect', { id, roomId });
+  const connectToRoom = async ( roomId: string ) => {
+    await socketRef.current.emit('system:connect', { id, roomId });
   }
 
-  const getMessages = ( roomId: string ) => {
-    socketRef.current.emit('messages:get', { roomId });
+  const getMessages = async ( roomId: string ) => {
+    await socketRef.current.emit('messages:get', { roomId });
   }
 
   const sendMessage = (roomId: string, message: string) => {
     socketRef.current.emit('messages:add', {roomId, message, ...user});
   }
 
-  return { users, messages, sendMessage, getMessages, connectToRoom }
+  return { user, users, messages, sendMessage, getMessages, connectToRoom }
 }
