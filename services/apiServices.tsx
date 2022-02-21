@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {appendFile} from "fs";
 
 const apiServices = () => {
     const url = 'http://localhost:8080';
@@ -20,7 +21,11 @@ const apiServices = () => {
       })
       .catch(error => error)
 
-    const register = (email: string, password: string, username: string) => api.post(`/register`, { email, password, username })
+    const register = (email: string, password: string, username: string) =>
+      api.post(
+        `/register`,
+        { email, password, username }
+      )
       .then((response) => {
         return response.data;
       })
@@ -48,6 +53,15 @@ const apiServices = () => {
         .catch(error => error)
     }
 
+    const uploadImage = async (file: any, id: string) => {
+      let data = new FormData();
+      data.append('file', file);
+      data.append('id', id);
+      return api.post('/uploadImage', data, { headers: { 'Content-Type': 'multipart/form-data' }})
+        .then(response => response)
+        .catch(error => error)
+    }
+
     api.interceptors.response.use(
       response => Promise.resolve(response),
       async (error) => {
@@ -70,7 +84,8 @@ const apiServices = () => {
       check,
       getUserById,
       getAllUsers,
-      createRoom
+      createRoom,
+      uploadImage
     }
 
 }
