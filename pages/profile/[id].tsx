@@ -94,7 +94,6 @@ export default function Profile (props: { user: User, users: User[], locale: str
   const onClickAddFriend = async (e: any, idUser: string, idFriend: string) => {
     e.stopPropagation()
     const res = await friendRequest(idUser, idFriend)
-    console.log(res)
   }
 
   const friends = <div style={{width: '100%', display: state.tab === 'friends' ? 'block' : 'none'}}>
@@ -135,6 +134,28 @@ export default function Profile (props: { user: User, users: User[], locale: str
         <Avatar sx={{marginLeft: '6px'}} alt="Avatar"
                 src={requests.reqUsers[req.userSenderId].imagePath ? `http://localhost:8080/${requests.reqUsers[req.userSenderId].imagePath}` : ''}/>
         <div style={{marginLeft: '12px'}}>{requests.reqUsers[req.userSenderId].username}</div>
+        <PersonAddIcon
+          sx={{marginLeft: 'auto', marginRight: '10px', width: '18px'}}
+        />
+      </Paper>
+    })}
+  </div>
+  const outReqs = <div style={{width: '100%', display: state.tab === 'out' ? 'block' : 'none'}}>
+    {requests.outReqs.map((req: any) => {
+      console.log(req)
+      return <Paper
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          cursor: 'pointer'
+        }}
+        key={req.id}
+        elevation={3}
+      >
+        <Avatar sx={{marginLeft: '6px'}} alt="Avatar"
+                src={requests.reqUsers[req.userRecipientId].imagePath ? `http://localhost:8080/${requests.reqUsers[req.userRecipientId].imagePath}` : ''}/>
+        <div style={{marginLeft: '12px'}}>{requests.reqUsers[req.userRecipientId].username}</div>
         <PersonAddIcon
           sx={{marginLeft: 'auto', marginRight: '10px', width: '18px'}}
         />
@@ -188,6 +209,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
           </ButtonGroup>
           {friends}
           {inReqs}
+          {outReqs}
         </div>
       </Box>
       <Modal

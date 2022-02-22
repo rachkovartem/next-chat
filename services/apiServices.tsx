@@ -53,8 +53,8 @@ const apiServices = () => {
         .catch(error => error)
     }
 
-    const friendRequest = async (id1: string, id2: string) => {
-      return api.post('/friendRequest', { id1, id2 })
+    const friendRequest = async (idUser: string, idFriend: string) => {
+      return api.post('/friendRequest', { idUser, idFriend })
         .then(response => response)
         .catch(error => error)
     }
