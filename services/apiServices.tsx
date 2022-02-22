@@ -53,11 +53,23 @@ const apiServices = () => {
         .catch(error => error)
     }
 
+    const friendRequest = async (id1: string, id2: string) => {
+      return api.post('/friendRequest', { id1, id2 })
+        .then(response => response)
+        .catch(error => error)
+    }
+
     const uploadImage = async (file: any, id: string) => {
       let data = new FormData();
       data.append('file', file);
       data.append('id', id);
       return api.post('/uploadImage', data, { headers: { 'Content-Type': 'multipart/form-data' }})
+        .then(response => response)
+        .catch(error => error)
+    }
+
+    const getRequests = async (idsArr: string[], id: string) => {
+      return api.post('/getRequests', { idsArr, id })
         .then(response => response)
         .catch(error => error)
     }
@@ -85,7 +97,9 @@ const apiServices = () => {
       getUserById,
       getAllUsers,
       createRoom,
-      uploadImage
+      uploadImage,
+      friendRequest,
+      getRequests
     }
 
 }

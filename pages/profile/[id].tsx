@@ -11,8 +11,10 @@ import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import {useEffect, useState} from "react";
 import { Crop } from '../crop/Crop';
 import type { AppContext } from 'next/app';
-const debounce = require('lodash.debounce');
-import {forwardRef} from "react";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import {useTranslation} from "next-i18next";
+import {useReducer} from "react";
 
 interface User {
   id: string,
@@ -20,6 +22,31 @@ interface User {
   registrationDate: string,
   username: string,
   imagePath: string,
+  requests: {
+    inReqs: {
+      id: string,
+      userSenderId: string,
+      userRecipientId: string,
+      userRecipientStatus: boolean
+    } [],
+    outReqs: {
+        id: string,
+        userSenderId: string,
+        userRecipientId: string,
+        userRecipientStatus: boolean
+      } [],
+    reqUsers: {
+        id: string,
+        username: string,
+        email: string,
+        password: string,
+        registration: string,
+        friends: string[],
+        friendsRequests: string[],
+        imagePath: string;
+      }[]
+  }
+
   password?: string
 }
 
@@ -28,13 +55,31 @@ interface Context extends AppContext {
   params: { id: string }
 }
 
-export default function Profile (props: { user: User, users: User[] }) {
+const initialState = {tab: 'friends'};
+
+function reducer(state: {tab: string}, action: string) {
+  switch (action) {
+    case 'in':
+      return {tab: 'in'};
+    case 'out':
+      return {tab: 'out'};
+    case 'friends':
+      return {tab: 'friends'};
+    default:
+      throw new Error();
+  }
+}
+
+export default function Profile (props: { user: User, users: User[], locale: string }) {
+  const { t } = useTranslation('common');
   const router = useRouter();
   const { user, users } = props;
-  const { id, email, registrationDate, username, imagePath } = user;
-  const [file, setFile] = useState<string | number | readonly string[] | undefined>();
-  const { createRoom, uploadImage } = apiServices();
-  console.log(props)
+  const { id, email, registrationDate, username, imagePath, requests } = user;
+  const [file, setFile] = useState<File | null>(null);
+  const { createRoom, uploadImage, friendRequest } = apiServices();
+  const [state, dispatch] = useReducer(reducer, initialState);
+  console.log(requests)
+
   const onClickUser = async (id1: string, id2: string) => {
     const res = await createRoom([id1, id2])
     if (res.status === 201) {
@@ -45,6 +90,57 @@ export default function Profile (props: { user: User, users: User[] }) {
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
   }
+
+  const onClickAddFriend = async (e: any, idUser: string, idFriend: string) => {
+    e.stopPropagation()
+    const res = await friendRequest(idUser, idFriend)
+    console.log(res)
+  }
+
+  const friends = <div style={{width: '100%', display: state.tab === 'friends' ? 'block' : 'none'}}>
+    {users
+      .filter((user) => user.id !== id)
+      .map((user) => (
+        <Paper
+          sx={{display: 'flex',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            cursor: 'pointer'}}
+          key={user.id}
+          elevation={3}
+          onClick={() => onClickUser(id, user.id)}
+        >
+          <Avatar sx={{marginLeft: '6px'}} alt="Avatar" src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}/>
+          <div style={{marginLeft: '12px'}}>{user.username}</div>
+          <PersonAddIcon
+            sx={{marginLeft: 'auto', marginRight: '10px', width: '18px'}}
+            onClick={e => onClickAddFriend(e, id, user.id)}
+          />
+        </Paper>)
+      )
+    }
+  </div>
+  const inReqs = <div style={{width: '100%', display: state.tab === 'in' ? 'block' : 'none'}}>
+    {requests.inReqs.map((req: any) => {
+      return <Paper
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          alignItems: 'center',
+          cursor: 'pointer'
+        }}
+        key={req.id}
+        elevation={3}
+      >
+        <Avatar sx={{marginLeft: '6px'}} alt="Avatar"
+                src={requests.reqUsers[req.userSenderId].imagePath ? `http://localhost:8080/${requests.reqUsers[req.userSenderId].imagePath}` : ''}/>
+        <div style={{marginLeft: '12px'}}>{requests.reqUsers[req.userSenderId].username}</div>
+        <PersonAddIcon
+          sx={{marginLeft: 'auto', marginRight: '10px', width: '18px'}}
+        />
+      </Paper>
+    })}
+  </div>
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -84,22 +180,14 @@ export default function Profile (props: { user: User, users: User[] }) {
             />
           </Button>
         </div>
-        <div>
-          {users
-            .filter((user) => user.id !== id)
-            .map((user) => (
-            <Paper
-              sx={{display: 'flex',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                cursor: 'pointer'}}
-              key={user.id}
-              elevation={3}
-              onClick={() => onClickUser(id, user.id)}
-            >
-              <Avatar sx={{marginLeft: '6px'}} alt="Avatar" src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}/>
-              <div style={{marginLeft: '12px'}}>{user.username}</div>
-            </Paper>))}
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <ButtonGroup sx={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)'}} size="medium" aria-label="small button group">
+            <Button onClick={() => dispatch('friends')} sx={{fontSize: '10px'}} key="friends">{t('friends')}</Button>
+            <Button onClick={() => dispatch('in')} sx={{fontSize: '10px'}} key="inRequests">{t('inRequests')}</Button>
+            <Button onClick={() => dispatch('out')} sx={{fontSize: '10px'}} key="outRequests">{t('outRequests')}</Button>
+          </ButtonGroup>
+          {friends}
+          {inReqs}
         </div>
       </Box>
       <Modal
@@ -107,18 +195,18 @@ export default function Profile (props: { user: User, users: User[] }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Crop image={file} id={id}/>
+        <Crop image={file} id={id} setFile={setFile}/>
       </Modal>
     </div>
-
   )
 }
 
 export async function getServerSideProps(context: Context) {
   const { locale } = context;
-  const { getUserById, getAllUsers } = apiServices();
+  const { getUserById, getAllUsers, getRequests } = apiServices();
   const responseUser = await getUserById(context.params.id);
-  const { id, email, registration, username, imagePath } = responseUser.data;
+  const { id, email, registration, username, imagePath, friends, friendsRequests} = responseUser.data;
+  const requests = await getRequests(friendsRequests, id)
   const date = new Date(Number(registration));
   const registrationDate = {
     day: date.getDate(),
@@ -138,6 +226,8 @@ export async function getServerSideProps(context: Context) {
         username: username || null,
         imagePath: imagePath || null,
         registrationDate: registrationDate || null,
+        friends: friends || null,
+        requests: requests.data || null
       },
       users: res.data },
   }

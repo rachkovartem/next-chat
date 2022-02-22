@@ -5,30 +5,43 @@ import apiServices from "../../services/apiServices";
 import SaveIcon from '@mui/icons-material/Save';
 import {Button} from "@mui/material";
 
+interface imgBlob extends Blob {
+  lastModifiedDate?: Date,
+  name?: string
+}
+
 // eslint-disable-next-line react/display-name
-export const Crop = forwardRef(({ image, id }: { image: any, id: string }, ref) => {
+export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id: string, setFile: Function }, ref) => {
   const { uploadImage } = apiServices();
-  const [crop, setCrop] = useState({
+  const [crop, setCrop] = useState<any>({
     unit: '%',
     width: 100,
     aspect: 1
   })
-  const [src, setSrc] = useState<string>('')
+  const [src, setSrc] = useState<string>('');
   const [imageRef, setImageRef] = useState('');
-  const [blob, setBlob] = useState();
+  const [blob, setBlob] = useState<imgBlob>();
   const [croppedImageUrl, setCroppedImageUrl] = useState<string | unknown>('');
 
   useEffect(() => {
     const reader = new FileReader();
-    reader.addEventListener('load', () =>
-      setSrc(reader.result)
+    reader.addEventListener('load', () => {
+        if (typeof reader.result === 'string') {
+          setSrc(reader.result)
+        } else {
+          console.error( `Type error on setSrc. render.result: ${reader.result}`)
+        }
+      }
+
     );
-    reader.readAsDataURL(image);
+    if (image) {
+      reader.readAsDataURL(image);
+    }
   }, [image])
 
-  const onCropComplete = (crop: any) => {
+  useEffect(() => {
     makeClientCrop(crop);
-  };
+  }, [crop])
 
   const onCropChange = (crop: any) => {
     setCrop(crop);
@@ -50,6 +63,7 @@ export const Crop = forwardRef(({ image, id }: { image: any, id: string }, ref) 
   }
 
   const getCroppedImg = (image: any, crop: any, fileName: string) => {
+    console.log(image)
     const canvas = document.createElement('canvas');
     const pixelRatio = window.devicePixelRatio;
     const scaleX = image.naturalWidth / image.width;
@@ -58,12 +72,12 @@ export const Crop = forwardRef(({ image, id }: { image: any, id: string }, ref) 
 
     canvas.width = crop.width * pixelRatio * scaleX;
     canvas.height = crop.height * pixelRatio * scaleY;
-
-    // @ts-ignore
+    if (ctx === null) {
+      console.error('ctx is null');
+      return
+    }
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    // @ts-ignore
     ctx.imageSmoothingQuality = 'high';
-    // @ts-ignore
     ctx.drawImage(
       image,
       crop.x * scaleX,
@@ -78,18 +92,15 @@ export const Crop = forwardRef(({ image, id }: { image: any, id: string }, ref) 
 
     return new Promise((resolve, reject) => {
       canvas.toBlob(
-        (blob) => {
+        (blob: imgBlob | null) => {
           if (!blob) {
-            //reject(new Error('Canvas is empty'));
             console.error('Canvas is empty');
             return;
           }
-          // @ts-ignore
           blob.name = fileName;
           setBlob(blob);
-          // @ts-ignore
           const fileUrl = window.URL.createObjectURL(blob);
-          // @ts-ignore
+          console.log(fileUrl)
           resolve(fileUrl);
         },
         'image/jpeg',
@@ -98,32 +109,34 @@ export const Crop = forwardRef(({ image, id }: { image: any, id: string }, ref) 
     });
   }
 
-  function blobToFile(theBlob, fileName){
-    //A Blob() is almost a File() - it's just missing the two properties below which we will add
+  function blobToFile(theBlob: imgBlob, fileName: string){
     theBlob.lastModifiedDate = new Date();
     theBlob.name = fileName;
     return theBlob;
   }
 
-  const onClickSave = (id: string) => {
-    uploadImage(blobToFile(blob, 'image.png'), id);
+  const onClickSave = async (id: string) => {
+    if (blob) {
+      await uploadImage(blobToFile(blob, 'image.png'), id);
+      setFile(null);
+      window.location.reload()
+    }
   }
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '100px'}}>
         <ReactCrop
           src={src}
           crop={crop}
           ruleOfThirds
           onImageLoaded={onImageLoaded}
-          onComplete={onCropComplete}
           onChange={onCropChange}
         />
-        <img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />
+        {/*<img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />*/}
       <Button
         sx={{marginTop: '50px'}}
         variant="contained"
-        onClick={() => onClickSave(croppedImageUrl, id)}
+        onClick={() => onClickSave(id)}
       >
         <SaveIcon />
       </Button>

@@ -15,5 +15,8 @@
   "noCases": "No cases to do",
   "userDoesNotExist": "User does not exits or password is wrong!",
   "userAlreadyExist": "User already exist or email is incorrect, username is empty!",
-  "send": "Send"
+  "send": "Send",
+  "friends": "Friends",
+  "inRequests": "InRequests",
+  "outRequests": "OutRequests"
 }
