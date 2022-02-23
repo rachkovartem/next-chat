@@ -6,6 +6,7 @@ import {useTranslation} from "next-i18next";
 import ApiServices from "../../../services/apiServices";
 import {User} from '../../profile/[id]'
 
+
 export const AutocompleteFriendInput = () => {
   const { t } = useTranslation('common');
   const { findUser } = ApiServices();
