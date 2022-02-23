@@ -15,39 +15,37 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import {useTranslation} from "next-i18next";
 import {useReducer} from "react";
+import {useStyles} from "./id.styles";
+import {SnackBar} from "../components/snackBar/SnackBar";
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
 
-interface User {
+export interface User {
   id: string,
   email: string,
   registrationDate: string,
   username: string,
   imagePath: string,
-  requests: {
-    inReqs: {
-      id: string,
-      userSenderId: string,
-      userRecipientId: string,
-      userRecipientStatus: boolean
-    } [],
-    outReqs: {
-        id: string,
-        userSenderId: string,
-        userRecipientId: string,
-        userRecipientStatus: boolean
-      } [],
-    reqUsers: {
-        id: string,
-        username: string,
-        email: string,
-        password: string,
-        registration: string,
-        friends: string[],
-        friendsRequests: string[],
-        imagePath: string;
-      }[]
-  }
-
   password?: string
+}
+
+interface InReq {
+  id: string,
+  userSenderId: string,
+  userRecipientId: string,
+  userRecipientStatus: boolean,
+  sender: User,
+}
+
+interface OutReq {
+  id: string,
+  userSenderId: string,
+  userRecipientId: string,
+  userRecipientStatus: boolean,
+  recipient: User,
 }
 
 interface Context extends AppContext {
@@ -70,15 +68,18 @@ function reducer(state: {tab: string}, action: string) {
   }
 }
 
-export default function Profile (props: { user: User, users: User[], locale: string }) {
+export default function Profile (props: { user: User, users: User[], locale: string, inReqs: InReq[], outReqs: OutReq[] }) {
   const { t } = useTranslation('common');
   const router = useRouter();
-  const { user, users } = props;
-  const { id, email, registrationDate, username, imagePath, requests } = user;
+  const { user, users, inReqs, outReqs } = props;
+  const { id, email, registrationDate, username, imagePath } = user;
+  const { createRoom, approveFriendReq, rejectFriendReq, friendRequest } = apiServices();
+
   const [file, setFile] = useState<File | null>(null);
-  const { createRoom, uploadImage, friendRequest } = apiServices();
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(requests)
+  const [snackBarText, setSnackBarText] = useState(null);
+
+  const classes = useStyles();
 
   const onClickUser = async (id1: string, id2: string) => {
     const res = await createRoom([id1, id2])
@@ -93,18 +94,28 @@ export default function Profile (props: { user: User, users: User[], locale: str
 
   const onClickAddFriend = async (e: any, idUser: string, idFriend: string) => {
     e.stopPropagation()
-    const res = await friendRequest(idUser, idFriend)
+    const res = await friendRequest(idUser, idFriend);
+    if ('data' in res && typeof res.data === "string") {
+      setSnackBarText(t(res.data))
+    }
   }
 
-  const friends = <div style={{width: '100%', display: state.tab === 'friends' ? 'block' : 'none'}}>
+  const onClickApproveReq = async (idUser: string, idFriend: string, idReq: string) => {
+    const res = await approveFriendReq(idUser, idFriend, idReq);
+    console.log(res.data)
+  }
+
+  const onClickRejectReq = async (idUser: string, idFriend: string, idReq: string) => {
+    const res = await rejectFriendReq(idUser, idFriend, idReq);
+    console.log(res.data)
+  }
+
+  const friendsDiv = <div style={{width: '100%', display: state.tab === 'friends' ? 'block' : 'none'}}>
     {users
       .filter((user) => user.id !== id)
       .map((user) => (
         <Paper
-          sx={{display: 'flex',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            cursor: 'pointer'}}
+          className={classes.userPaper}
           key={user.id}
           elevation={3}
           onClick={() => onClickUser(id, user.id)}
@@ -119,77 +130,64 @@ export default function Profile (props: { user: User, users: User[], locale: str
       )
     }
   </div>
-  const inReqs = <div style={{width: '100%', display: state.tab === 'in' ? 'block' : 'none'}}>
-    {requests.inReqs.map((req: any) => {
+  const inReqsDiv = <div style={{width: '100%', display: state.tab === 'in' ? 'block' : 'none'}}>
+    {inReqs.map((req: any) => {
       return <Paper
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          cursor: 'pointer'
-        }}
+        className={classes.userPaperNoCursor}
         key={req.id}
         elevation={3}
       >
-        <Avatar sx={{marginLeft: '6px'}} alt="Avatar"
-                src={requests.reqUsers[req.userSenderId].imagePath ? `http://localhost:8080/${requests.reqUsers[req.userSenderId].imagePath}` : ''}/>
-        <div style={{marginLeft: '12px'}}>{requests.reqUsers[req.userSenderId].username}</div>
-        <PersonAddIcon
-          sx={{marginLeft: 'auto', marginRight: '10px', width: '18px'}}
+        <Avatar
+            sx={{marginLeft: '6px'}}
+            alt="Avatar"
+            src={req.sender.imagePath ? `http://localhost:8080/${req.sender.imagePath}` : ''}/>
+        <div style={{marginLeft: '12px'}}>{req.sender.username}</div>
+        <AddCircleRoundedIcon
+            sx={{marginLeft: 'auto', width: '18px', cursor: 'pointer'}}
+            onClick={() => onClickApproveReq(id, req.userSenderId, req.id)}
+        />
+        <RemoveCircleOutlineRoundedIcon
+            sx={{marginLeft: '5px', marginRight: '10px', width: '18px', cursor: 'pointer'}}
+            onClick={() => onClickRejectReq(id, req.userSenderId, req.id)}
         />
       </Paper>
     })}
   </div>
-  const outReqs = <div style={{width: '100%', display: state.tab === 'out' ? 'block' : 'none'}}>
-    {requests.outReqs.map((req: any) => {
-      console.log(req)
+  const outReqsDiv = <div style={{width: '100%', display: state.tab === 'out' ? 'block' : 'none'}}>
+    {outReqs.map((req: any) => {
       return <Paper
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          cursor: 'pointer'
-        }}
+        className={classes.userPaperNoCursor}
         key={req.id}
         elevation={3}
       >
         <Avatar sx={{marginLeft: '6px'}} alt="Avatar"
-                src={requests.reqUsers[req.userRecipientId].imagePath ? `http://localhost:8080/${requests.reqUsers[req.userRecipientId].imagePath}` : ''}/>
-        <div style={{marginLeft: '12px'}}>{requests.reqUsers[req.userRecipientId].username}</div>
-        <PersonAddIcon
-          sx={{marginLeft: 'auto', marginRight: '10px', width: '18px'}}
+                src={req.recipient.imagePath ? `http://localhost:8080/${req.recipient.imagePath}` : ''}/>
+        <div style={{marginLeft: '12px'}}>{req.recipient.username}</div>
+        <RemoveCircleOutlineRoundedIcon
+            sx={{marginLeft: 'auto', marginRight: '10px', width: '18px', cursor: 'pointer'}}
+            onClick={() => onClickRejectReq(id, req.userSenderId, req.id)}
         />
       </Paper>
     })}
   </div>
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
+    <div className={classes.profile}>
       <Header {...props}/>
       <Box
-        sx={{
-          margin: '50px auto 0',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 250px)',
-          gap: '200px',
-          alignItems: 'center',
-          '& .MuiPaper-root': {
-            m: 1,
-            height: 50,
-          },
-        }}
+        className={classes.userProfileBox}
       >
         <div
-          style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}
+          className={classes.avatarWrapper}
         >
           <Avatar
-            sx={{marginLeft: '6px', width: 100, height: 100}}
+            className={classes.avatar}
             alt="Avatar"
             src={imagePath ? `http://localhost:8080/${imagePath}` : ''}
           />
-          <p style={{margin: '20px 0 0 0'}}>{username}</p>
+          <p className={classes.username}>{username}</p>
           <Button
-            sx={{marginTop: '10px'}}
+            className={classes.avatarButton}
             variant="contained"
             component="label"
           >
@@ -201,15 +199,38 @@ export default function Profile (props: { user: User, users: User[], locale: str
             />
           </Button>
         </div>
-        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-          <ButtonGroup sx={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)'}} size="medium" aria-label="small button group">
-            <Button onClick={() => dispatch('friends')} sx={{fontSize: '10px'}} key="friends">{t('friends')}</Button>
-            <Button onClick={() => dispatch('in')} sx={{fontSize: '10px'}} key="inRequests">{t('inRequests')}</Button>
-            <Button onClick={() => dispatch('out')} sx={{fontSize: '10px'}} key="outRequests">{t('outRequests')}</Button>
+        <div className={classes.friendsWrapper}>
+          <AutocompleteFriendInput/>
+          <ButtonGroup
+              className={classes.buttonsGroup}
+              size="medium"
+              aria-label="small button group"
+          >
+            <Button
+                onClick={() => dispatch('friends')}
+                className={classes.button}
+                key="friends"
+            >
+              {t('friends')}
+            </Button>
+            <Button
+                onClick={() => dispatch('in')}
+                className={classes.button}
+                key="inRequests"
+            >
+              {t('inRequests')}
+            </Button>
+            <Button
+                onClick={() => dispatch('out')}
+                className={classes.button}
+                key="outRequests"
+            >
+              {t('outRequests')}
+            </Button>
           </ButtonGroup>
-          {friends}
-          {inReqs}
-          {outReqs}
+          {friendsDiv}
+          {inReqsDiv}
+          {outReqsDiv}
         </div>
       </Box>
       <Modal
@@ -219,6 +240,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
       >
         <Crop image={file} id={id} setFile={setFile}/>
       </Modal>
+      <SnackBar text={snackBarText} setText={setSnackBarText} />
     </div>
   )
 }
@@ -235,7 +257,6 @@ export async function getServerSideProps(context: Context) {
     month: date.getMonth()+1,
     year: date.getFullYear(),
   }
-
   const res = await getAllUsers();
 
   return {
@@ -248,9 +269,12 @@ export async function getServerSideProps(context: Context) {
         username: username || null,
         imagePath: imagePath || null,
         registrationDate: registrationDate || null,
-        friends: friends || null,
-        requests: requests.data || null
+        friends: friends || [],
       },
-      users: res.data },
+      users: res.data || [],
+      inReqs: requests.data.inReqs || [],
+      outReqs: requests.data.outReqs || [],
+    },
+
   }
 }

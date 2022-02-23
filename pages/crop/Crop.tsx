@@ -126,6 +126,7 @@ export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id
   return (
     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '100px'}}>
         <ReactCrop
+          style={{width: '50vh'}}
           src={src}
           crop={crop}
           ruleOfThirds

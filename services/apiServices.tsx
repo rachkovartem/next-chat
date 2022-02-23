@@ -41,6 +41,12 @@ const apiServices = () => {
         .catch(error => error)
     }
 
+  const findUser = async (option: string) => {
+    return api.get('/findUser', {params: {option},})
+      .then(response => response)
+      .catch(error => error)
+  }
+
     const getAllUsers = async () => {
       return api.get('/allUsers')
         .then(response => response)
@@ -68,11 +74,23 @@ const apiServices = () => {
         .catch(error => error)
     }
 
-    const getRequests = async (idsArr: string[], id: string) => {
-      return api.post('/getRequests', { idsArr, id })
+    const getRequests = async (friendReqsArr: string[], userId: string) => {
+      return api.post('/getRequests', { friendReqsArr, userId })
         .then(response => response)
         .catch(error => error)
     }
+
+    const approveFriendReq = async (idUser: string, idFriend: string, idReq: string) => {
+        return api.post('/approveFriendReq', { idUser, idFriend, idReq })
+            .then(response => response)
+            .catch(error => error)
+    }
+
+  const rejectFriendReq = async (idUser: string, idFriend: string, idReq: string) => {
+    return api.post('/rejectFriendReq', { idUser, idFriend, idReq })
+      .then(response => response)
+      .catch(error => error)
+  }
 
     api.interceptors.response.use(
       response => Promise.resolve(response),
@@ -99,7 +117,10 @@ const apiServices = () => {
       createRoom,
       uploadImage,
       friendRequest,
-      getRequests
+      getRequests,
+      approveFriendReq,
+      rejectFriendReq,
+      findUser
     }
 
 }

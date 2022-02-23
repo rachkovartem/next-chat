@@ -18,5 +18,8 @@
   "send": "Send",
   "friends": "Friends",
   "inRequests": "InRequests",
-  "outRequests": "OutRequests"
+  "outRequests": "OutRequests",
+  "userAlreadySend": "This user already sent request to you",
+  "requestExist": "This request already sent",
+  "autocompleteLabel": "Username or email..."
 }
