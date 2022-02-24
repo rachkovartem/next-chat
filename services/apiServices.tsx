@@ -2,47 +2,53 @@ import axios from 'axios';
 import {appendFile} from "fs";
 
 const apiServices = () => {
-    const url = 'http://localhost:8080';
+  const url = 'http://localhost:8080';
 
-    const api = axios.create({
-        baseURL: url,
-        withCredentials: true,
-    });
+  const api = axios.create({
+      baseURL: url,
+      withCredentials: true,
+  });
 
-    const refreshAccessToken = async ():Promise<any> => {
-      return await api.get(`/auth/refresh`)
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const login = (email: string, password: string) => api.post(`/auth/login`, { email, password })
-      .then((response) => {
-        return response.data;
-      })
-      .catch(error => error)
-
-    const register = (email: string, password: string, username: string) =>
-      api.post(
-        `/register`,
-        { email, password, username }
-      )
-      .then((response) => {
-        return response.data;
-      })
-      .catch(error => error)
-
-    const check = () => api.get('/check')
+  const refreshAccessToken = async ():Promise<any> => {
+    return await api.get(`/auth/refresh`)
       .then(response => response)
       .catch(error => error)
+  }
 
-    const getUserById = async (id: string) => {
-      return api.get('/profile', {params: {id},})
-        .then(response => response)
-        .catch(error => error)
-    }
+  const login = (email: string, password: string) => api.post(`/auth/login`, { email, password })
+    .then((response) => {
+      return response.data;
+    })
+    .catch(error => error)
 
-  const findUser = async (option: string) => {
-    return api.get('/findUser', {params: {option},})
+  const register = (email: string, password: string, username: string) =>
+    api.post(
+      `/register`,
+      { email, password, username }
+    )
+    .then((response) => {
+      return response.data;
+    })
+    .catch(error => error)
+
+  const check = () => api.get('/check')
+    .then(response => response)
+    .catch(error => error)
+
+  const getUserById = async (id: string) => {
+    return api.get('/profile', {params: {id},})
+      .then(response => response)
+      .catch(error => error)
+  }
+
+  const findUser = async (option: string, id: string) => {
+    return api.get('/findUser', {params: {option, id},})
+      .then(response => response)
+      .catch(error => error)
+  }
+
+  const removeFriend = async (idUser: string, idFriend: string) => {
+    return api.post('/removeFriend',  {idUser, idFriend})
       .then(response => response)
       .catch(error => error)
   }
@@ -120,7 +126,8 @@ const apiServices = () => {
       getRequests,
       approveFriendReq,
       rejectFriendReq,
-      findUser
+      findUser,
+      removeFriend
     }
 
 }

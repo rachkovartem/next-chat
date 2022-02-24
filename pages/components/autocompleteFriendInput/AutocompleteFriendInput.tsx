@@ -5,43 +5,89 @@ import {useEffect, useState} from "react";
 import {useTranslation} from "next-i18next";
 import ApiServices from "../../../services/apiServices";
 import {User} from '../../profile/[id]'
+import {Avatar} from "@mui/material";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import Paper from "@mui/material/Paper";
+import {useStyles} from "../../profile/id.styles";
+import apiServices from "../../../services/apiServices";
 
-export const AutocompleteFriendInput = () => {
+export const AutocompleteFriendInput = ({setSnackBarText, id}: {setSnackBarText: Function, id: string}) => {
+  const classes = useStyles();
   const { t } = useTranslation('common');
   const { findUser } = ApiServices();
-  const [options, setOptions] = useState<string[]>([]);
+  const [initialSearch, setInitialSearch] = useState(true)
+  const [options, setOptions] = useState<any[]>([]);
   const [text, setText] = useState('');
+  const { friendRequest } = apiServices();
 
   const onChange = (e: any) => {
-    setText(e.target.value)
+    if (initialSearch) {
+      setInitialSearch(false)
+    }
+    setText(e.target.value.toString())
   }
 
   const onChangeText = async () => {
-    const res = await findUser(text);
-    console.log(res.data)
-    const arr = res.data.map((item: User) => item.username)
-    if (Array.isArray(arr)) {
-      setOptions(arr)
+    const res = await findUser(text, id);
+    if (Array.isArray(res.data)) {
+      setOptions(res.data)
     } else {
       setOptions([])
     }
-
   }
 
   useEffect(() => {
-    onChangeText()
+    if (text.length > 0) {
+      onChangeText()
+    } else {
+      setOptions([])
+    }
   }, [text])
+
+  const onClickAddFriend = async (e: any, idUser: string, idFriend: string) => {
+    e.stopPropagation()
+    const res = await friendRequest(idUser, idFriend);
+    if ('data' in res && typeof res.data === "string") {
+      setSnackBarText(t(res.data))
+      return
+    }
+    if(!('data' in res)) {
+      setSnackBarText(t('smthWrong'))
+      return
+    }
+    window.location.reload()
+  }
+
   return (<Autocomplete
-    disablePortal
-    id="friendNameInput"
+    size='small'
+    id='friendNameInput'
     options={options}
-    sx={{ width: '100%', marginBottom: '10px' }}
+    sx={{width: '100%', marginBottom: '10px' }}
+    noOptionsText={initialSearch ? t('write') : t('notFound')}
+    getOptionLabel={(option) => [option.username, option.email].toString()}
+    renderOption={(props, option) => {
+      return (<Paper
+        className={classes.userPaperNoCursor}
+        key={option.id}
+        elevation={0}
+      >
+        <Avatar sx={{marginLeft: '6px', width: 26, height: 26}} alt="Avatar"
+                src={option.imagePath ? `http://localhost:8080/${option.imagePath}` : ''}/>
+        <div style={{marginLeft: '12px'}}>{option.username}</div>
+        <PersonAddIcon
+          sx={{marginLeft: 'auto', marginRight: '10px', width: '18px', cursor: 'pointer'}}
+          onClick={e => onClickAddFriend(e, id, option.id)}
+        />
+      </Paper>)
+    }}
     renderInput={(params) =>
       <TextField
         {...params}
         label={t('autocompleteLabel')}
         value={text}
+        onBlur={() => setInitialSearch(true)}
         onChange={onChange}
-      />}
+      />
+      }
   />)
 }

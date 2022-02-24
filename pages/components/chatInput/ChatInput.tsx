@@ -16,6 +16,16 @@ export const ChatInput = ({roomId}: { roomId: string }) => {
   const onClickSend = () => {
     if (userMessage.length === 0) return
     sendMessage(roomId, userMessage);
+    setUserMessage('');
+  }
+
+  const onClickEnter = (e: any) => {
+    console.log(e)
+    if (userMessage.length === 0) return
+    if (e.key === 'Enter') {
+      sendMessage(roomId, userMessage);
+      setUserMessage('');
+    }
   }
 
   return (
@@ -39,6 +49,7 @@ export const ChatInput = ({roomId}: { roomId: string }) => {
           type="text"
           value={userMessage}
           onChange={(e) => setUserMessage(e.target.value)}
+          onKeyDown={onClickEnter}
         />
         <IconButton type="button" sx={{ p: '10px' }} onClick={onClickSend} aria-label="send">
           <SendIcon />

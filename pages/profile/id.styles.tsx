@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import {makeStyles} from "@material-ui/core/styles";
 
 export const useStyles = makeStyles({
     profile: {
@@ -9,10 +9,6 @@ export const useStyles = makeStyles({
         display: 'grid',
         gridTemplateColumns: 'repeat(2, 250px)',
         gap: '200px',
-        '& .MuiPaper-root': {
-            m: 1,
-            height: 50,
-        }
     },
     avatarWrapper: {
         display: 'flex',
@@ -49,12 +45,23 @@ export const useStyles = makeStyles({
         justifyContent: 'flex-start',
         alignItems: 'center',
         cursor: 'pointer',
-        marginTop: '5px'
+        marginTop: '5px',
+        m: 1,
+        height: 50,
     },
     userPaperNoCursor: {
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
         marginTop: '5px'
+    },
+    groupChatPaper: {
+        width: '100%',
+        height: '60px',
+        display: 'flex',
+        gap: '5px',
+        justifyContent: 'flex-start',
+        marginBottom: '10px',
+        padding: '5px'
     }
 });

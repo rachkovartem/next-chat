@@ -21,5 +21,12 @@
   "outRequests": "OutRequests",
   "userAlreadySend": "This user already sent request to you",
   "requestExist": "This request already sent",
-  "autocompleteLabel": "Username or email..."
+  "autocompleteLabel": "Username or email...",
+  "userAlreadyFriend": "User already your friend",
+  "smthWrong": "Something went wrong...",
+  "notFound": "Nothing found...",
+  "write": "Enter text for search...",
+  "removeFriend": "Remove from friends",
+  "addToGroupChat": "Add to group chat",
+  "userAlreadyAdded": "User already added"
 }
