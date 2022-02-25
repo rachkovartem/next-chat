@@ -28,5 +28,6 @@
   "write": "Enter text for search...",
   "removeFriend": "Remove from friends",
   "addToGroupChat": "Add to group chat",
-  "userAlreadyAdded": "User already added"
+  "userAlreadyAdded": "User already added",
+  "threeOrMore": "Group chat should include 3 or more participants"
 }

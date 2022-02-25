@@ -71,6 +71,12 @@ const apiServices = () => {
         .catch(error => error)
     }
 
+    const createGroupRoom = async (members: {username: string, id: string}[]) => {
+      return api.post('/rooms/createGroupRoom', { members })
+        .then(response => response)
+        .catch(error => error)
+    }
+
     const uploadImage = async (file: any, id: string) => {
       let data = new FormData();
       data.append('file', file);
@@ -127,7 +133,8 @@ const apiServices = () => {
       approveFriendReq,
       rejectFriendReq,
       findUser,
-      removeFriend
+      removeFriend,
+      createGroupRoom
     }
 
 }

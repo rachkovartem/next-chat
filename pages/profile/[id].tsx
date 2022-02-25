@@ -1,31 +1,27 @@
 import 'react-image-crop/dist/ReactCrop.css';
-import {Avatar, Button, Chip, ListItem, Menu, MenuItem, Modal} from "@mui/material";
+import {Avatar, Button, Chip, Modal} from "@mui/material";
 import {useRouter} from "next/router";
-import apiServices from "../../services/apiServices";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import Header from "../components/header/Header";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import {useEffect, useState} from "react";
-import { Crop } from '../crop/Crop';
+import {useState} from "react";
 import type { AppContext } from 'next/app';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import {useTranslation} from "next-i18next";
 import {useReducer} from "react";
-import {useStyles} from "./id.styles";
-import {SnackBar} from "../components/snackBar/SnackBar";
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+
+import {FriendsListItem} from "../components/friendsListItem/FriendsListItem";
+import apiServices from "../../services/apiServices";
+import {SnackBar} from "../components/snackBar/SnackBar";
+import Header from "../components/header/Header";
+import { Crop } from '../crop/Crop';
+import {useStyles} from "./id.styles";
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import {data} from "browserslist";
 
 export interface User {
   id: string,
@@ -76,34 +72,16 @@ function reducer(state: {tab: string}, action: string) {
 
 export default function Profile (props: { user: User, users: User[], locale: string, inReqs: InReq[], outReqs: OutReq[] }) {
   const { t } = useTranslation('common');
-  const router = useRouter();
-  const { user, users, inReqs, outReqs } = props;
-  const { id, friends, username, imagePath, objFriends } = user;
-  const { createRoom, approveFriendReq, rejectFriendReq, removeFriend } = apiServices();
+  const { user, inReqs, outReqs } = props;
+  const { id, username, imagePath, objFriends } = user;
+  const { approveFriendReq, rejectFriendReq, removeFriend, createGroupRoom } = apiServices();
   const [file, setFile] = useState<File | null>(null);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [snackBarText, setSnackBarText] = useState(null);
-  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
-  const [groupChatMembers, setGroupChatMembers] = useState([{username: 'vasya', id: '1'}, {username: 'kolya', id: '2'}])
-  const open = Boolean(menuAnchorEl);
-  const handleClickMenuIcon = (event: any) => {
-    event.stopPropagation()
-    setMenuAnchorEl(event.currentTarget);
-  };
-  const handleClickMenu = (e: any) => {
-    if (e) {
-      e.stopPropagation();
-    }
-    setMenuAnchorEl(null);
-  };
   const classes = useStyles();
-
-  const onClickUser = async (id1: string, id2: string) => {
-    const res = await createRoom([id1, id2])
-    if (res.status === 201) {
-      await router.push(`/room/${res.data.roomId}`);
-    }
-  }
+  const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([])
+  const isBrowser = typeof window !== 'undefined';
+  const router = useRouter();
 
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
@@ -121,60 +99,28 @@ export default function Profile (props: { user: User, users: User[], locale: str
     window.location.reload()
   }
 
-  const onClickRemoveFriend = async (e: any, idUser: string, idFriend: string) => {
-    handleClickMenu(e);
-    const res = await removeFriend(idUser, idFriend);
-    console.log(res.data)
-    window.location.reload()
-  }
-
-  const onClickAddToGroupChat = async (e: any, id: string, username: string) => {
-    handleClickMenu(e);
-    if (groupChatMembers.some(member => member.id === id)) {
-      setSnackBarText(t('userAlreadyAdded'))
+  const onClickCreateGroupChat = async (members: {username: string, id: string}[]) => {
+    const res = await createGroupRoom(members);
+    if ('data' in res && typeof res.data === 'string') {
+      setSnackBarText(t(res.data))
       return
+    } else if ('data' in res) {
+      await router.push(`/room/${res.data.roomId}`);
+    } else {
+      console.log('err')
     }
-    setGroupChatMembers((prevState) => [...prevState, {id, username}])
-    console.log(groupChatMembers)
   }
 
+  const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, setSnackBarText};
   const friendsDiv = <div style={{width: '100%', display: state.tab === 'friends' ? 'block' : 'none'}}>
-    {objFriends
+    {isBrowser ? objFriends
       .filter((user) => user.id !== id)
       .map((user) => (
-        <Paper
-          className={classes.userPaper}
-          key={user.id}
-          elevation={3}
-          onClick={() => onClickUser(id, user.id)}
-        >
-          <Avatar sx={{marginLeft: '6px'}} alt="Avatar" src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}/>
-          <div style={{marginLeft: '12px'}}>{user.username}</div>
-          <KeyboardArrowDownIcon
-            sx={{marginLeft: 'auto', marginRight: '10px', width: '18px', cursor: 'pointer'}}
-            onClick={handleClickMenuIcon}/>
-          <Menu
-            id="basic-menu"
-            autoFocus={false}
-            anchorEl={menuAnchorEl}
-            open={open}
-            onClose={handleClickMenu}
-            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-          >
-            <MenuItem onClick={(e) => onClickAddToGroupChat(e, user.id, user.username)}>
-              <GroupAddIcon sx={{marginRight: '10px'}}/>
-              {t('addToGroupChat')}
-            </MenuItem>
-            <MenuItem onClick={(e) => onClickRemoveFriend(e, id, user.id)}>
-              <PersonRemoveIcon sx={{marginRight: '10px'}}/>
-              {t('removeFriend')}
-            </MenuItem>
-          </Menu>
-        </Paper>)
-      )
+        <FriendsListItem key={user.id} user={user} {...friendsListItemProps}/>
+      )) : null
     }
   </div>
+
   const inReqsDiv = <div style={{width: '100%', display: state.tab === 'in' ? 'block' : 'none'}}>
     {inReqs.map((req: any) => {
       return <Paper
@@ -215,30 +161,29 @@ export default function Profile (props: { user: User, users: User[], locale: str
       </Paper>
     })}
   </div>
-  const groupChatInput = <Paper
-    className={classes.groupChatPaper}
-  >
+  const groupChatInput = groupChatMembers.length > 0
+    ? <Paper className={classes.groupChatPaper}>
     {groupChatMembers.map((member) => {
       return (
           <Chip
             key={member.id}
             label={member.username}
-            onDelete={(e) => console.log(1)}
+            onDelete={() => setGroupChatMembers((prevState) => prevState.filter(item => item.id !== member.id))}
           />
       );
     })}
+      <AddCircleIcon
+        sx={{alignSelf: 'center', marginLeft: 'auto', cursor: 'pointer'}}
+        onClick={() => onClickCreateGroupChat(groupChatMembers)}
+      />
   </Paper>
-
+    : null;
 
   return (
     <div className={classes.profile}>
       <Header {...props}/>
-      <Box
-        className={classes.userProfileBox}
-      >
-        <div
-          className={classes.avatarWrapper}
-        >
+      <Box className={classes.userProfileBox}>
+        <div className={classes.avatarWrapper}>
           <Avatar
             className={classes.avatar}
             alt="Avatar"
@@ -288,9 +233,11 @@ export default function Profile (props: { user: User, users: User[], locale: str
               {t('outRequests')}
             </Button>
           </ButtonGroup>
-          {friendsDiv}
-          {inReqsDiv}
-          {outReqsDiv}
+          <div style={{ width: 330 }}>
+            {friendsDiv}
+            {inReqsDiv}
+            {outReqsDiv}
+          </div>
         </div>
       </Box>
       <Modal
@@ -309,7 +256,7 @@ export async function getServerSideProps(context: Context) {
   const { locale } = context;
   const { getUserById, getAllUsers, getRequests } = apiServices();
   const responseUser = await getUserById(context.params.id);
-  const { id, email, registration, username, imagePath, friends, friendsRequests, objFriends} = responseUser.data;
+  const { id, email, username, imagePath, friends, friendsRequests, objFriends} = responseUser.data;
   const requests = await getRequests(friendsRequests, id);
   const res = await getAllUsers();
 

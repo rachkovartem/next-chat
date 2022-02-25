@@ -7,7 +7,7 @@ export const useStyles = makeStyles({
     userProfileBox: {
         margin: '50px auto 0',
         display: 'grid',
-        gridTemplateColumns: 'repeat(2, 250px)',
+        gridTemplateColumns: '250px 400px',
         gap: '200px',
     },
     avatarWrapper: {
@@ -57,8 +57,8 @@ export const useStyles = makeStyles({
     },
     groupChatPaper: {
         width: '100%',
-        height: '60px',
         display: 'flex',
+        flexWrap: 'wrap',
         gap: '5px',
         justifyContent: 'flex-start',
         marginBottom: '10px',
