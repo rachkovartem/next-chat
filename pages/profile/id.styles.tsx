@@ -33,12 +33,13 @@ export const useStyles = makeStyles({
         height: '400px'
     },
     buttonsGroup: {
+        width: '100%',
         display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateColumns: 'repeat(4, 1fr)',
         marginBottom: '5px'
     },
     button: {
-        fontSize: '10px'
+        fontSize: '10px',
     },
     userPaper: {
         display: 'flex',

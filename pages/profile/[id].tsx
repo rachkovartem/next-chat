@@ -1,5 +1,5 @@
 import 'react-image-crop/dist/ReactCrop.css';
-import {Avatar, Button, Chip, Modal} from "@mui/material";
+import {Avatar, AvatarGroup, Button, Chip, Modal} from "@mui/material";
 import {useRouter} from "next/router";
 import * as React from 'react';
 import Box from '@mui/material/Box';
@@ -22,6 +22,16 @@ import Header from "../components/header/Header";
 import { Crop } from '../crop/Crop';
 import {useStyles} from "./id.styles";
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import MenuComponent from "../components/friendMenu/FriendMenu";
+
+interface Room {
+  roomId: string;
+  participants: string;
+  groupRoom: boolean;
+  creationDate: string;
+  fullParticipants: User[]
+}
 
 export interface User {
   id: string,
@@ -31,6 +41,7 @@ export interface User {
   friends: string[],
   objFriends: User[],
   friendRequests: string[],
+  fullGroupRooms: Room[]
   password?: string
 }
 
@@ -65,6 +76,8 @@ function reducer(state: {tab: string}, action: string) {
       return {tab: 'out'};
     case 'friends':
       return {tab: 'friends'};
+    case 'groups':
+      return {tab: 'groups'};
     default:
       throw new Error();
   }
@@ -73,7 +86,7 @@ function reducer(state: {tab: string}, action: string) {
 export default function Profile (props: { user: User, users: User[], locale: string, inReqs: InReq[], outReqs: OutReq[] }) {
   const { t } = useTranslation('common');
   const { user, inReqs, outReqs } = props;
-  const { id, username, imagePath, objFriends } = user;
+  const { id, username, imagePath, objFriends, fullGroupRooms } = user;
   const { approveFriendReq, rejectFriendReq, removeFriend, createGroupRoom } = apiServices();
   const [file, setFile] = useState<File | null>(null);
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -111,6 +124,10 @@ export default function Profile (props: { user: User, users: User[], locale: str
     }
   }
 
+  const onClickRoom = async (roomId: string) => {
+      await router.push(`/room/${roomId}`);
+  }
+
   const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, setSnackBarText};
   const friendsDiv = <div style={{width: '100%', display: state.tab === 'friends' ? 'block' : 'none'}}>
     {isBrowser ? objFriends
@@ -118,6 +135,30 @@ export default function Profile (props: { user: User, users: User[], locale: str
       .map((user) => (
         <FriendsListItem key={user.id} user={user} {...friendsListItemProps}/>
       )) : null
+    }
+  </div>
+
+  const groupsDiv = <div style={{width: '100%', display: state.tab === 'groups' ? 'block' : 'none'}}>
+    {isBrowser ? fullGroupRooms
+      .map((room) => (<Paper
+      className={classes.userPaper}
+      key={room.roomId}
+      onClick={() => onClickRoom(room.roomId)}
+      elevation={3}
+      >
+        <AvatarGroup sx={{paddingLeft: '20px'}} max={4} spacing={'small'} total={room.fullParticipants.length}>
+          {room.fullParticipants.map( user => {
+            return (
+              <Avatar
+                key={user.id}
+                sx={{marginLeft: '6px'}}
+                alt="Avatar"
+                src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}
+              />)
+          })}
+        </AvatarGroup>
+        <div style={{marginLeft: '12px'}}>{room.roomId}</div>
+      </Paper> )) : null
     }
   </div>
 
@@ -144,6 +185,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
       </Paper>
     })}
   </div>
+
   const outReqsDiv = <div style={{width: '100%', display: state.tab === 'out' ? 'block' : 'none'}}>
     {outReqs.map((req: any) => {
       return <Paper
@@ -161,6 +203,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
       </Paper>
     })}
   </div>
+
   const groupChatInput = groupChatMembers.length > 0
     ? <Paper className={classes.groupChatPaper}>
     {groupChatMembers.map((member) => {
@@ -174,7 +217,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
     })}
       <AddCircleIcon
         sx={{alignSelf: 'center', marginLeft: 'auto', cursor: 'pointer'}}
-        onClick={() => onClickCreateGroupChat(groupChatMembers)}
+        onClick={() => onClickCreateGroupChat([...groupChatMembers, { username: user.username, id: user.id }])}
       />
   </Paper>
     : null;
@@ -219,6 +262,13 @@ export default function Profile (props: { user: User, users: User[], locale: str
               {t('friends')}
             </Button>
             <Button
+              onClick={() => dispatch('groups')}
+              className={classes.button}
+              key="groups"
+            >
+              {t('groups')}
+            </Button>
+            <Button
                 onClick={() => dispatch('in')}
                 className={classes.button}
                 key="inRequests"
@@ -235,6 +285,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
           </ButtonGroup>
           <div style={{ width: 330 }}>
             {friendsDiv}
+            {groupsDiv}
             {inReqsDiv}
             {outReqsDiv}
           </div>
@@ -256,7 +307,7 @@ export async function getServerSideProps(context: Context) {
   const { locale } = context;
   const { getUserById, getAllUsers, getRequests } = apiServices();
   const responseUser = await getUserById(context.params.id);
-  const { id, email, username, imagePath, friends, friendsRequests, objFriends} = responseUser.data;
+  const { id, email, username, imagePath, friends, friendsRequests, objFriends, fullGroupRooms} = responseUser.data;
   const requests = await getRequests(friendsRequests, id);
   const res = await getAllUsers();
 
@@ -270,7 +321,8 @@ export async function getServerSideProps(context: Context) {
         username: username || null,
         imagePath: imagePath || null,
         friends: friends || [],
-        objFriends: objFriends || []
+        objFriends: objFriends || [],
+        fullGroupRooms: fullGroupRooms || []
       },
       users: res.data || [],
       inReqs: requests.data.inReqs || [],

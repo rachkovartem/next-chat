@@ -29,5 +29,6 @@
   "removeFriend": "Remove from friends",
   "addToGroupChat": "Add to group chat",
   "userAlreadyAdded": "User already added",
-  "threeOrMore": "Group chat should include 3 or more participants"
+  "threeOrMore": "Group chat should include 3 or more participants",
+  "groups": "Groups"
 }

@@ -31,8 +31,6 @@ const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMe
 
   const onClickAddToGroupChat = async (e: any, id: string, username: string) => {
     handleClickMenu(e);
-    console.log(id)
-    console.log(username)
     if (groupChatMembers.some((member: {id: string, username: string}) => member.id === id)) {
       setSnackBarText(t('userAlreadyAdded'))
       return
@@ -50,11 +48,15 @@ const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMe
       transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
     >
-      <MenuItem key={`add-${user.id}`} onClick={(e) => onClickAddToGroupChat(e, user.id, user.username)}>
+      <MenuItem
+        key={`add-${user.id}`}
+        onClick={(e) => onClickAddToGroupChat(e, user.id, user.username)}>
         <GroupAddIcon sx={{marginRight: '10px'}}/>
         {t('addToGroupChat')}
       </MenuItem>
-      <MenuItem key={`remove-${user.id}`} onClick={(e) => onClickRemoveFriend(e, id, user.id)}>
+      <MenuItem
+        key={`remove-${user.id}`}
+        onClick={(e) => onClickRemoveFriend(e, id, user.id)}>
         <PersonRemoveIcon sx={{marginRight: '10px'}}/>
         {t('removeFriend')}
       </MenuItem>

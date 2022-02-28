@@ -36,7 +36,7 @@ const apiServices = () => {
     .catch(error => error)
 
   const getUserById = async (id: string) => {
-    return api.get('/profile', {params: {id},})
+    return api.get('/getUserById', {params: {id},})
       .then(response => response)
       .catch(error => error)
   }
@@ -73,6 +73,12 @@ const apiServices = () => {
 
     const createGroupRoom = async (members: {username: string, id: string}[]) => {
       return api.post('/rooms/createGroupRoom', { members })
+        .then(response => response)
+        .catch(error => error)
+    }
+
+    const getRoomInfo = (id: string) => {
+      return api.post('/rooms/getRoomInfo',{ id })
         .then(response => response)
         .catch(error => error)
     }
@@ -134,7 +140,8 @@ const apiServices = () => {
       rejectFriendReq,
       findUser,
       removeFriend,
-      createGroupRoom
+      createGroupRoom,
+      getRoomInfo
     }
 
 }
