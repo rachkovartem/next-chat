@@ -1,4 +1,4 @@
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useRouter} from "next/router";
 import {Avatar, Button} from "@mui/material";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
@@ -6,9 +6,10 @@ import {useTranslation} from "next-i18next";
 import { ChangeLocal } from "../changeLocal/ChangeLocal";
 import * as React from 'react';
 import {Room} from "../../profile/[id]";
+import {InitialState} from "../../../redux/reducers";
 
 export default function Header(props: {locale: string, room: any | null}) {
-
+  const { user } = useSelector((state: InitialState) => state);
   const { locale, room } = props;
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
@@ -24,11 +25,20 @@ export default function Header(props: {locale: string, room: any | null}) {
   const chatName = room
     ? room.groupRoom
       ? <div>{room.roomId}</div>
-      : <div>{room.participants.map((user: any) => {
-        return (<>
-          <Avatar sx={{marginLeft: '6px'}} alt="Avatar" src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}/>
-          <div style={{marginLeft: '12px'}}>{user.username}</div>
-        </>)
+      : <div>{room.participants.filter((participant: any) => participant.id !== user.id).map((participant: any) => {
+        return (
+          <div
+            key={participant.id}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: '5px',
+            }}
+          >
+            <Avatar sx={{marginLeft: '6px'}} alt="Avatar" src={participant.imagePath ? `http://localhost:8080/${participant.imagePath}` : ''}/>
+            <div style={{marginLeft: '12px'}}>{participant.username}</div>
+          </div>)
       })}</div>
     : null;
 

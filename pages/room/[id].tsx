@@ -4,12 +4,13 @@ import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useTranslation} from "next-i18next";
 import * as React from 'react';
 import {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 
 import Header from "../components/header/Header";
 import {ChatWindow} from "../components/chatWindow/ChatWindow";
+import {InitialState} from "../../redux/reducers";
 
 export default function Room(props: any) {
-
   const { locale, room } = props;
   const { t } = useTranslation('common');
   const router = useRouter();

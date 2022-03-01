@@ -120,7 +120,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
   }
 
   const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, setSnackBarText};
-  const friendsDiv = <div style={{width: '100%', display: profileTab === 'friends' ? 'block' : 'none'}}>
+  const friendsDiv = <div style={{width: '100%', display: profileTab === 'friends' || !profileTab ? 'block' : 'none'}}>
     {isBrowser ? objFriends
       .filter((user) => user.id !== id)
       .map((user) => (

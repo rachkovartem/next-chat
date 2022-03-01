@@ -99,6 +99,7 @@ export const ChatWindow = (props: Room) => {
                   marginLeft: user.id === item.senderId ? 'auto' : '0',
                   maxWidth: '100%',
                   overflowWrap: 'break-word',
+                  wordBreak: 'break-word',
                   position: 'relative',
                   p: '9px',
                   lineHeight: '1',
