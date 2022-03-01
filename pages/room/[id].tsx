@@ -10,7 +10,7 @@ import {ChatWindow} from "../components/chatWindow/ChatWindow";
 
 export default function Room(props: any) {
 
-  const { locale, roomId } = props;
+  const { locale, room } = props;
   const { t } = useTranslation('common');
   const router = useRouter();
   const { check } = apiServices();
@@ -28,7 +28,7 @@ export default function Room(props: any) {
   return (
     <>
       <Header {...props}/>
-      <ChatWindow roomId={roomId}/>
+      <ChatWindow {...room}/>
     </>
   )
 }
@@ -37,13 +37,11 @@ export async function getServerSideProps(context: any) {
   const { getRoomInfo } = apiServices()
   const { id } = context.query;
   const { locale } = context;
-
   const room = await getRoomInfo(id);
-  console.log(room.data)
 
   return {
     props: {
-      roomId: id,
+      room: room.data,
       locale,
       ...(await serverSideTranslations(locale, ['common'])),
     },

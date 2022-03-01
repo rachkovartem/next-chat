@@ -6,14 +6,15 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import {useState} from "react";
+import {useState, useReducer, useEffect} from "react";
 import type { AppContext } from 'next/app';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import {useTranslation} from "next-i18next";
-import {useReducer} from "react";
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import {useDispatch, useSelector} from "react-redux";
+import {setUser, setProfileTab} from "../../redux/actions";
 
 import {FriendsListItem} from "../components/friendsListItem/FriendsListItem";
 import apiServices from "../../services/apiServices";
@@ -22,15 +23,17 @@ import Header from "../components/header/Header";
 import { Crop } from '../crop/Crop';
 import {useStyles} from "./id.styles";
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import MenuComponent from "../components/friendMenu/FriendMenu";
+import {InitialState} from "../../redux/reducers";
 
-interface Room {
+export interface Room {
   roomId: string;
   participants: string;
   groupRoom: boolean;
   creationDate: string;
-  fullParticipants: User[]
+  fullParticipants: User[];
+  avatars: {
+    [key: string]: string
+  }
 }
 
 export interface User {
@@ -66,35 +69,23 @@ interface Context extends AppContext {
   params: { id: string }
 }
 
-const initialState = {tab: 'friends'};
-
-function reducer(state: {tab: string}, action: string) {
-  switch (action) {
-    case 'in':
-      return {tab: 'in'};
-    case 'out':
-      return {tab: 'out'};
-    case 'friends':
-      return {tab: 'friends'};
-    case 'groups':
-      return {tab: 'groups'};
-    default:
-      throw new Error();
-  }
-}
-
 export default function Profile (props: { user: User, users: User[], locale: string, inReqs: InReq[], outReqs: OutReq[] }) {
   const { t } = useTranslation('common');
-  const { user, inReqs, outReqs } = props;
+  const { user, inReqs, outReqs, locale } = props;
   const { id, username, imagePath, objFriends, fullGroupRooms } = user;
   const { approveFriendReq, rejectFriendReq, removeFriend, createGroupRoom } = apiServices();
   const [file, setFile] = useState<File | null>(null);
-  const [state, dispatch] = useReducer(reducer, initialState);
   const [snackBarText, setSnackBarText] = useState(null);
   const classes = useStyles();
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([])
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
+  const { profileTab } = useSelector((state: InitialState)  => state);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setUser(user));
+  }, [user])
 
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
@@ -129,7 +120,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
   }
 
   const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, setSnackBarText};
-  const friendsDiv = <div style={{width: '100%', display: state.tab === 'friends' ? 'block' : 'none'}}>
+  const friendsDiv = <div style={{width: '100%', display: profileTab === 'friends' ? 'block' : 'none'}}>
     {isBrowser ? objFriends
       .filter((user) => user.id !== id)
       .map((user) => (
@@ -138,7 +129,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
     }
   </div>
 
-  const groupsDiv = <div style={{width: '100%', display: state.tab === 'groups' ? 'block' : 'none'}}>
+  const groupsDiv = <div style={{width: '100%', display: profileTab === 'groups' ? 'block' : 'none'}}>
     {isBrowser ? fullGroupRooms
       .map((room) => (<Paper
       className={classes.userPaper}
@@ -162,7 +153,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
     }
   </div>
 
-  const inReqsDiv = <div style={{width: '100%', display: state.tab === 'in' ? 'block' : 'none'}}>
+  const inReqsDiv = <div style={{width: '100%', display: profileTab === 'in' ? 'block' : 'none'}}>
     {inReqs.map((req: any) => {
       return <Paper
         className={classes.userPaperNoCursor}
@@ -186,7 +177,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
     })}
   </div>
 
-  const outReqsDiv = <div style={{width: '100%', display: state.tab === 'out' ? 'block' : 'none'}}>
+  const outReqsDiv = <div style={{width: '100%', display: profileTab === 'out' ? 'block' : 'none'}}>
     {outReqs.map((req: any) => {
       return <Paper
         className={classes.userPaperNoCursor}
@@ -224,7 +215,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
 
   return (
     <div className={classes.profile}>
-      <Header {...props}/>
+      <Header locale={locale} room={null}/>
       <Box className={classes.userProfileBox}>
         <div className={classes.avatarWrapper}>
           <Avatar
@@ -255,28 +246,28 @@ export default function Profile (props: { user: User, users: User[], locale: str
               aria-label="small button group"
           >
             <Button
-                onClick={() => dispatch('friends')}
+                onClick={() => dispatch(setProfileTab('friends'))}
                 className={classes.button}
                 key="friends"
             >
               {t('friends')}
             </Button>
             <Button
-              onClick={() => dispatch('groups')}
+              onClick={() => dispatch(setProfileTab('groups'))}
               className={classes.button}
               key="groups"
             >
               {t('groups')}
             </Button>
             <Button
-                onClick={() => dispatch('in')}
+                onClick={() => dispatch(setProfileTab('in'))}
                 className={classes.button}
                 key="inRequests"
             >
               {t('inRequests')}
             </Button>
             <Button
-                onClick={() => dispatch('out')}
+                onClick={() => dispatch(setProfileTab('out'))}
                 className={classes.button}
                 key="outRequests"
             >

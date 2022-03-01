@@ -1,15 +1,18 @@
 import Paper from "@mui/material/Paper";
-import {Button, TextField} from "@mui/material";
 import Box from "@mui/material/Box";
 import * as React from "react";
-import {useEffect, useState} from "react";
-import {useChat} from "../../../hooks/useChat";
+import {useEffect} from "react";
 import {useTranslation} from "next-i18next";
 import Stack from '@mui/material/Stack';
-import {ChatInput} from "../chatInput/ChatInput";
-import {useRef} from "react";
 
-export const ChatWindow = ({ roomId }: { roomId: string }) => {
+import {useChat} from "../../../hooks/useChat";
+import {ChatInput} from "../chatInput/ChatInput";
+import {Room} from "../../profile/[id]";
+import {Avatar} from "@mui/material";
+
+export const ChatWindow = (props: Room) => {
+  const {roomId, groupRoom, participants, avatars} = props;
+  console.log(props)
   const { user, messages, getMessages, connectToRoom } = useChat();
   const { t } = useTranslation('common');
 
@@ -76,31 +79,49 @@ export const ChatWindow = ({ roomId }: { roomId: string }) => {
       >
         {
           messages.map(item =>
-            <Paper
-              sx={{
-                position: 'relative',
-                p: '9px',
-                lineHeight: '1',
-                alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit',
-                backgroundColor: user.id === item.senderId ? '#fff' : '#d5d5d5',
+            <div
+              style={{
+                display: 'flex',
+                width: '100%',
+                alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit'}}
+              key={item.messageId}>
+              <Avatar
+                sx={{
+                  marginRight: '5px',
+                  display: user.id === item.senderId || !groupRoom ? 'none' : 'initial',
+                  alignSelf: 'end',
               }}
-              elevation={2}
-              key={item.messageId}
-            >
-              {item.message}
-              <p style={{
-                margin: 0,
-                paddingRight: '3px',
-                fontSize: '9px',
-                color: '#9b9b9b',
-                position: 'absolute',
-                bottom: 0,
-                right: 0
-              }}
+                alt="Avatar"
+                src={avatars[item.senderId] ? `http://localhost:8080/${avatars[item.senderId]}` : ''}
+              />
+              <Paper
+                sx={{
+                  marginLeft: user.id === item.senderId ? 'auto' : '0',
+                  maxWidth: '100%',
+                  overflowWrap: 'break-word',
+                  position: 'relative',
+                  p: '9px',
+                  lineHeight: '1',
+                  borderRadius: '10px',
+                  backgroundColor: user.id === item.senderId ? '#fff' : '#d5d5d5',
+                }}
+                elevation={2}
               >
-                { getTime(item.sendingDate) }
-              </p>
-            </Paper>)
+                {item.message}
+                <p style={{
+                  margin: 0,
+                  paddingRight: '3px',
+                  fontSize: '9px',
+                  color: '#9b9b9b',
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0
+                }}
+                >
+                  { getTime(item.sendingDate) }
+                </p>
+              </Paper>
+            </div>)
         }
       </Stack>
     </Paper>

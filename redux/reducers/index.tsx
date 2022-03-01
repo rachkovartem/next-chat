@@ -1,19 +1,38 @@
+import {User} from "../../pages/profile/[id]";
+
 interface InitialState {
-    user: any
+    user: User,
+    profileTab: string
 }
 
 const initialState : InitialState = {
-   user: null
+   user: {
+       id: '',
+       email: '',
+       username: '',
+       imagePath: '',
+       friends: [],
+       objFriends: [],
+       friendRequests: [],
+       fullGroupRooms: [],
+       password: ''
+   },
+   profileTab: 'friends'
 }
 
 const reducer = (state = initialState, action: { type: string, payload: any }) => {
     switch (action.type) {
-        case 'SET_LOGIN_SERVER_ERROR':
+        case 'SET_USER':
             return {
                 ...state,
-                loginServerError: action.payload
+                user: action.payload
             }
         default: return state
+        case 'SET_PROFILE_TAB':
+            return {
+                ...state,
+                profileTab: action.payload
+            }
     }
 }
 
