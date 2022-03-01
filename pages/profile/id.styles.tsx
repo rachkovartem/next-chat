@@ -13,12 +13,17 @@ export const useStyles = makeStyles({
     avatarWrapper: {
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        '& .avatarProfile': {
+            marginLeft: '6px',
+            width: '100px',
+            height: '100px',
+        }
     },
-    avatar: {
+    avatarProfile: {
         marginLeft: '6px',
-        width: 100,
-        height: 100
+        width: '100px',
+        height: '100px',
     },
     username: {
         margin: '20px 0 0 0'
@@ -34,12 +39,12 @@ export const useStyles = makeStyles({
     },
     buttonsGroup: {
         width: '100%',
-        display: 'grid',
+        display: 'grid!important',
         gridTemplateColumns: 'repeat(4, 1fr)',
-        marginBottom: '5px'
+        marginBottom: '5px',
     },
     button: {
-        fontSize: '10px',
+        fontSize: '10px!important',
     },
     userPaper: {
         display: 'flex',

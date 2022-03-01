@@ -11,3 +11,24 @@ export const setProfileTab = (value: string) => {
         payload: value
     }
 }
+
+export const setUserObjFriends = (value: any) => {
+    return {
+        type: 'SET_USER_OBJFRIENDS',
+        payload: value
+    }
+}
+
+export const setUserInReqs = (value: any) => {
+    return {
+        type: 'SET_USER_INREQS',
+        payload: value
+    }
+}
+
+export const setUserOutReqs = (value: any) => {
+    return {
+        type: 'SET_USER_OUTREQS',
+        payload: value
+    }
+}

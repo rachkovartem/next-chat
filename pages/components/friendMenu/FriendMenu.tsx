@@ -6,10 +6,12 @@ import apiServices from "../../../services/apiServices";
 import {useTranslation} from "next-i18next";
 import {t} from "i18next";
 import {string} from "prop-types";
+import {setUserObjFriends} from "../../../redux/actions";
+import {useDispatch} from "react-redux";
 
 // @ts-ignore
 const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMembers, setSnackBarText, setMenuAnchorEl}) => {
-
+  const dispatch = useDispatch();
   const open = Boolean(menuAnchorEl);
   const { removeFriend } = apiServices();
   const { t } = useTranslation('common');
@@ -23,10 +25,19 @@ const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMe
 
   const onClickRemoveFriend = async (e: any, idUser: string, idFriend: string) => {
     handleClickMenu(e);
-    console.log(idFriend)
     const res = await removeFriend(idUser, idFriend);
-    console.log(res.data)
-    window.location.reload()
+    if ('data' in res && 'objFriends' in res.data) {
+      setSnackBarText(t(res.data.text));
+      console.log(res.data.objFriends)
+      dispatch(setUserObjFriends(res.data.objFriends));
+    }
+    if ('data' in res && typeof res.data.text === 'string') {
+      setSnackBarText(t(res.data.text))
+    }
+    if ('data' in res && typeof res.data === 'string') {
+      setSnackBarText(t(res.data))
+      return
+    }
   }
 
   const onClickAddToGroupChat = async (e: any, id: string, username: string) => {

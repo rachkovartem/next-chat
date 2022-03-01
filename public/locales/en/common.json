@@ -30,5 +30,7 @@
   "addToGroupChat": "Add to group chat",
   "userAlreadyAdded": "User already added",
   "threeOrMore": "Group chat should include 3 or more participants",
-  "groups": "Groups"
+  "groups": "Groups",
+  "reqSended": "The request has been sent",
+  "friendDeleted": "Successfully deleted"
 }

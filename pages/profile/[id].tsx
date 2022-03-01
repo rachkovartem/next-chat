@@ -14,16 +14,29 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {useDispatch, useSelector} from "react-redux";
-import {setUser, setProfileTab} from "../../redux/actions";
 
+import {setUser, setProfileTab, setUserInReqs, setUserOutReqs} from "../../redux/actions";
 import {FriendsListItem} from "../components/friendsListItem/FriendsListItem";
 import apiServices from "../../services/apiServices";
 import {SnackBar} from "../components/snackBar/SnackBar";
 import Header from "../components/header/Header";
-import { Crop } from '../crop/Crop';
+import { Crop } from '../components/crop/Crop';
 import {useStyles} from "./id.styles";
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
 import {InitialState} from "../../redux/reducers";
+import {setUserObjFriends} from "../../redux/actions";
+
+export interface User {
+  id: string,
+  email: string,
+  username: string,
+  imagePath: string,
+  friends: string[],
+  objFriends: User[],
+  friendRequests: string[],
+  fullGroupRooms: Room[],
+  password?: string
+}
 
 export interface Room {
   roomId: string;
@@ -36,43 +49,14 @@ export interface Room {
   }
 }
 
-export interface User {
-  id: string,
-  email: string,
-  username: string,
-  imagePath: string,
-  friends: string[],
-  objFriends: User[],
-  friendRequests: string[],
-  fullGroupRooms: Room[]
-  password?: string
-}
-
-interface InReq {
-  id: string,
-  userSenderId: string,
-  userRecipientId: string,
-  userRecipientStatus: boolean,
-  sender: User,
-}
-
-interface OutReq {
-  id: string,
-  userSenderId: string,
-  userRecipientId: string,
-  userRecipientStatus: boolean,
-  recipient: User,
-}
-
 interface Context extends AppContext {
   locale: string,
   params: { id: string }
 }
 
-export default function Profile (props: { user: User, users: User[], locale: string, inReqs: InReq[], outReqs: OutReq[] }) {
+export default function Profile (props: {locale: string, id: string}) {
+  const {locale, id} = props;
   const { t } = useTranslation('common');
-  const { user, inReqs, outReqs, locale } = props;
-  const { id, username, imagePath, objFriends, fullGroupRooms } = user;
   const { approveFriendReq, rejectFriendReq, removeFriend, createGroupRoom } = apiServices();
   const [file, setFile] = useState<File | null>(null);
   const [snackBarText, setSnackBarText] = useState(null);
@@ -80,12 +64,29 @@ export default function Profile (props: { user: User, users: User[], locale: str
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([])
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
-  const { profileTab } = useSelector((state: InitialState)  => state);
+  const { profileTab, user } = useSelector((state: InitialState)  => state);
+  const { email, username, imagePath, friends, friendRequests, objFriends, fullGroupRooms, inReqs, outReqs } = user;
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  const { getUserById, getRequests } = apiServices();
+
+  const onLoadingPage = async () => {
+    const responseUser = await getUserById(id);
+    const { friendsRequests } = responseUser.data;
+    const requests = await getRequests(friendsRequests, id);
+    const user = {
+        ...responseUser.data,
+        inReqs: requests.data.inReqs,
+        outReqs: requests.data.outReqs,
+    }
     dispatch(setUser(user));
-  }, [user])
+  }
+
+  useEffect(() => {
+    onLoadingPage()
+  }, [])
+
+
 
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
@@ -93,14 +94,19 @@ export default function Profile (props: { user: User, users: User[], locale: str
 
   const onClickApproveReq = async (idUser: string, idFriend: string, idReq: string) => {
     const res = await approveFriendReq(idUser, idFriend, idReq);
-    console.log(res.data)
-    window.location.reload()
+    if (typeof res.data === 'string') {
+      setSnackBarText(t(res.data))
+      return
+    }
+    dispatch(setUserObjFriends(res.data.objFriends));
+    dispatch(setUserInReqs(res.data.inReqs));
+    dispatch(setProfileTab('friends'));
   }
 
   const onClickRejectReq = async (idUser: string, idFriend: string, idReq: string) => {
     const res = await rejectFriendReq(idUser, idFriend, idReq);
-    console.log(res.data)
-    window.location.reload()
+    dispatch(setUserInReqs(res.data.inReqs));
+    dispatch(setUserOutReqs(res.data.outReqs));
   }
 
   const onClickCreateGroupChat = async (members: {username: string, id: string}[]) => {
@@ -138,7 +144,9 @@ export default function Profile (props: { user: User, users: User[], locale: str
       elevation={3}
       >
         <AvatarGroup sx={{paddingLeft: '20px'}} max={4} spacing={'small'} total={room.fullParticipants.length}>
-          {room.fullParticipants.map( user => {
+          {room.fullParticipants
+            .sort((a,b) => (a.id === user.id ? 0 : 1))
+            .map( user => {
             return (
               <Avatar
                 key={user.id}
@@ -219,7 +227,7 @@ export default function Profile (props: { user: User, users: User[], locale: str
       <Box className={classes.userProfileBox}>
         <div className={classes.avatarWrapper}>
           <Avatar
-            className={classes.avatar}
+            className='avatarProfile'
             alt="Avatar"
             src={imagePath ? `http://localhost:8080/${imagePath}` : ''}
           />
@@ -295,29 +303,13 @@ export default function Profile (props: { user: User, users: User[], locale: str
 }
 
 export async function getServerSideProps(context: Context) {
-  const { locale } = context;
-  const { getUserById, getAllUsers, getRequests } = apiServices();
-  const responseUser = await getUserById(context.params.id);
-  const { id, email, username, imagePath, friends, friendsRequests, objFriends, fullGroupRooms} = responseUser.data;
-  const requests = await getRequests(friendsRequests, id);
-  const res = await getAllUsers();
+  const { locale, params } = context;
 
   return {
     props: {
       locale,
       ...(await serverSideTranslations(locale, ['common'])),
-      user: {
-        id: id || null,
-        email: email || null,
-        username: username || null,
-        imagePath: imagePath || null,
-        friends: friends || [],
-        objFriends: objFriends || [],
-        fullGroupRooms: fullGroupRooms || []
-      },
-      users: res.data || [],
-      inReqs: requests.data.inReqs || [],
-      outReqs: requests.data.outReqs || [],
+      id: params.id
     },
 
   }

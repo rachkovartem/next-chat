@@ -1,7 +1,7 @@
 import ReactCrop from "react-image-crop";
 import * as React from "react";
 import {forwardRef, useEffect, useRef, useState} from "react";
-import apiServices from "../../services/apiServices";
+import apiServices from "../../../services/apiServices";
 import SaveIcon from '@mui/icons-material/Save';
 import {Button} from "@mui/material";
 

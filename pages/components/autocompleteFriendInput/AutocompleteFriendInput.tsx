@@ -3,15 +3,18 @@ import Autocomplete from "@mui/material/Autocomplete";
 import * as React from "react";
 import {useEffect, useState} from "react";
 import {useTranslation} from "next-i18next";
-import ApiServices from "../../../services/apiServices";
-import {User} from '../../profile/[id]'
 import {Avatar} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Paper from "@mui/material/Paper";
+import {useDispatch} from "react-redux";
+
+import ApiServices from "../../../services/apiServices";
 import {useStyles} from "../../profile/id.styles";
 import apiServices from "../../../services/apiServices";
+import {setUserOutReqs} from "../../../redux/actions";
 
 export const AutocompleteFriendInput = ({setSnackBarText, id}: {setSnackBarText: Function, id: string}) => {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const { t } = useTranslation('common');
   const { findUser } = ApiServices();
@@ -47,15 +50,19 @@ export const AutocompleteFriendInput = ({setSnackBarText, id}: {setSnackBarText:
   const onClickAddFriend = async (e: any, idUser: string, idFriend: string) => {
     e.stopPropagation()
     const res = await friendRequest(idUser, idFriend);
-    if ('data' in res && typeof res.data === "string") {
+    if ('data' in res && typeof res.data === 'string') {
       setSnackBarText(t(res.data))
+      return
+    }
+    if ('data' in res && 'outReqs' in res.data) {
+      dispatch(setUserOutReqs(res.data.outReqs));
+      setSnackBarText(t(res.data.text));
       return
     }
     if(!('data' in res)) {
       setSnackBarText(t('smthWrong'))
       return
     }
-    window.location.reload()
   }
 
   return (<Autocomplete

@@ -75,7 +75,7 @@ export const ChatWindow = (props: Room) => {
         direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
-        spacing={0.5}
+        spacing={1}
       >
         {
           messages.map(item =>
@@ -83,6 +83,7 @@ export const ChatWindow = (props: Room) => {
               style={{
                 display: 'flex',
                 width: '100%',
+                minWidth: '34px',
                 alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit'}}
               key={item.messageId}>
               <Avatar
@@ -98,6 +99,7 @@ export const ChatWindow = (props: Room) => {
                 sx={{
                   marginLeft: user.id === item.senderId ? 'auto' : '0',
                   maxWidth: '100%',
+                  minWidth: '34px',
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
                   position: 'relative',
@@ -110,7 +112,7 @@ export const ChatWindow = (props: Room) => {
               >
                 {item.message}
                 <p style={{
-                  margin: 0,
+                  margin: '0 3px 0 0',
                   paddingRight: '3px',
                   fontSize: '9px',
                   color: '#9b9b9b',
