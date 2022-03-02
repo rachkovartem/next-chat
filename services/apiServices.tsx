@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {appendFile} from "fs";
+const Compress = require('compress.js');
 
 const apiServices = () => {
   const url = 'http://localhost:8080';
@@ -71,8 +71,8 @@ const apiServices = () => {
         .catch(error => error)
     }
 
-    const createGroupRoom = async (members: {username: string, id: string}[]) => {
-      return api.post('/rooms/createGroupRoom', { members })
+    const createGroupRoom = async (members: {username: string, id: string}[], idUser: string) => {
+      return api.post('/rooms/createGroupRoom', { members, idUser })
         .then(response => response)
         .catch(error => error)
     }

@@ -2,19 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pages/components/ellipseText/EllipseText.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/components/groupsTab/GroupsTab.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/components/tooltip/Tooltip.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/crop/Crop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/crop/Crop.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/friendMenu/FriendMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendMenu/FriendMenu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/header/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/crop/Crop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/crop/Crop.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/login/Login.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/profile/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/profile/id.styles.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/id.styles.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/locales/en/common.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/locales/en/common.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/locales/ru/common.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/locales/ru/common.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/actions/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/actions/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/reducers/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/apiServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/apiServices.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +50,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../nest-chat-server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -103,6 +105,7 @@
       <workItem from="1645772391270" duration="26023000" />
       <workItem from="1646031735757" duration="13490000" />
       <workItem from="1646116733857" duration="11672000" />
+      <workItem from="1646204430122" duration="13631000" />
     </task>
     <servers />
   </component>

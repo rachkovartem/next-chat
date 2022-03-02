@@ -14,6 +14,7 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {useDispatch, useSelector} from "react-redux";
+import LinesEllipsis from 'react-lines-ellipsis';
 
 import {setUser, setProfileTab, setUserInReqs, setUserOutReqs} from "../../redux/actions";
 import {FriendsListItem} from "../components/friendsListItem/FriendsListItem";
@@ -25,6 +26,7 @@ import {useStyles} from "./id.styles";
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
 import {InitialState} from "../../redux/reducers";
 import {setUserObjFriends} from "../../redux/actions";
+import {GroupsTab} from "../components/groupsTab/GroupsTab";
 
 export interface User {
   id: string,
@@ -86,8 +88,6 @@ export default function Profile (props: {locale: string, id: string}) {
     onLoadingPage()
   }, [])
 
-
-
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
   }
@@ -109,13 +109,13 @@ export default function Profile (props: {locale: string, id: string}) {
     dispatch(setUserOutReqs(res.data.outReqs));
   }
 
-  const onClickCreateGroupChat = async (members: {username: string, id: string}[]) => {
-    const res = await createGroupRoom(members);
+  const onClickCreateGroupChat = async (members: {username: string, id: string}[], idUser: string) => {
+    const res = await createGroupRoom(members, idUser);
     if ('data' in res && typeof res.data === 'string') {
       setSnackBarText(t(res.data))
       return
     } else if ('data' in res) {
-      await router.push(`/room/${res.data.roomId}`);
+      await router.push(`/room/${res.data.roomRes.roomId}`);
     } else {
       console.log('err')
     }
@@ -126,7 +126,7 @@ export default function Profile (props: {locale: string, id: string}) {
   }
 
   const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, setSnackBarText};
-  const friendsDiv = <div style={{width: '100%', display: profileTab === 'friends' || !profileTab ? 'block' : 'none'}}>
+  const friendsDiv = <div style={{width: '100%'}}>
     {isBrowser ? objFriends
       .filter((user) => user.id !== id)
       .map((user) => (
@@ -135,33 +135,7 @@ export default function Profile (props: {locale: string, id: string}) {
     }
   </div>
 
-  const groupsDiv = <div style={{width: '100%', display: profileTab === 'groups' ? 'block' : 'none'}}>
-    {isBrowser ? fullGroupRooms
-      .map((room) => (<Paper
-      className={classes.userPaper}
-      key={room.roomId}
-      onClick={() => onClickRoom(room.roomId)}
-      elevation={3}
-      >
-        <AvatarGroup sx={{paddingLeft: '20px'}} max={4} spacing={'small'} total={room.fullParticipants.length}>
-          {room.fullParticipants
-            .sort((a,b) => (a.id === user.id ? 0 : 1))
-            .map( user => {
-            return (
-              <Avatar
-                key={user.id}
-                sx={{marginLeft: '6px'}}
-                alt="Avatar"
-                src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}
-              />)
-          })}
-        </AvatarGroup>
-        <div style={{marginLeft: '12px'}}>{room.roomId}</div>
-      </Paper> )) : null
-    }
-  </div>
-
-  const inReqsDiv = <div style={{width: '100%', display: profileTab === 'in' ? 'block' : 'none'}}>
+  const inReqsDiv = <div style={{width: '100%'}}>
     {inReqs.map((req: any) => {
       return <Paper
         className={classes.userPaperNoCursor}
@@ -185,7 +159,7 @@ export default function Profile (props: {locale: string, id: string}) {
     })}
   </div>
 
-  const outReqsDiv = <div style={{width: '100%', display: profileTab === 'out' ? 'block' : 'none'}}>
+  const outReqsDiv = <div style={{width: '100%'}}>
     {outReqs.map((req: any) => {
       return <Paper
         className={classes.userPaperNoCursor}
@@ -216,7 +190,9 @@ export default function Profile (props: {locale: string, id: string}) {
     })}
       <AddCircleIcon
         sx={{alignSelf: 'center', marginLeft: 'auto', cursor: 'pointer'}}
-        onClick={() => onClickCreateGroupChat([...groupChatMembers, { username: user.username, id: user.id }])}
+        onClick={() => onClickCreateGroupChat(
+          [...groupChatMembers, { username: user.username, id: user.id }],
+          user.id)}
       />
   </Paper>
     : null;
@@ -283,10 +259,10 @@ export default function Profile (props: {locale: string, id: string}) {
             </Button>
           </ButtonGroup>
           <div style={{ width: 330 }}>
-            {friendsDiv}
-            {groupsDiv}
-            {inReqsDiv}
-            {outReqsDiv}
+            {profileTab === 'friends' ? friendsDiv : null}
+            {profileTab === 'groups' ? <GroupsTab onClickRoom={onClickRoom}/> : null}
+            {profileTab === 'in' ? inReqsDiv : null}
+            {profileTab === 'out' ? outReqsDiv : null}
           </div>
         </div>
       </Box>

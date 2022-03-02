@@ -32,5 +32,6 @@
   "threeOrMore": "Group chat should include 3 or more participants",
   "groups": "Groups",
   "reqSended": "The request has been sent",
-  "friendDeleted": "Successfully deleted"
+  "friendDeleted": "Successfully deleted",
+  "groupAlreadyExists": "The group already exist"
 }

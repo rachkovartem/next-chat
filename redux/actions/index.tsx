@@ -32,3 +32,10 @@ export const setUserOutReqs = (value: any) => {
         payload: value
     }
 }
+
+export const setUserImagePath = (value: string) => {
+    return {
+        type: 'SET_USER_IMAGE_PATH',
+        payload: value
+    }
+}

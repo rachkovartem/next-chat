@@ -32,11 +32,11 @@ interface User {
 
 interface InitialState {
     user: User,
-    profileTab: string
+    profileTab: string,
 }
 
 const initialState : InitialState = {
-   user: {
+    user: {
        id: '',
        email: '',
        username: '',
@@ -49,7 +49,7 @@ const initialState : InitialState = {
        outReqs: [],
        password: ''
    },
-   profileTab: 'friends'
+   profileTab: 'friends',
 }
 
 const reducer = (state = initialState, action: { type: string, payload: any }) => {
@@ -86,6 +86,14 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                 user: {
                     ...state.user,
                     outReqs: action.payload,
+                }
+            }
+        case 'SET_USER_IMAGE_PATH':
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    imagePath: action.payload,
                 }
             }
         default: return state

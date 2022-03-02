@@ -4,6 +4,8 @@ import {forwardRef, useEffect, useRef, useState} from "react";
 import apiServices from "../../../services/apiServices";
 import SaveIcon from '@mui/icons-material/Save';
 import {Button} from "@mui/material";
+import {useDispatch} from "react-redux";
+import {setUserImagePath} from "../../../redux/actions";
 
 interface imgBlob extends Blob {
   lastModifiedDate?: Date,
@@ -12,6 +14,7 @@ interface imgBlob extends Blob {
 
 // eslint-disable-next-line react/display-name
 export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id: string, setFile: Function }, ref) => {
+  const dispatch = useDispatch();
   const { uploadImage } = apiServices();
   const [crop, setCrop] = useState<any>({
     unit: '%',
@@ -117,9 +120,9 @@ export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id
 
   const onClickSave = async (id: string) => {
     if (blob) {
-      await uploadImage(blobToFile(blob, 'image.png'), id);
+      const res = await uploadImage(blobToFile(blob, 'image.png'), id);
+      dispatch(setUserImagePath(res.data.path));
       setFile(null);
-      window.location.reload()
     }
   }
 

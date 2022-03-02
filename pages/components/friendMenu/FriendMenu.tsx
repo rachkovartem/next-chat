@@ -4,8 +4,6 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import apiServices from "../../../services/apiServices";
 import {useTranslation} from "next-i18next";
-import {t} from "i18next";
-import {string} from "prop-types";
 import {setUserObjFriends} from "../../../redux/actions";
 import {useDispatch} from "react-redux";
 
