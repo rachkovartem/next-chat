@@ -69,5 +69,5 @@ export const useStyles = makeStyles({
         justifyContent: 'flex-start',
         marginBottom: '10px',
         padding: '5px'
-    }
+    },
 });

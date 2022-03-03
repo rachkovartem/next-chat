@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import {useState, useReducer, useEffect} from "react";
+import {useState, useEffect, useRef, ReactElement} from "react";
 import type { AppContext } from 'next/app';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import {useTranslation} from "next-i18next";
@@ -14,7 +14,7 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {useDispatch, useSelector} from "react-redux";
-import LinesEllipsis from 'react-lines-ellipsis';
+import {SnackbarProvider, useSnackbar} from 'notistack';
 
 import {setUser, setProfileTab, setUserInReqs, setUserOutReqs} from "../../redux/actions";
 import {FriendsListItem} from "../components/friendsListItem/FriendsListItem";
@@ -27,6 +27,7 @@ import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/Aut
 import {InitialState} from "../../redux/reducers";
 import {setUserObjFriends} from "../../redux/actions";
 import {GroupsTab} from "../components/groupsTab/GroupsTab";
+import {ServerMessage, useChat} from "../../hooks/useChat";
 
 export interface User {
   id: string,
@@ -59,20 +60,24 @@ interface Context extends AppContext {
 export default function Profile (props: {locale: string, id: string}) {
   const {locale, id} = props;
   const { t } = useTranslation('common');
-  const { approveFriendReq, rejectFriendReq, removeFriend, createGroupRoom } = apiServices();
+  const { approveFriendReq, rejectFriendReq, createGroupRoom } = apiServices();
   const [file, setFile] = useState<File | null>(null);
-  const [snackBarText, setSnackBarText] = useState(null);
   const classes = useStyles();
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([])
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
   const { profileTab, user } = useSelector((state: InitialState)  => state);
-  const { email, username, imagePath, friends, friendRequests, objFriends, fullGroupRooms, inReqs, outReqs } = user;
+  const { username, imagePath, objFriends, inReqs, outReqs } = user;
   const dispatch = useDispatch();
-
-  const { getUserById, getRequests } = apiServices();
-
+  const inputRef = useRef(null);
+  const { getUserById, getRequests, getAllRoomsIds } = apiServices();
+  const { notification, connectToRoom } = useChat();
+  const { enqueueSnackbar } = useSnackbar();
   const onLoadingPage = async () => {
+    const rooms = await getAllRoomsIds(id);
+    if ('data' in rooms) {
+      await Promise.all(rooms.data.map((roomId: string) => connectToRoom(roomId)))
+    }
     const responseUser = await getUserById(id);
     const { friendsRequests } = responseUser.data;
     const requests = await getRequests(friendsRequests, id);
@@ -88,6 +93,15 @@ export default function Profile (props: {locale: string, id: string}) {
     onLoadingPage()
   }, [])
 
+  useEffect(() => {
+    if (notification) {
+      enqueueSnackbar(<div>
+        <div>{notification?.senderUsername}</div>
+        <div>{notification?.message}</div>
+      </div>);
+    }
+  }, [notification])
+
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
   }
@@ -95,7 +109,7 @@ export default function Profile (props: {locale: string, id: string}) {
   const onClickApproveReq = async (idUser: string, idFriend: string, idReq: string) => {
     const res = await approveFriendReq(idUser, idFriend, idReq);
     if (typeof res.data === 'string') {
-      setSnackBarText(t(res.data))
+      enqueueSnackbar(t(res.data))
       return
     }
     dispatch(setUserObjFriends(res.data.objFriends));
@@ -112,7 +126,7 @@ export default function Profile (props: {locale: string, id: string}) {
   const onClickCreateGroupChat = async (members: {username: string, id: string}[], idUser: string) => {
     const res = await createGroupRoom(members, idUser);
     if ('data' in res && typeof res.data === 'string') {
-      setSnackBarText(t(res.data))
+      enqueueSnackbar(t(res.data))
       return
     } else if ('data' in res) {
       await router.push(`/room/${res.data.roomRes.roomId}`);
@@ -125,9 +139,10 @@ export default function Profile (props: {locale: string, id: string}) {
       await router.push(`/room/${roomId}`);
   }
 
-  const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, setSnackBarText};
+  const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, enqueueSnackbar};
   const friendsDiv = <div style={{width: '100%'}}>
-    {isBrowser ? objFriends
+    {
+      isBrowser ? objFriends
       .filter((user) => user.id !== id)
       .map((user) => (
         <FriendsListItem key={user.id} user={user} {...friendsListItemProps}/>
@@ -215,6 +230,7 @@ export default function Profile (props: {locale: string, id: string}) {
           >
             <AddAPhotoIcon />
             <input
+              ref={inputRef}
               type="file"
               onChange={onChangeFile}
               hidden
@@ -222,7 +238,7 @@ export default function Profile (props: {locale: string, id: string}) {
           </Button>
         </div>
         <div className={classes.friendsWrapper}>
-          <AutocompleteFriendInput setSnackBarText={setSnackBarText} id={id}/>
+          <AutocompleteFriendInput enqueueSnackbar={enqueueSnackbar} id={id}/>
           {groupChatInput}
           <ButtonGroup
               className={classes.buttonsGroup}
@@ -271,9 +287,8 @@ export default function Profile (props: {locale: string, id: string}) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Crop image={file} id={id} setFile={setFile}/>
+        <Crop image={file} id={id} setFile={setFile} inputRef={inputRef}/>
       </Modal>
-      <SnackBar text={snackBarText} setText={setSnackBarText} />
     </div>
   )
 }

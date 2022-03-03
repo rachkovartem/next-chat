@@ -1,11 +1,12 @@
 import ReactCrop from "react-image-crop";
 import * as React from "react";
-import {forwardRef, useEffect, useRef, useState} from "react";
+import {forwardRef, Ref, useEffect, useState} from "react";
 import apiServices from "../../../services/apiServices";
 import SaveIcon from '@mui/icons-material/Save';
 import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {setUserImagePath} from "../../../redux/actions";
+import Resizer from "react-image-file-resizer";
 
 interface imgBlob extends Blob {
   lastModifiedDate?: Date,
@@ -13,7 +14,19 @@ interface imgBlob extends Blob {
 }
 
 // eslint-disable-next-line react/display-name
-export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id: string, setFile: Function }, ref) => {
+export const Crop = forwardRef(
+  (
+    {
+      image,
+      id,
+      setFile,
+      inputRef
+    }: {
+      image: File | null,
+      id: string,
+      setFile: Function ,
+      inputRef: Ref<any>
+    }, ref) => {
   const dispatch = useDispatch();
   const { uploadImage } = apiServices();
   const [crop, setCrop] = useState<any>({
@@ -66,7 +79,6 @@ export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id
   }
 
   const getCroppedImg = (image: any, crop: any, fileName: string) => {
-    console.log(image)
     const canvas = document.createElement('canvas');
     const pixelRatio = window.devicePixelRatio;
     const scaleX = image.naturalWidth / image.width;
@@ -103,7 +115,6 @@ export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id
           blob.name = fileName;
           setBlob(blob);
           const fileUrl = window.URL.createObjectURL(blob);
-          console.log(fileUrl)
           resolve(fileUrl);
         },
         'image/jpeg',
@@ -112,17 +123,38 @@ export const Crop = forwardRef(({ image, id, setFile }: { image: File | null, id
     });
   }
 
-  function blobToFile(theBlob: imgBlob, fileName: string){
+  const resizeFile = (file: any): Promise<File> =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        200,
+        200,
+        "JPEG",
+        80,
+        0,
+        (uri) => {
+          // @ts-ignore
+          resolve(uri);
+        },
+        "file"
+      );
+    });
+
+  const blobToFile = async (theBlob: imgBlob, fileName: string) => {
     theBlob.lastModifiedDate = new Date();
     theBlob.name = fileName;
-    return theBlob;
+    return await resizeFile(theBlob);
   }
 
   const onClickSave = async (id: string) => {
     if (blob) {
-      const res = await uploadImage(blobToFile(blob, 'image.png'), id);
+      const file = await blobToFile(blob, 'image.png');
+      const res = await uploadImage(file, id);
       dispatch(setUserImagePath(res.data.path));
       setFile(null);
+      if (inputRef !== null && typeof inputRef === 'object') {
+        inputRef.current.value = '';
+      }
     }
   }
 

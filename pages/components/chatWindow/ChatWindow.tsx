@@ -12,7 +12,6 @@ import {Avatar} from "@mui/material";
 
 export const ChatWindow = (props: Room) => {
   const {roomId, groupRoom, participants, avatars} = props;
-  console.log(props)
   const { user, messages, getMessages, connectToRoom } = useChat();
   const { t } = useTranslation('common');
 
@@ -20,7 +19,6 @@ export const ChatWindow = (props: Room) => {
     await connectToRoom(roomId);
     await getMessages(roomId);
   }
-
   useEffect(() => {
     onLoading()
   }, [])
@@ -85,7 +83,8 @@ export const ChatWindow = (props: Room) => {
                 width: '100%',
                 minWidth: '34px',
                 alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit'}}
-              key={item.messageId}>
+              key={item.messageId}
+            >
               <Avatar
                 sx={{
                   marginRight: '5px',

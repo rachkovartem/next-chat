@@ -87,7 +87,6 @@ const Login = ({locale} : {locale: string}) => {
               return
             }
             const res = await register(email, password, username);
-            console.log(res)
             if (res.status === 'successfully') {
                 await onClickLogin();
                 setEmail('');

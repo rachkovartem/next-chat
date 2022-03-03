@@ -13,7 +13,7 @@ import {useStyles} from "../../profile/id.styles";
 import apiServices from "../../../services/apiServices";
 import {setUserOutReqs} from "../../../redux/actions";
 
-export const AutocompleteFriendInput = ({setSnackBarText, id}: {setSnackBarText: Function, id: string}) => {
+export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar: Function, id: string}) => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const { t } = useTranslation('common');
@@ -51,16 +51,16 @@ export const AutocompleteFriendInput = ({setSnackBarText, id}: {setSnackBarText:
     e.stopPropagation()
     const res = await friendRequest(idUser, idFriend);
     if ('data' in res && typeof res.data === 'string') {
-      setSnackBarText(t(res.data))
+      enqueueSnackbar(t(res.data), {variant: 'warning'});
       return
     }
     if ('data' in res && 'outReqs' in res.data) {
       dispatch(setUserOutReqs(res.data.outReqs));
-      setSnackBarText(t(res.data.text));
+      enqueueSnackbar(t(res.data.text), {variant: 'warning'});
       return
     }
     if(!('data' in res)) {
-      setSnackBarText(t('smthWrong'))
+      enqueueSnackbar(t('smthWrong'), {variant: 'warning'})
       return
     }
   }

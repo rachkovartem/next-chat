@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app';
 import { Provider } from 'react-redux';
 import store from "../redux/store/store";
 import { appWithTranslation } from 'next-i18next';
+import {SnackbarProvider} from "notistack";
 
 function SafeHydrate({ children }: any) {
   return (
@@ -14,11 +15,14 @@ function SafeHydrate({ children }: any) {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider store={store}>
-      <SafeHydrate>
-        <Component {...pageProps} />
-      </SafeHydrate>
-    </Provider>)
+    <SnackbarProvider maxSnack={3}>
+      <Provider store={store}>
+        <SafeHydrate>
+          <Component {...pageProps} />
+        </SafeHydrate>
+      </Provider>
+    </SnackbarProvider>
+      )
 }
 
 export default appWithTranslation(MyApp);

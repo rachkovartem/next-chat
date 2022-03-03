@@ -20,7 +20,6 @@ export const ChatInput = ({roomId}: { roomId: string }) => {
   }
 
   const onClickEnter = (e: any) => {
-    console.log(e)
     if (userMessage.length === 0) return
     if (e.key === 'Enter') {
       sendMessage(roomId, userMessage);

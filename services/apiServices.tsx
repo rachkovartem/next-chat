@@ -1,5 +1,5 @@
 import axios from 'axios';
-const Compress = require('compress.js');
+import Resizer from "react-image-file-resizer";
 
 const apiServices = () => {
   const url = 'http://localhost:8080';
@@ -83,6 +83,12 @@ const apiServices = () => {
         .catch(error => error)
     }
 
+    const getAllRoomsIds = (idUser: string) => {
+      return api.post('/rooms/getAllRoomsIds',{ idUser })
+        .then(response => response)
+        .catch(error => error)
+  }
+
     const uploadImage = async (file: any, id: string) => {
       let data = new FormData();
       data.append('file', file);
@@ -104,7 +110,7 @@ const apiServices = () => {
             .catch(error => error)
     }
 
-  const rejectFriendReq = async (idUser: string, idFriend: string, idReq: string) => {
+    const rejectFriendReq = async (idUser: string, idFriend: string, idReq: string) => {
     return api.post('/rejectFriendReq', { idUser, idFriend, idReq })
       .then(response => response)
       .catch(error => error)
@@ -141,9 +147,9 @@ const apiServices = () => {
       findUser,
       removeFriend,
       createGroupRoom,
-      getRoomInfo
+      getRoomInfo,
+      getAllRoomsIds
     }
-
 }
 
 export default apiServices;

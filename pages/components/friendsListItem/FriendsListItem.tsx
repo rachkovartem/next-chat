@@ -16,13 +16,13 @@ export const FriendsListItem = (
     id,
     groupChatMembers,
     setGroupChatMembers,
-    setSnackBarText
+    enqueueSnackbar
   } : {
     user: User,
     id: string,
     groupChatMembers: {username: string, id: string}[],
     setGroupChatMembers: Function,
-    setSnackBarText: Function
+    enqueueSnackbar: Function
   }) => {
   const router = useRouter();
   const { createRoom } = apiServices();
@@ -41,7 +41,7 @@ export const FriendsListItem = (
     }
   }
 
-  const menuProps = {user, id, menuAnchorEl, setMenuAnchorEl, groupChatMembers, setGroupChatMembers, setSnackBarText}
+  const menuProps = {user, id, menuAnchorEl, setMenuAnchorEl, groupChatMembers, setGroupChatMembers, enqueueSnackbar}
 
   return <Paper
     className={classes.userPaper}

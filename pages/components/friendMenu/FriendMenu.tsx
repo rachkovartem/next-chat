@@ -8,7 +8,7 @@ import {setUserObjFriends} from "../../../redux/actions";
 import {useDispatch} from "react-redux";
 
 // @ts-ignore
-const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMembers, setSnackBarText, setMenuAnchorEl}) => {
+const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMembers, enqueueSnackbar, setMenuAnchorEl}) => {
   const dispatch = useDispatch();
   const open = Boolean(menuAnchorEl);
   const { removeFriend } = apiServices();
@@ -25,15 +25,14 @@ const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMe
     handleClickMenu(e);
     const res = await removeFriend(idUser, idFriend);
     if ('data' in res && 'objFriends' in res.data) {
-      setSnackBarText(t(res.data.text));
-      console.log(res.data.objFriends)
+      enqueueSnackbar(t(res.data.text), {variant: 'warning'});
       dispatch(setUserObjFriends(res.data.objFriends));
     }
     if ('data' in res && typeof res.data.text === 'string') {
-      setSnackBarText(t(res.data.text))
+      enqueueSnackbar(t(res.data.text), {variant: 'warning'})
     }
     if ('data' in res && typeof res.data === 'string') {
-      setSnackBarText(t(res.data))
+      enqueueSnackbar(t(res.data), {variant: 'warning'})
       return
     }
   }
@@ -41,7 +40,7 @@ const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMe
   const onClickAddToGroupChat = async (e: any, id: string, username: string) => {
     handleClickMenu(e);
     if (groupChatMembers.some((member: {id: string, username: string}) => member.id === id)) {
-      setSnackBarText(t('userAlreadyAdded'))
+      enqueueSnackbar(t('userAlreadyAdded'), {variant: 'warning'})
       return
     }
     setGroupChatMembers((prevState: {id: string, username: string}[]) => [...prevState, {id, username}])
