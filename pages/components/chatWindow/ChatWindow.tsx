@@ -9,6 +9,7 @@ import {useChat} from "../../../hooks/useChat";
 import {ChatInput} from "../chatInput/ChatInput";
 import {Room} from "../../profile/[id]";
 import {Avatar} from "@mui/material";
+import Header from "../header/Header";
 
 export const ChatWindow = (props: Room) => {
   const {roomId, groupRoom, participants, avatars} = props;
@@ -40,6 +41,7 @@ export const ChatWindow = (props: Room) => {
       alignItems: 'center'
     }}
   >
+    <Header room={props}/>
     <Paper
       sx={
         {

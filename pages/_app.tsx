@@ -14,11 +14,12 @@ function SafeHydrate({ children }: any) {
 }
 
 function MyApp({ Component, pageProps }: AppProps) {
+
   return (
     <SnackbarProvider maxSnack={3}>
       <Provider store={store}>
         <SafeHydrate>
-          <Component {...pageProps} />
+            <Component {...pageProps} />
         </SafeHydrate>
       </Provider>
     </SnackbarProvider>

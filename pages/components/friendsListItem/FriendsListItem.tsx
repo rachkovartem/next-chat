@@ -1,5 +1,5 @@
 import Paper from "@mui/material/Paper";
-import {Avatar} from "@mui/material";
+import {Avatar, Badge} from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MenuComponent from "../friendMenu/FriendMenu";
 import * as React from "react";
@@ -9,6 +9,7 @@ import {useRouter} from "next/router";
 import {t} from "i18next";
 import apiServices from "../../../services/apiServices";
 import {User} from "../../profile/[id]";
+import {useChat} from "../../../hooks/useChat";
 
 export const FriendsListItem = (
   {
@@ -24,6 +25,7 @@ export const FriendsListItem = (
     setGroupChatMembers: Function,
     enqueueSnackbar: Function
   }) => {
+  const {usersOnline} = useChat();
   const router = useRouter();
   const { createRoom } = apiServices();
   const classes = useStyles();
@@ -42,14 +44,28 @@ export const FriendsListItem = (
   }
 
   const menuProps = {user, id, menuAnchorEl, setMenuAnchorEl, groupChatMembers, setGroupChatMembers, enqueueSnackbar}
-
+  const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
   return <Paper
     className={classes.userPaper}
     key={user.id}
     elevation={3}
     onClick={() => onClickUser(id, user.id)}
   >
-    <Avatar sx={{marginLeft: '6px'}} alt="Avatar" src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}/>
+      <Badge
+        sx={{
+          marginLeft: '6px',
+          '& .MuiBadge-colorSecondary': {
+            backgroundColor: '#b2b2b2',
+          }
+        }}
+        anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'left',
+        }}
+        color={isOnline(user.id) ? "success" : "secondary"}
+        variant="dot">
+        <Avatar alt="Avatar" src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}/>
+      </Badge>
     <div style={{marginLeft: '12px'}}>{user.username}</div>
     <KeyboardArrowDownIcon
       sx={{marginLeft: 'auto', marginRight: '10px', width: '18px', cursor: 'pointer'}}

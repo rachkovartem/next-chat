@@ -1,6 +1,6 @@
 import {Room} from "../../pages/profile/[id]";
 
-interface InReq {
+export interface InReq {
     id: string,
     userSenderId: string,
     userRecipientId: string,
@@ -8,7 +8,7 @@ interface InReq {
     sender: User,
 }
 
-interface OutReq {
+export interface OutReq {
     id: string,
     userSenderId: string,
     userRecipientId: string,

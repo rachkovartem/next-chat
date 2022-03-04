@@ -28,6 +28,10 @@ import {InitialState} from "../../redux/reducers";
 import {setUserObjFriends} from "../../redux/actions";
 import {GroupsTab} from "../components/groupsTab/GroupsTab";
 import {ServerMessage, useChat} from "../../hooks/useChat";
+import {FriendsTab} from '../components/friendsTab/FriendsTab';
+import {InReqsTab} from "../components/inReqsTab/InReqsTab";
+import {OutReqsTab} from "../components/outReqsTab/OutReqsTab";
+import {SideBar} from "../components/sideBar/sideBar";
 
 export interface User {
   id: string,
@@ -96,25 +100,37 @@ export default function Profile (props: {locale: string, id: string}) {
   useEffect(() => {
     if (notification) {
       enqueueSnackbar(<div>
-        <div>{notification?.senderUsername}</div>
-        <div>{notification?.message}</div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '10px',
+          }}>
+          <Avatar
+            alt="Avatar"
+            src={notification ? `http://localhost:8080/${notification.senderAvatar}` : ''}
+          />
+          <div
+            style={{
+              maxWidth: '288px',
+              marginLeft: '10px',
+              fontWeight: 'bold',
+            }}
+          >
+        </div>
+          {notification?.senderUsername}
+        </div>
+        <div
+          style={{maxWidth: '288px'}}
+        >
+          {notification?.message}
+        </div>
       </div>);
     }
   }, [notification])
 
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
-  }
-
-  const onClickApproveReq = async (idUser: string, idFriend: string, idReq: string) => {
-    const res = await approveFriendReq(idUser, idFriend, idReq);
-    if (typeof res.data === 'string') {
-      enqueueSnackbar(t(res.data))
-      return
-    }
-    dispatch(setUserObjFriends(res.data.objFriends));
-    dispatch(setUserInReqs(res.data.inReqs));
-    dispatch(setProfileTab('friends'));
   }
 
   const onClickRejectReq = async (idUser: string, idFriend: string, idReq: string) => {
@@ -139,58 +155,7 @@ export default function Profile (props: {locale: string, id: string}) {
       await router.push(`/room/${roomId}`);
   }
 
-  const friendsListItemProps = {id, groupChatMembers, setGroupChatMembers, enqueueSnackbar};
-  const friendsDiv = <div style={{width: '100%'}}>
-    {
-      isBrowser ? objFriends
-      .filter((user) => user.id !== id)
-      .map((user) => (
-        <FriendsListItem key={user.id} user={user} {...friendsListItemProps}/>
-      )) : null
-    }
-  </div>
-
-  const inReqsDiv = <div style={{width: '100%'}}>
-    {inReqs.map((req: any) => {
-      return <Paper
-        className={classes.userPaperNoCursor}
-        key={req.id}
-        elevation={3}
-      >
-        <Avatar
-            sx={{marginLeft: '6px'}}
-            alt="Avatar"
-            src={req.sender.imagePath ? `http://localhost:8080/${req.sender.imagePath}` : ''}/>
-        <div style={{marginLeft: '12px'}}>{req.sender.username}</div>
-        <AddCircleRoundedIcon
-            sx={{marginLeft: 'auto', width: '18px', cursor: 'pointer'}}
-            onClick={() => onClickApproveReq(id, req.userSenderId, req.id)}
-        />
-        <RemoveCircleOutlineRoundedIcon
-            sx={{marginLeft: '5px', marginRight: '10px', width: '18px', cursor: 'pointer'}}
-            onClick={() => onClickRejectReq(id, req.userSenderId, req.id)}
-        />
-      </Paper>
-    })}
-  </div>
-
-  const outReqsDiv = <div style={{width: '100%'}}>
-    {outReqs.map((req: any) => {
-      return <Paper
-        className={classes.userPaperNoCursor}
-        key={req.id}
-        elevation={3}
-      >
-        <Avatar sx={{marginLeft: '6px'}} alt="Avatar"
-                src={req.recipient.imagePath ? `http://localhost:8080/${req.recipient.imagePath}` : ''}/>
-        <div style={{marginLeft: '12px'}}>{req.recipient.username}</div>
-        <RemoveCircleOutlineRoundedIcon
-            sx={{marginLeft: 'auto', marginRight: '10px', width: '18px', cursor: 'pointer'}}
-            onClick={() => onClickRejectReq(id, req.userRecipientId, req.id)}
-        />
-      </Paper>
-    })}
-  </div>
+  const friendsTabProps = {isBrowser, objFriends, id, groupChatMembers, setGroupChatMembers, enqueueSnackbar};
 
   const groupChatInput = groupChatMembers.length > 0
     ? <Paper className={classes.groupChatPaper}>
@@ -213,82 +178,84 @@ export default function Profile (props: {locale: string, id: string}) {
     : null;
 
   return (
-    <div className={classes.profile}>
-      <Header locale={locale} room={null}/>
-      <Box className={classes.userProfileBox}>
-        <div className={classes.avatarWrapper}>
-          <Avatar
-            className='avatarProfile'
-            alt="Avatar"
-            src={imagePath ? `http://localhost:8080/${imagePath}` : ''}
-          />
-          <p className={classes.username}>{username}</p>
-          <Button
-            className={classes.avatarButton}
-            variant="contained"
-            component="label"
-          >
-            <AddAPhotoIcon />
-            <input
-              ref={inputRef}
-              type="file"
-              onChange={onChangeFile}
-              hidden
+    <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
+      <SideBar locale={locale}/>
+      <div className={classes.profile}>
+        <Box className={classes.userProfileBox}>
+          <div className={classes.avatarWrapper}>
+            <Avatar
+              className='avatarProfile'
+              alt="Avatar"
+              src={imagePath ? `http://localhost:8080/${imagePath}` : ''}
             />
-          </Button>
-        </div>
-        <div className={classes.friendsWrapper}>
-          <AutocompleteFriendInput enqueueSnackbar={enqueueSnackbar} id={id}/>
-          {groupChatInput}
-          <ButtonGroup
+            <p className={classes.username}>{username}</p>
+            <Button
+              className={classes.avatarButton}
+              variant="contained"
+              component="label"
+            >
+              <AddAPhotoIcon />
+              <input
+                ref={inputRef}
+                type="file"
+                onChange={onChangeFile}
+                hidden
+              />
+            </Button>
+          </div>
+          <div className={classes.friendsWrapper}>
+            <AutocompleteFriendInput enqueueSnackbar={enqueueSnackbar} id={id}/>
+            {groupChatInput}
+            <ButtonGroup
               className={classes.buttonsGroup}
               size="medium"
               aria-label="small button group"
-          >
-            <Button
+            >
+              <Button
                 onClick={() => dispatch(setProfileTab('friends'))}
                 className={classes.button}
                 key="friends"
-            >
-              {t('friends')}
-            </Button>
-            <Button
-              onClick={() => dispatch(setProfileTab('groups'))}
-              className={classes.button}
-              key="groups"
-            >
-              {t('groups')}
-            </Button>
-            <Button
+              >
+                {t('friends')}
+              </Button>
+              <Button
+                onClick={() => dispatch(setProfileTab('groups'))}
+                className={classes.button}
+                key="groups"
+              >
+                {t('groups')}
+              </Button>
+              <Button
                 onClick={() => dispatch(setProfileTab('in'))}
                 className={classes.button}
                 key="inRequests"
-            >
-              {t('inRequests')}
-            </Button>
-            <Button
+              >
+                {t('inRequests')}
+              </Button>
+              <Button
                 onClick={() => dispatch(setProfileTab('out'))}
                 className={classes.button}
                 key="outRequests"
-            >
-              {t('outRequests')}
-            </Button>
-          </ButtonGroup>
-          <div style={{ width: 330 }}>
-            {profileTab === 'friends' ? friendsDiv : null}
-            {profileTab === 'groups' ? <GroupsTab onClickRoom={onClickRoom}/> : null}
-            {profileTab === 'in' ? inReqsDiv : null}
-            {profileTab === 'out' ? outReqsDiv : null}
+              >
+                {t('outRequests')}
+              </Button>
+            </ButtonGroup>
+            <div style={{ width: 330 }}>
+              {profileTab === 'friends' ? <FriendsTab {...friendsTabProps} /> : null}
+              {profileTab === 'groups' ? <GroupsTab onClickRoom={onClickRoom} /> : null}
+              {profileTab === 'in' ? <InReqsTab enqueueSnackbar={enqueueSnackbar} inReqs={inReqs} id={id} onClickRejectReq={onClickRejectReq}/> : null}
+              {profileTab === 'out' ? <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} /> : null}
+            </div>
           </div>
-        </div>
-      </Box>
-      <Modal
-        open={Boolean(file)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Crop image={file} id={id} setFile={setFile} inputRef={inputRef}/>
-      </Modal>
+        </Box>
+        <Modal
+          open={Boolean(file)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Crop image={file} id={id} setFile={setFile} inputRef={inputRef}/>
+        </Modal>
+      </div>
     </div>
   )
 }
@@ -302,6 +269,5 @@ export async function getServerSideProps(context: Context) {
       ...(await serverSideTranslations(locale, ['common'])),
       id: params.id
     },
-
   }
 }

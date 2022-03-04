@@ -2,22 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pages/components/friendsTab/FriendsTab.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/components/inReqsTab/InReqsTab.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/components/outReqsTab/OutReqsTab.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/components/sideBar/sideBar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/friends/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/useChat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useChat.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/crop/Crop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/crop/Crop.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/friendMenu/FriendMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendMenu/FriendMenu.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/login/Login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/snackBar/SnackBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/snackBar/SnackBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/header/Header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/profile/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/profile/id.styles.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/id.styles.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/apiServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/apiServices.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/room/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/room/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redux/reducers/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/globals.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +50,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../next-to-do-app" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../nest-chat-server" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -68,6 +67,7 @@
       <recent name="$PROJECT_DIR$/../to-do-server/src/authModule/guards" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pages/components/sideBar" />
       <recent name="$PROJECT_DIR$/pages/components" />
       <recent name="$PROJECT_DIR$/public" />
       <recent name="$PROJECT_DIR$/pages" />
@@ -107,7 +107,8 @@
       <workItem from="1646031735757" duration="13490000" />
       <workItem from="1646116733857" duration="11672000" />
       <workItem from="1646204430122" duration="13857000" />
-      <workItem from="1646289695673" duration="29927000" />
+      <workItem from="1646289695673" duration="30033000" />
+      <workItem from="1646375210976" duration="30733000" />
     </task>
     <servers />
   </component>

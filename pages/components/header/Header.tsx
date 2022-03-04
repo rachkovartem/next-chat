@@ -1,26 +1,11 @@
-import {useDispatch, useSelector} from "react-redux";
-import {useRouter} from "next/router";
 import {Avatar, AvatarGroup, Button} from "@mui/material";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
-import {useTranslation} from "next-i18next";
-import { ChangeLocal } from "../changeLocal/ChangeLocal";
 import * as React from 'react';
-import {Room} from "../../profile/[id]";
-import {InitialState} from "../../../redux/reducers";
 
-export default function Header(props: {locale: string, room: any | null}) {
-  const { user } = useSelector((state: InitialState) => state);
-  const { locale, room } = props;
-  const { t } = useTranslation('common');
-  const dispatch = useDispatch();
-  const router = useRouter();
+import {useChat} from '../../../hooks/useChat';
 
-  const onClickLogout = async () => {
-    await router.push(`/`);
-    localStorage.clear();
-    document.cookie = 'access_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = 'refresh_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  }
+export default function Header(props: { room: any | null}) {
+  const {user} = useChat()
+  const { room } = props;
 
   const avatar = (participant: {id: string, imagePath: string}) =>
     <Avatar
@@ -30,7 +15,7 @@ export default function Header(props: {locale: string, room: any | null}) {
       src={participant.imagePath ? `http://localhost:8080/${participant.imagePath}` : ''}
     />
 
-  const chatName = room
+  const chatName = room && user.id
     ? room.groupRoom
       ? <div style={{
         display: 'flex',
@@ -64,29 +49,5 @@ export default function Header(props: {locale: string, room: any | null}) {
       })}</div>
     : null;
 
-  return (
-      <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr 1fr'}}>
-        <ChangeLocal locale={locale} />
-          <div>{chatName}</div>
-        <div style={{display: 'flex', justifyContent: 'end', marginTop: '10px'}}>
-          <Button
-            sx={{
-              marginRight: '20px',
-              background: '#a8edea',
-              color: '#3b3b3b'
-            }}
-            onClick={() => router.push(`/profile/${localStorage.getItem('id')}`)}
-            variant="contained"
-          >{t('profile')}
-          </Button>
-          <Button
-            sx={{marginRight: '20px',
-              background: '#a8edea',
-              color: '#3b3b3b'}}
-            onClick={onClickLogout}
-            variant="contained"
-          >{t('logout')}</Button>
-        </div>
-      </div>
-  )
+  return chatName
 }

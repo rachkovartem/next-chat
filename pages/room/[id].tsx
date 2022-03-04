@@ -8,7 +8,7 @@ import {useSelector} from "react-redux";
 
 import Header from "../components/header/Header";
 import {ChatWindow} from "../components/chatWindow/ChatWindow";
-import {InitialState} from "../../redux/reducers";
+import {SideBar} from "../components/sideBar/sideBar";
 
 export default function Room(props: any) {
   const { locale, room } = props;
@@ -27,10 +27,12 @@ export default function Room(props: any) {
   }, [])
 
   return (
-    <>
-      <Header {...props}/>
-      <ChatWindow {...room}/>
-    </>
+    <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
+      <SideBar locale={locale}/>
+      <div>
+        <ChatWindow {...room}/>
+      </div>
+    </div>
   )
 }
 
