@@ -17,8 +17,8 @@
   "userAlreadyExist": "User already exist or email is incorrect, username is empty!",
   "send": "Send",
   "friends": "Friends",
-  "inRequests": "InRequests",
-  "outRequests": "OutRequests",
+  "inRequests": "Incoming requests",
+  "outRequests": "Outgoing requests",
   "userAlreadySend": "This user already sent request to you",
   "requestExist": "This request already sent",
   "autocompleteLabel": "Username or email...",
@@ -33,5 +33,6 @@
   "groups": "Groups",
   "reqSended": "The request has been sent",
   "friendDeleted": "Successfully deleted",
-  "groupAlreadyExists": "The group already exist"
+  "groupAlreadyExists": "The group already exist",
+  "recents": "Recents"
 }

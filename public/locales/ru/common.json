@@ -33,5 +33,6 @@
   "groups": "Группы",
   "reqSended": "Запрос отправлен",
   "friendDeleted": "Успешно удалено",
-  "groupAlreadyExists": "Группа уже существует"
+  "groupAlreadyExists": "Группа уже существует",
+  "recents": "Недавние"
 }

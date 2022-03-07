@@ -32,10 +32,17 @@ export const useStyles = makeStyles({
         marginTop: '10px'
     },
     friendsWrapper: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: '400px'
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, 1fr)',
+        gridTemplateAreas: `
+            'groups friends recents'
+            'groups friends inreqs'
+            'groups friends outreqs'
+        `,
+        gap: '10px',
+        margin: '10px',
+        maxHeight: '100vh',
+        flexWrap: 'wrap',
     },
     buttonsGroup: {
         width: '100%',

@@ -15,7 +15,7 @@ export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
   const { user } = useSelector((state: InitialState)  => state);
   const { fullGroupRooms } = user;
 
-  return <div style={{width: '100%'}}>
+  return <div>
     {isBrowser ? fullGroupRooms
       .map((room) => {
         const text = room.fullParticipants
@@ -54,7 +54,7 @@ export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
               fontSize: '12px'
             }}
             >
-              <EllipseText text={text}/>
+              <EllipseText text={text} maxLine={2}/>
             </div>
           </Paper>)
         }/>)

@@ -7,6 +7,9 @@ import {Avatar} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Paper from "@mui/material/Paper";
 import {useDispatch} from "react-redux";
+import InputBase from '@mui/material/InputBase';
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 
 import ApiServices from "../../../services/apiServices";
 import {useStyles} from "../../profile/id.styles";
@@ -69,7 +72,7 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
     size='small'
     id='friendNameInput'
     options={options}
-    sx={{width: '100%', marginBottom: '10px' }}
+    sx={{p: '2px 4px', display: 'flex', alignItems: 'center'}}
     noOptionsText={initialSearch ? t('write') : t('notFound')}
     getOptionLabel={(option) => [option.username, option.email].toString()}
     renderOption={(props, option) => {
@@ -88,13 +91,15 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
       </Paper>)
     }}
     renderInput={(params) =>
-      <TextField
-        {...params}
-        label={t('autocompleteLabel')}
-        value={text}
-        onBlur={() => setInitialSearch(true)}
-        onChange={onChange}
-      />
+      <>
+        <TextField
+          {...params}
+          label={t('autocompleteLabel')}
+          value={text}
+          onBlur={() => setInitialSearch(true)}
+          onChange={onChange}
+        />
+      </>
       }
   />)
 }

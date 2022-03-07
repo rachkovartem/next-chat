@@ -1,10 +1,10 @@
 import LinesEllipsis from "react-lines-ellipsis";
 
 
-export const EllipseText = ({text}: {text: string}) => {
+export const EllipseText = ({text, maxLine}: {text: string, maxLine: number}) => {
     return  <LinesEllipsis
       text={text}
-      maxLine='2'
+      maxLine={maxLine.toString()}
       ellipsis='...'
       component='div'
       basedOn='letters'

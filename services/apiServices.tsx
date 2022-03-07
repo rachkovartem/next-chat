@@ -53,6 +53,12 @@ const apiServices = () => {
       .catch(error => error)
   }
 
+  const getLastMessages = async (roomsIds: string[], friendsIds: string[], userId: string) => {
+    return api.post('/rooms/getLastMessages', {roomsIds, friendsIds, userId})
+      .then(response => response)
+      .catch(error => error)
+  }
+
     const getAllUsers = async () => {
       return api.get('/allUsers')
         .then(response => response)
@@ -148,7 +154,8 @@ const apiServices = () => {
       removeFriend,
       createGroupRoom,
       getRoomInfo,
-      getAllRoomsIds
+      getAllRoomsIds,
+      getLastMessages
     }
 }
 

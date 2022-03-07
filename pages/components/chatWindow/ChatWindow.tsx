@@ -33,6 +33,7 @@ export const ChatWindow = (props: Room) => {
 
   return <Box
     sx={{
+      borderLeft: '1px solid #e8e8e8',
       width: '100%',
       height: '100%',
       display: 'flex',
@@ -49,8 +50,8 @@ export const ChatWindow = (props: Room) => {
           marginBottom: 0,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
-          width: '50vw',
-          height: '50vh',
+          width: '100%',
+          height: '100%',
           display: 'flex',
           flexDirection: 'column-reverse',
           overflowY: 'scroll',
@@ -69,7 +70,7 @@ export const ChatWindow = (props: Room) => {
           },
         }
       }
-      elevation={3}
+      elevation={0}
     >
       <Stack
         direction="column"
