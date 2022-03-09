@@ -19,11 +19,12 @@ export const SideBar = ({locale}: {locale: string}) => {
   const router = useRouter();
   const { pathname, asPath, query } = router;
   const routerOptionLocale = locale === 'ru' ? 'en' : 'ru';
-  const {user} = useChat()
+  const {disconnect} = useChat()
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
 
   const onClickLogout = async () => {
+    await disconnect();
     await router.push(`/`);
     localStorage.clear();
     document.cookie = 'access_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";

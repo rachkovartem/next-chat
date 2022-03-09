@@ -16,6 +16,11 @@ export interface OutReq {
     recipient: User,
 }
 
+export interface FriendRoom extends User {
+    roomId: string,
+    groupRoom: boolean,
+  }
+
 interface User {
     id: string,
     email: string,
@@ -28,6 +33,8 @@ interface User {
     fullGroupRooms: Room[],
     inReqs: InReq[],
     outReqs: OutReq[],
+    friendsRoomsIds: {[key: string]: string},
+    fullRooms: FriendRoom[] & Room [],
     password?: string
 }
 
@@ -47,8 +54,10 @@ const initialState : InitialState = {
        objFriends: [],
        friendRequests: [],
        fullGroupRooms: [],
+       friendsRoomsIds: {},
        inReqs: [],
        outReqs: [],
+       fullRooms:[],
        password: ''
    },
    profileTab: 'friends',

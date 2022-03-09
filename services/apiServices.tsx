@@ -53,8 +53,8 @@ const apiServices = () => {
       .catch(error => error)
   }
 
-  const getLastMessages = async (roomsIds: string[], friendsIds: string[], userId: string) => {
-    return api.post('/rooms/getLastMessages', {roomsIds, friendsIds, userId})
+  const getLastMessages = async (userId: string) => {
+    return api.post('/rooms/getLastMessages', {userId})
       .then(response => response)
       .catch(error => error)
   }

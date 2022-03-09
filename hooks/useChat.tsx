@@ -1,5 +1,7 @@
 import {io} from "socket.io-client";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {Message} from "../pages/profile/[id]";
+import apiServices from "../services/apiServices";
 const debounce = require('lodash.debounce');
 
 export interface ServerMessage {
@@ -19,7 +21,9 @@ export const useChat = () => {
         [usersOnline, setUsersOnline] = useState<string[]>([]),
         [messages, setMessages] = useState<ServerMessage[]>([]),
         [notification, setNotification] = useState<ServerMessage | null>(null),
+        [lastMessages, setLastMessages] = useState<{[roomId: string]: Message}>({}),
         socketRef = useRef<any>(null),
+        { getLastMessages } = apiServices(),
         isServer = typeof window === "undefined"
   let id: string | null,
       username: string | null
@@ -28,9 +32,26 @@ export const useChat = () => {
     username = localStorage.getItem('username');
   }
 
-  const debouncedWentOfflineListener = () => debounce((wentOfflineId: string) => {
-    setUsersOnline((friendsOnline) => [...friendsOnline.splice(friendsOnline.indexOf(wentOfflineId), 1)]);
-  }, 2000)
+  const loadLastMessages = async () => {
+    if (!user.id) return
+    const messages = await getLastMessages(user.id)
+    setLastMessages(messages.data)
+  }
+
+  const dbSetUsersOnline = debounce(setUsersOnline, 0)
+
+  const wentOfflineListener = (wentOfflineId: string) => {
+    setUsersOnline((friendsOnline) => {
+      const index = friendsOnline.indexOf(wentOfflineId)
+      const newArr = [...friendsOnline]
+      newArr.splice(index, 1);
+      return newArr
+    });
+  }
+
+  useEffect(() => {
+    loadLastMessages();
+  }, [user])
 
   useEffect(() => {
     setUser({ id, username });
@@ -42,17 +63,20 @@ export const useChat = () => {
     });
 
     socketRef.current.on('friends:online', (friendsOnline: string[]) => {
-      setUsersOnline(friendsOnline);
+      dbSetUsersOnline(friendsOnline);
     });
 
-    socketRef.current.on('friends:wentOffline', debouncedWentOfflineListener);
+    socketRef.current.on('friends:wentOffline', wentOfflineListener);
 
     socketRef.current.on('friends:wentOnline', (wentOnlineId: string) => {
-      setUsersOnline((friendsOnline) => [...friendsOnline.concat(wentOnlineId)]);
+      dbSetUsersOnline((friendsOnline: string[]) => {
+        if (friendsOnline.includes(wentOnlineId)) return friendsOnline
+        return [...friendsOnline.concat(wentOnlineId)]
+      });
     });
 
     socketRef.current.on('system:connected', (serverMessages: any) => {
-      console.log(serverMessages);
+      // console.log(serverMessages);
     });
 
     socketRef.current.on('messages:get', (serverMessages: any) => {
@@ -60,8 +84,14 @@ export const useChat = () => {
     });
 
     socketRef.current.on('messages:add', (serverMessage: ServerMessage[]) => {
-      setNotification(serverMessage[0])
-      setMessages(prev => [...prev, ...serverMessage])
+      setMessages(prev => [...prev, ...serverMessage]);
+      setNotification(serverMessage[0]);
+      setLastMessages((prevState => {
+        const roomId = serverMessage[0].roomId;
+        const newState = {...prevState};
+        newState[roomId] = serverMessage[0];
+        return newState
+      }))
     });
 
     socketRef.current.on('system', (serverMessage: any) => {
@@ -70,6 +100,10 @@ export const useChat = () => {
 
     return () => socketRef.current.disconnect()
   }, [])
+
+  const disconnect = async () => {
+    await socketRef.current.disconnect()
+  }
 
   const connectToRoom = async ( roomId: string ) => {
     await socketRef.current.emit('system:connect', { id, roomId });
@@ -83,5 +117,5 @@ export const useChat = () => {
     socketRef.current.emit('messages:add', {roomId, message, ...user});
   }
 
-  return { user, usersOnline, messages, notification, sendMessage, getMessages, connectToRoom }
+  return { user, usersOnline, messages, notification, lastMessages, sendMessage, getMessages, connectToRoom, disconnect }
 }

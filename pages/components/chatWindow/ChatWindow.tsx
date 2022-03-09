@@ -35,7 +35,7 @@ export const ChatWindow = (props: Room) => {
     sx={{
       borderLeft: '1px solid #e8e8e8',
       width: '100%',
-      height: '100%',
+      height: '100vh',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
