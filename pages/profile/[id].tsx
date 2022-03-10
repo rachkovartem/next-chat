@@ -14,7 +14,7 @@ import {useSnackbar} from 'notistack';
 import { Crop } from '../components/crop/Crop';
 import {useStyles} from "./id.styles";
 import {InitialState} from "../../redux/reducers";
-import {useChat} from "../../hooks/useChat";
+import {ServerMessage, useChat} from "../../hooks/useChat";
 import {SideBar} from "../components/sideBar/sideBar";
 import {usePages} from "../../hooks/usePages";
 
@@ -47,7 +47,8 @@ export interface Room {
   fullParticipants: User[];
   avatars: {
     [key: string]: string
-  }
+  };
+  lastMessage: ServerMessage;
 }
 
 interface Context extends AppContext {
@@ -65,7 +66,7 @@ export default function Profile (props: {locale: string, id: string}) {
   const { username, imagePath } = user;
   const dispatch = useDispatch();
   const inputRef = useRef(null);
-  const { notification, connectToRoom } = useChat();
+  const { notification, connectToRoom, showNotification } = useChat();
   const { enqueueSnackbar } = useSnackbar();
   const { onLoadingPage } = usePages();
 
@@ -74,35 +75,7 @@ export default function Profile (props: {locale: string, id: string}) {
   }, [])
 
   useEffect(() => {
-    if (notification) {
-      enqueueSnackbar(<div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '10px',
-          }}>
-          <Avatar
-            alt="Avatar"
-            src={notification ? `http://localhost:8080/${notification.senderAvatar}` : ''}
-          />
-          <div
-            style={{
-              maxWidth: '288px',
-              marginLeft: '10px',
-              fontWeight: 'bold',
-            }}
-          >
-        </div>
-          {notification?.senderUsername}
-        </div>
-        <div
-          style={{maxWidth: '288px'}}
-        >
-          {notification?.message}
-        </div>
-      </div>);
-    }
+    showNotification(notification)
   }, [notification])
 
   const onChangeFile = (e: any) => {

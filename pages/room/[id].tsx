@@ -4,36 +4,46 @@ import {useTranslation} from "next-i18next";
 import * as React from 'react';
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
+import Box from "@mui/material/Box";
 
-import Header from "../components/header/Header";
 import {ChatWindow} from "../components/chatWindow/ChatWindow";
 import {SideBar} from "../components/sideBar/sideBar";
 import {InitialState} from "../../redux/reducers";
 import {usePages} from "../../hooks/usePages";
 import {useChat} from "../../hooks/useChat";
-import {FriendsListItem} from "../components/friendsListItem/FriendsListItem";
-import {ArrowTooltips} from "../components/tooltip/Tooltip";
-import Paper from "@mui/material/Paper";
-import {Avatar, AvatarGroup, Badge} from "@mui/material";
-import {EllipseText} from "../components/ellipseText/EllipseText";
-import {roomStyles} from "./id.styles";
 import apiServices from "../../services/apiServices";
-import {Message} from "../profile/[id]";
-import Box from "@mui/material/Box";
 import {ChatFriendList} from "../components/chatFriendsList/ChatFriendsList";
+import {setFullRooms} from "../../redux/actions";
+import {Room as RoomInterface} from "../profile/[id]";
+const {getAllUserRooms} = apiServices();
 
 export default function Room(props: any) {
   const { locale, room } = props;
   const { t } = useTranslation('common');
   const router = useRouter();
-  const { user } = useSelector((state: InitialState)  => state);
-  const { connectToRoom, usersOnline, lastMessages } = useChat();
+  const { connectToRoom, notification } = useChat();
   const { onLoadingPage } = usePages();
   const dispatch = useDispatch();
+  const { user, fullRooms } = useSelector((state: InitialState)  => state);
+  const [currentRoom, setCurrentRoom] = useState<RoomInterface>(room);
 
   useEffect(() => {
     onLoadingPage({connectToRoom, dispatch, router});
   }, [])
+
+  useEffect(() => {
+    if (notification) {
+      const newState = [...fullRooms];
+      const index = newState.findIndex(el => el.roomId === notification?.roomId);
+      newState[index].lastMessage = notification;
+      const deleted = newState.splice(index, 1);
+      newState.unshift(deleted[0])
+      const newRooms = fullRooms.length < 2
+        ? fullRooms
+        : newState;
+      dispatch(setFullRooms(newRooms))
+    }
+  }, [notification])
 
   return (
     <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
@@ -56,9 +66,9 @@ export default function Room(props: any) {
             boxShadow: 'inset 1px 1px 10px #a8a8a8',
           },
         }}>
-          <ChatFriendList/>
+          <ChatFriendList setCurrentRoom={setCurrentRoom}/>
         </Box>
-        <ChatWindow {...room}/>
+        {currentRoom ? <ChatWindow {...currentRoom}/> : null}
       </div>
     </div>
   )
@@ -72,7 +82,7 @@ export async function getServerSideProps(context: any) {
 
   return {
     props: {
-      room: room.data,
+      room: room.data || null,
       locale,
       ...(await serverSideTranslations(locale, ['common'])),
     },

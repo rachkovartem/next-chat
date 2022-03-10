@@ -1,7 +1,7 @@
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import {Button, Chip} from "@mui/material";
-import {setProfileTab, setUser, setUserInReqs, setUserOutReqs} from "../../redux/actions";
+import {setUser, setUserInReqs, setUserOutReqs} from "../../redux/actions";
 import {FriendsTab} from "../components/friendsTab/FriendsTab";
 import {GroupsTab} from "../components/groupsTab/GroupsTab";
 import {InReqsTab} from "../components/inReqsTab/InReqsTab";
@@ -40,14 +40,17 @@ export default function Friends (props: {locale: string, id: string}) {
   const { user } = useSelector((state: InitialState)  => state);
   const { objFriends, inReqs, outReqs } = user;
   const dispatch = useDispatch();
-  const { connectToRoom } = useChat();
+  const { connectToRoom, showNotification, notification } = useChat();
   const { onLoadingPage } = usePages();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     onLoadingPage({connectToRoom, dispatch, router})
   }, [])
 
-  const { enqueueSnackbar } = useSnackbar();
+  useEffect(() => {
+    showNotification(notification)
+  }, [notification])
 
   const onClickRejectReq = async (idUser: string, idFriend: string, idReq: string) => {
     const res = await rejectFriendReq(idUser, idFriend, idReq);

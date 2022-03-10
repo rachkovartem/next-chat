@@ -1,35 +1,27 @@
 import {Avatar, Badge} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import * as React from "react";
-import {useChat} from "../../../hooks/useChat";
-import {FriendRoom, InitialState} from "../../../redux/reducers";
+import {useChat} from "../../../../hooks/useChat";
+import {FriendRoom, InitialState} from "../../../../redux/reducers";
 import {makeStyles} from "@material-ui/core/styles";
-import {Message, User} from "../../profile/[id]";
+import {Message, Room, User} from "../../../profile/[id]";
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 
-export const FriendRoomItem = ({friend, classes}: {friend: User, classes: { userPaper: any }}) => {
+export const FriendRoomItem = ({friend, classes, clickItem}: {friend: any, classes: { userPaper: any }, clickItem: Function}) => {
   const { usersOnline } = useChat();
-  const { user } = useSelector((state: InitialState)  => state);
+  const { user, fullRooms } = useSelector((state: InitialState)  => state);
   const { lastMessages } = useChat();
   const { friendsRoomsIds } = user;
   const [message, setMessage] = useState('');
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
-
-  useEffect(() => {
-    const userId = friend.id;
-    const roomId = friendsRoomsIds[userId];
-    const lastMessage = lastMessages[roomId];
-    if (lastMessage) {
-      setMessage(lastMessage.message)
-    }
-  }, [lastMessages])
 
   return <Paper
     sx={{background: 'none'}}
     className={classes.userPaper}
     key={friend.id}
     elevation={0}
+    onClick={() => clickItem(friend.roomId)}
   >
     <Badge
       sx={{
@@ -60,7 +52,7 @@ export const FriendRoomItem = ({friend, classes}: {friend: User, classes: { user
       <div style={{
         fontSize: '12px',
       }}>
-        {message}
+        {friend.lastMessage.message}
       </div>
     </div>
   </Paper>

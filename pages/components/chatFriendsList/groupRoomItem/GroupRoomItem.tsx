@@ -1,39 +1,33 @@
 import {Avatar} from "@mui/material";
-import {EllipseText} from "../ellipseText/EllipseText";
+import {EllipseText} from "../../ellipseText/EllipseText";
 import Paper from "@mui/material/Paper";
 import * as React from "react";
-import {Message, Room} from "../../profile/[id]";
-import {useChat} from "../../../hooks/useChat";
+import {Message, Room} from "../../../profile/[id]";
+import {useChat} from "../../../../hooks/useChat";
 import {useEffect, useState} from "react";
+import {FriendRoom} from "../../../../redux/reducers";
 
 
 export const GroupRoomItem = (
   {
     room,
     classes,
-    title
+    title,
+    clickItem
   }
   :
   {
-    room: Room,
+    room: Room | FriendRoom,
     classes: {userPaper: any},
-    title: string
+    title: string,
+    clickItem: Function,
   }) => {
-  const [message, setMessage] = useState('');
-  const { lastMessages } = useChat();
-
-  useEffect(() => {
-    if (room.roomId in lastMessages) {
-      setMessage(lastMessages[room.roomId].message)
-    }
-  }, [lastMessages])
-
 
   return <Paper
     sx={{background: 'none'}}
     className={classes.userPaper}
     key={room.roomId}
-    // onClick={() => onClickRoom(room.roomId)}
+    onClick={() => clickItem(room.roomId)}
     elevation={0}
   >
     <Avatar
@@ -61,7 +55,7 @@ export const GroupRoomItem = (
         }}>
         <EllipseText text={title} maxLine={1}/>
       </div>
-      <div>{message}</div>
+      <div>{room.lastMessage.message}</div>
     </div>
   </Paper>
 }

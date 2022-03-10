@@ -6,31 +6,49 @@ import {useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
 import {useChat} from "../../../hooks/useChat";
 import {roomStyles} from "../../room/id.styles";
-import {FriendRoomItem} from "../friendRoomItem/FriendRoomItem";
-import {GroupRoomItem} from "../groupRoomItem/GroupRoomItem";
-import {useState} from "react";
+import {FriendRoomItem} from "./friendRoomItem/FriendRoomItem";
+import {GroupRoomItem} from "./groupRoomItem/GroupRoomItem";
+import {useEffect, useState} from "react";
+import apiServices from "../../../services/apiServices";
+import {useDispatch} from "react-redux";
+import {setFullRooms} from "../../../redux/actions";
+import {Room} from "../../profile/[id]";
+import {useRouter} from "next/router";
 
-export const ChatFriendList = () => {
+export const ChatFriendList = ({setCurrentRoom}: {setCurrentRoom: Function}) => {
+  const dispatch = useDispatch();
+  const {getAllUserRooms, getRoomInfo} = apiServices();
   const classes = roomStyles();
-  const { user } = useSelector((state: InitialState)  => state);
-  const { lastMessages } = useChat();
-  const { friendsRoomsIds, fullRooms } = user;
+  const router = useRouter();
+  const { user, fullRooms } = useSelector((state: InitialState)  => state);
   const isBrowser = typeof window !== 'undefined';
-  const sortedRooms = [...fullRooms].sort((a: any, b: any) => {
-    if (b.roomId in lastMessages) {
-      return (Number(lastMessages[b.roomId].sendingDate) - Number(lastMessages[a.roomId].sendingDate))
-    } else {return 0}
-  })
+
+  const loadRoomInfo = async () => {
+    if (user.id) {
+      const res = await getAllUserRooms(user.id);
+      dispatch(setFullRooms(res.data))
+    }
+  }
+
+  const clickItem = async  (roomId: string) => {
+    await router.push(`/room/${roomId}`,undefined, { shallow: true });
+    const room = await getRoomInfo(roomId);
+    setCurrentRoom(room.data);
+  }
+
+  useEffect(() => {
+    loadRoomInfo()
+  }, [user.id])
   return <>
-      {isBrowser ? sortedRooms.map(room => {
-        if (room.groupRoom) {
+      {isBrowser ? fullRooms.map((room) => {
+        if (room.groupRoom && room.fullParticipants) {
           const title = room.fullParticipants
             .filter(participant => (participant.id !== user.id))
             .map(user => user.username)
             .join(', ')
-          return <GroupRoomItem key={room.roomId} room={room} classes={classes} title={title}/>
+          return <GroupRoomItem clickItem={clickItem} key={room.roomId} room={room} classes={classes} title={title}/>
         } else if (!room.groupRoom) {
-            return <FriendRoomItem key={room.roomId} friend={room} classes={classes} />
+          return <FriendRoomItem clickItem={clickItem} key={room.roomId} friend={room} classes={classes} />
         }
       }) : null}
     </>

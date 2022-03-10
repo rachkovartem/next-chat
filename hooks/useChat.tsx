@@ -1,8 +1,12 @@
 import {io} from "socket.io-client";
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Message} from "../pages/profile/[id]";
 import apiServices from "../services/apiServices";
+import {Avatar} from "@mui/material";
+import * as React from "react";
+import {useSnackbar} from "notistack";
 const debounce = require('lodash.debounce');
+
 
 export interface ServerMessage {
   messageId: string,
@@ -16,12 +20,13 @@ export interface ServerMessage {
 
 const SERVER_URL = 'http://localhost:8080';
 
-export const useChat = () => {
+export const useChat = (roomId?: string | undefined) => {
   const [user, setUser] = useState<{id: string | null, username: string | null}>({id: null, username: null}),
         [usersOnline, setUsersOnline] = useState<string[]>([]),
         [messages, setMessages] = useState<ServerMessage[]>([]),
         [notification, setNotification] = useState<ServerMessage | null>(null),
         [lastMessages, setLastMessages] = useState<{[roomId: string]: Message}>({}),
+        { enqueueSnackbar } = useSnackbar(),
         socketRef = useRef<any>(null),
         { getLastMessages } = apiServices(),
         isServer = typeof window === "undefined"
@@ -84,7 +89,9 @@ export const useChat = () => {
     });
 
     socketRef.current.on('messages:add', (serverMessage: ServerMessage[]) => {
-      setMessages(prev => [...prev, ...serverMessage]);
+      if(roomId && serverMessage[0].roomId === roomId) {
+        setMessages(prev => [...prev, ...serverMessage]);
+      }
       setNotification(serverMessage[0]);
       setLastMessages((prevState => {
         const roomId = serverMessage[0].roomId;
@@ -117,5 +124,37 @@ export const useChat = () => {
     socketRef.current.emit('messages:add', {roomId, message, ...user});
   }
 
-  return { user, usersOnline, messages, notification, lastMessages, sendMessage, getMessages, connectToRoom, disconnect }
+  const showNotification = (notification: ServerMessage | null) => {
+    if (notification) {
+      enqueueSnackbar(<div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '10px',
+          }}>
+          <Avatar
+            alt="Avatar"
+            src={notification ? `http://localhost:8080/${notification.senderAvatar}` : ''}
+          />
+          <div
+            style={{
+              maxWidth: '288px',
+              marginLeft: '10px',
+              fontWeight: 'bold',
+            }}
+          >
+          </div>
+          {notification?.senderUsername}
+        </div>
+        <div
+          style={{maxWidth: '288px'}}
+        >
+          {notification?.message}
+        </div>
+      </div>);
+    }
+  }
+
+  return { user, usersOnline, messages, notification, lastMessages, sendMessage, setLastMessages, getMessages, connectToRoom, disconnect, showNotification }
 }

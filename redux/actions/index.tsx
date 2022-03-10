@@ -1,3 +1,6 @@
+import {Room} from "../../pages/profile/[id]";
+import {FriendRoom} from "../reducers";
+
 export const setUser = (value: any) => {
     return {
         type: 'SET_USER',
@@ -5,9 +8,9 @@ export const setUser = (value: any) => {
     }
 }
 
-export const setProfileTab = (value: string) => {
+export const setFullRooms = (value: (FriendRoom | Room)[]) => {
     return {
-        type: 'SET_PROFILE_TAB',
+        type: 'SET_FULL_ROOMS',
         payload: value
     }
 }

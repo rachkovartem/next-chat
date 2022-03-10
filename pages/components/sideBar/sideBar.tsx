@@ -11,7 +11,8 @@ import * as React from "react";
 import {useRouter} from "next/router";
 import {useChat} from "../../../hooks/useChat";
 import {useTranslation} from "next-i18next";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {InitialState} from "../../../redux/reducers";
 
 
 export const SideBar = ({locale}: {locale: string}) => {
@@ -81,6 +82,7 @@ export const SideBar = ({locale}: {locale: string}) => {
             display: 'flex',
             justifyContent: 'center',
           }}
+          onClick={() => router.push(`/room/${localStorage.getItem('id')}`)}
         >
           <ForumIcon />
         </ListItem>

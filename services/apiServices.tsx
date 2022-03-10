@@ -59,6 +59,12 @@ const apiServices = () => {
       .catch(error => error)
   }
 
+  const getAllUserRooms = async (userId: string) => {
+    return api.post('/rooms/getAllUserRooms', {userId})
+      .then(response => response)
+      .catch(error => error)
+  }
+
     const getAllUsers = async () => {
       return api.get('/allUsers')
         .then(response => response)
@@ -155,7 +161,8 @@ const apiServices = () => {
       createGroupRoom,
       getRoomInfo,
       getAllRoomsIds,
-      getLastMessages
+      getLastMessages,
+      getAllUserRooms
     }
 }
 

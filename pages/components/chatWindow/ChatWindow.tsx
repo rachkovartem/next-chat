@@ -1,7 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import * as React from "react";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {useTranslation} from "next-i18next";
 import Stack from '@mui/material/Stack';
 
@@ -13,7 +13,8 @@ import Header from "../header/Header";
 
 export const ChatWindow = (props: Room) => {
   const {roomId, groupRoom, participants, avatars} = props;
-  const { user, messages, getMessages, connectToRoom } = useChat();
+  const { user, messages, getMessages, connectToRoom } = useChat(roomId);
+  const [initial, setInitial] = useState(false);
   const { t } = useTranslation('common');
 
   const onLoading = async () => {
@@ -21,8 +22,12 @@ export const ChatWindow = (props: Room) => {
     await getMessages(roomId);
   }
   useEffect(() => {
+    if (roomId === user.id) {
+      setInitial(true)
+      return
+    }
     onLoading()
-  }, [])
+  }, [roomId])
 
   const getTime = (timestamp: string) => {
     const date = new Date(+timestamp);
@@ -31,7 +36,7 @@ export const ChatWindow = (props: Room) => {
     return hours + ':' + minutes.slice(-2)
   }
 
-  return <Box
+  return <>{initial ? null : <Box
     sx={{
       borderLeft: '1px solid #e8e8e8',
       width: '100%',
@@ -85,7 +90,8 @@ export const ChatWindow = (props: Room) => {
                 display: 'flex',
                 width: '100%',
                 minWidth: '34px',
-                alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit'}}
+                alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit'
+              }}
               key={item.messageId}
             >
               <Avatar
@@ -93,7 +99,7 @@ export const ChatWindow = (props: Room) => {
                   marginRight: '5px',
                   display: user.id === item.senderId || !groupRoom ? 'none' : 'initial',
                   alignSelf: 'end',
-              }}
+                }}
                 alt="Avatar"
                 src={avatars[item.senderId] ? `http://localhost:8080/${avatars[item.senderId]}` : ''}
               />
@@ -123,7 +129,7 @@ export const ChatWindow = (props: Room) => {
                   right: 0
                 }}
                 >
-                  { getTime(item.sendingDate) }
+                  {getTime(item.sendingDate)}
                 </p>
               </Paper>
             </div>)
@@ -131,5 +137,5 @@ export const ChatWindow = (props: Room) => {
       </Stack>
     </Paper>
     <ChatInput roomId={roomId}/>
-  </Box>
+  </Box>}</>
 }

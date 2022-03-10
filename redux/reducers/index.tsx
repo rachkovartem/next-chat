@@ -1,4 +1,5 @@
-import {Room} from "../../pages/profile/[id]";
+import {Message, Room} from "../../pages/profile/[id]";
+import {ServerMessage} from "../../hooks/useChat";
 
 export interface InReq {
     id: string,
@@ -19,6 +20,8 @@ export interface OutReq {
 export interface FriendRoom extends User {
     roomId: string,
     groupRoom: boolean,
+    lastMessage: ServerMessage,
+    fullParticipants?: User[],
   }
 
 interface User {
@@ -40,7 +43,7 @@ interface User {
 
 interface InitialState {
     user: User,
-    profileTab: string,
+    fullRooms: FriendRoom[] | Room [],
 }
 
 const initialState : InitialState = {
@@ -60,7 +63,7 @@ const initialState : InitialState = {
        fullRooms:[],
        password: ''
    },
-   profileTab: 'friends',
+   fullRooms: [],
 }
 
 const reducer = (state = initialState, action: { type: string, payload: any }) => {
@@ -70,10 +73,10 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                 ...state,
                 user: action.payload
             }
-        case 'SET_PROFILE_TAB':
+        case 'SET_FULL_ROOMS':
             return {
                 ...state,
-                profileTab: action.payload
+                fullRooms: [...action.payload]
             }
         case 'SET_USER_OBJFRIENDS':
             return {
