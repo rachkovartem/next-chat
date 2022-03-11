@@ -22,6 +22,13 @@ export const setUserObjFriends = (value: any) => {
     }
 }
 
+export const setCurrentRoom = (value: Room | null) => {
+    return {
+        type: 'SET_CURRENT_ROOM',
+        payload: value
+    }
+}
+
 export const setUserInReqs = (value: any) => {
     return {
         type: 'SET_USER_INREQS',

@@ -1,10 +1,11 @@
 import {io} from "socket.io-client";
 import {useEffect, useRef, useState} from "react";
 import {Message} from "../pages/profile/[id]";
-import apiServices from "../services/apiServices";
+import ApiServices from "../services/ApiServices";
 import {Avatar} from "@mui/material";
 import * as React from "react";
 import {useSnackbar} from "notistack";
+import {useApi} from "./useApi";
 const debounce = require('lodash.debounce');
 
 
@@ -20,7 +21,7 @@ export interface ServerMessage {
 
 const SERVER_URL = 'http://localhost:8080';
 
-export const useChat = (roomId?: string | undefined) => {
+export const useChat = () => {
   const [user, setUser] = useState<{id: string | null, username: string | null}>({id: null, username: null}),
         [usersOnline, setUsersOnline] = useState<string[]>([]),
         [messages, setMessages] = useState<ServerMessage[]>([]),
@@ -28,7 +29,7 @@ export const useChat = (roomId?: string | undefined) => {
         [lastMessages, setLastMessages] = useState<{[roomId: string]: Message}>({}),
         { enqueueSnackbar } = useSnackbar(),
         socketRef = useRef<any>(null),
-        { getLastMessages } = apiServices(),
+        { getLastMessages } = ApiServices(),
         isServer = typeof window === "undefined"
   let id: string | null,
       username: string | null
@@ -84,14 +85,17 @@ export const useChat = (roomId?: string | undefined) => {
       // console.log(serverMessages);
     });
 
-    socketRef.current.on('messages:get', (serverMessages: any) => {
+    socketRef.current.on(`messages:get${id}`, (serverMessages: any) => {
       setMessages([...serverMessages])
     });
 
     socketRef.current.on('messages:add', (serverMessage: ServerMessage[]) => {
-      if(roomId && serverMessage[0].roomId === roomId) {
-        setMessages(prev => [...prev, ...serverMessage]);
-      }
+      setMessages(prev => {
+        if (prev.length === 0 || serverMessage[0].roomId === prev[0].roomId) {
+          return [...prev, ...serverMessage]
+        }
+        return  [...prev]
+      });
       setNotification(serverMessage[0]);
       setLastMessages((prevState => {
         const roomId = serverMessage[0].roomId;

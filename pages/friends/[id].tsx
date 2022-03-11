@@ -8,7 +8,7 @@ import {InReqsTab} from "../components/inReqsTab/InReqsTab";
 import {OutReqsTab} from "../components/outReqsTab/OutReqsTab";
 import * as React from "react";
 import {useTranslation} from "next-i18next";
-import apiServices from "../../services/apiServices";
+import ApiServices from "../../services/ApiServices";
 import {useEffect, useRef, useState} from "react";
 import {useStyles} from "../profile/id.styles";
 import {useRouter} from "next/router";
@@ -32,7 +32,7 @@ export default function Friends (props: {locale: string, id: string}) {
 
   const {locale, id} = props;
   const { t } = useTranslation('common');
-  const { rejectFriendReq, createGroupRoom } = apiServices();
+  const { rejectFriendReq, createGroupRoom } = ApiServices();
   const classes = useStyles();
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([])
   const isBrowser = typeof window !== 'undefined';

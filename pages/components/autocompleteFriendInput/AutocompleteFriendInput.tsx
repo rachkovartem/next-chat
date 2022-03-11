@@ -7,13 +7,8 @@ import {Avatar} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Paper from "@mui/material/Paper";
 import {useDispatch} from "react-redux";
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
-
-import ApiServices from "../../../services/apiServices";
 import {useStyles} from "../../profile/id.styles";
-import apiServices from "../../../services/apiServices";
+import ApiServices from "../../../services/ApiServices";
 import {setUserOutReqs} from "../../../redux/actions";
 
 export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar: Function, id: string}) => {
@@ -24,7 +19,7 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
   const [initialSearch, setInitialSearch] = useState(true)
   const [options, setOptions] = useState<any[]>([]);
   const [text, setText] = useState('');
-  const { friendRequest } = apiServices();
+  const { friendRequest } = ApiServices();
 
   const onChange = (e: any) => {
     if (initialSearch) {

@@ -13,6 +13,7 @@ import {useChat} from "../../../hooks/useChat";
 import {useTranslation} from "next-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
+import {setCurrentRoom} from "../../../redux/actions";
 
 
 export const SideBar = ({locale}: {locale: string}) => {
@@ -82,7 +83,10 @@ export const SideBar = ({locale}: {locale: string}) => {
             display: 'flex',
             justifyContent: 'center',
           }}
-          onClick={() => router.push(`/room/${localStorage.getItem('id')}`)}
+          onClick={() => {
+            router.push(`/room/${localStorage.getItem('id')}`)
+            dispatch(setCurrentRoom(null))
+          }}
         >
           <ForumIcon />
         </ListItem>

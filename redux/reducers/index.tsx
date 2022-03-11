@@ -44,6 +44,7 @@ interface User {
 interface InitialState {
     user: User,
     fullRooms: FriendRoom[] | Room [],
+    currentRoom: Room | null,
 }
 
 const initialState : InitialState = {
@@ -64,6 +65,7 @@ const initialState : InitialState = {
        password: ''
    },
    fullRooms: [],
+   currentRoom: null,
 }
 
 const reducer = (state = initialState, action: { type: string, payload: any }) => {
@@ -71,12 +73,17 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
         case 'SET_USER':
             return {
                 ...state,
-                user: action.payload
+                user: action.payload,
             }
         case 'SET_FULL_ROOMS':
             return {
                 ...state,
-                fullRooms: [...action.payload]
+                fullRooms: [...action.payload],
+            }
+        case 'SET_CURRENT_ROOM':
+            return {
+                ...state,
+                currentRoom: action.payload ? {...action.payload} : null,
             }
         case 'SET_USER_OBJFRIENDS':
             return {

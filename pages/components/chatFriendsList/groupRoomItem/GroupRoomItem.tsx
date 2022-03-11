@@ -5,7 +5,8 @@ import * as React from "react";
 import {Message, Room} from "../../../profile/[id]";
 import {useChat} from "../../../../hooks/useChat";
 import {useEffect, useState} from "react";
-import {FriendRoom} from "../../../../redux/reducers";
+import {FriendRoom, InitialState} from "../../../../redux/reducers";
+import {useSelector} from "react-redux";
 
 
 export const GroupRoomItem = (
@@ -18,14 +19,15 @@ export const GroupRoomItem = (
   :
   {
     room: Room | FriendRoom,
-    classes: {userPaper: any},
+    classes: {userPaper: any, userPaperSelected: any},
     title: string,
     clickItem: Function,
   }) => {
 
+  const { currentRoom } = useSelector((state: InitialState)  => state);
+
   return <Paper
-    sx={{background: 'none'}}
-    className={classes.userPaper}
+    className={currentRoom?.roomId === room.roomId ? classes.userPaperSelected : classes.userPaper}
     key={room.roomId}
     onClick={() => clickItem(room.roomId)}
     elevation={0}

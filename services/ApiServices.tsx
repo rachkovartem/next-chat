@@ -1,12 +1,11 @@
 import axios from 'axios';
-import Resizer from "react-image-file-resizer";
+import {useApi} from "../hooks/useApi";
 
-const apiServices = () => {
+const ApiServices = () => {
   const url = 'http://localhost:8080';
-
   const api = axios.create({
-      baseURL: url,
-      withCredentials: true,
+    baseURL: url,
+    withCredentials: true,
   });
 
   const refreshAccessToken = async ():Promise<any> => {
@@ -166,4 +165,4 @@ const apiServices = () => {
     }
 }
 
-export default apiServices;
+export default ApiServices;

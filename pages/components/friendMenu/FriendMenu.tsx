@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Menu, MenuItem} from "@mui/material";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
-import apiServices from "../../../services/apiServices";
+import ApiServices from "../../../services/ApiServices";
 import {useTranslation} from "next-i18next";
 import {setUserObjFriends} from "../../../redux/actions";
 import {useDispatch} from "react-redux";
@@ -11,7 +11,7 @@ import {useDispatch} from "react-redux";
 const MenuComponent = ({user, id, menuAnchorEl, groupChatMembers, setGroupChatMembers, enqueueSnackbar, setMenuAnchorEl}) => {
   const dispatch = useDispatch();
   const open = Boolean(menuAnchorEl);
-  const { removeFriend } = apiServices();
+  const { removeFriend } = ApiServices();
   const { t } = useTranslation('common');
 
   const handleClickMenu = (e: any) => {

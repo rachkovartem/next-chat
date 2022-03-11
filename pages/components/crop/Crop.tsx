@@ -1,7 +1,7 @@
 import ReactCrop from "react-image-crop";
 import * as React from "react";
 import {forwardRef, Ref, useEffect, useState} from "react";
-import apiServices from "../../../services/apiServices";
+import ApiServices from "../../../services/ApiServices";
 import SaveIcon from '@mui/icons-material/Save';
 import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
@@ -28,7 +28,7 @@ export const Crop = forwardRef(
       inputRef: Ref<any>
     }, ref) => {
   const dispatch = useDispatch();
-  const { uploadImage } = apiServices();
+  const { uploadImage } = ApiServices();
   const [crop, setCrop] = useState<any>({
     unit: '%',
     width: 100,

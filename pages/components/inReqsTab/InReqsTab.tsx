@@ -5,7 +5,7 @@ import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutl
 import * as React from "react";
 import {setProfileTab, setUserInReqs, setUserObjFriends} from "../../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
-import apiServices from "../../../services/apiServices";
+import ApiServices from "../../../services/ApiServices";
 import {useTranslation} from "next-i18next";
 import {useStyles} from "../../profile/id.styles";
 import {InReq} from "../../../redux/reducers";
@@ -25,7 +25,7 @@ export const InReqsTab =
     onClickRejectReq: Function,
   }) => {
   const dispatch = useDispatch();
-  const { approveFriendReq } = apiServices();
+  const { approveFriendReq } = ApiServices();
   const classes = useStyles();
   const { t } = useTranslation('common');
   const onClickApproveReq = async (idUser: string, idFriend: string, idReq: string) => {

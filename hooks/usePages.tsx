@@ -1,5 +1,5 @@
 import {setUser} from "../redux/actions";
-import apiServices from "../services/apiServices";
+import ApiServices from "../services/ApiServices";
 import {NextRouter} from "next/router";
 
 export const usePages = () => {
@@ -12,7 +12,7 @@ export const usePages = () => {
       dispatch: Function,
       router: NextRouter
     }) => {
-    const { getUserById, getRequests, getAllRoomsIds, check } = apiServices();
+    const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
     const resCheck = await check();
     if ('status' in resCheck && resCheck.status !== 200) {
       await router.push('/')

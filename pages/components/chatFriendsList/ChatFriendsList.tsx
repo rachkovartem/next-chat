@@ -9,15 +9,15 @@ import {roomStyles} from "../../room/id.styles";
 import {FriendRoomItem} from "./friendRoomItem/FriendRoomItem";
 import {GroupRoomItem} from "./groupRoomItem/GroupRoomItem";
 import {useEffect, useState} from "react";
-import apiServices from "../../../services/apiServices";
+import ApiServices from "../../../services/ApiServices";
 import {useDispatch} from "react-redux";
 import {setFullRooms} from "../../../redux/actions";
-import {Room} from "../../profile/[id]";
+import {setCurrentRoom} from "../../../redux/actions";
 import {useRouter} from "next/router";
 
-export const ChatFriendList = ({setCurrentRoom}: {setCurrentRoom: Function}) => {
+export const ChatFriendList = () => {
   const dispatch = useDispatch();
-  const {getAllUserRooms, getRoomInfo} = apiServices();
+  const {getAllUserRooms, getRoomInfo} = ApiServices();
   const classes = roomStyles();
   const router = useRouter();
   const { user, fullRooms } = useSelector((state: InitialState)  => state);
@@ -33,7 +33,7 @@ export const ChatFriendList = ({setCurrentRoom}: {setCurrentRoom: Function}) => 
   const clickItem = async  (roomId: string) => {
     await router.push(`/room/${roomId}`,undefined, { shallow: true });
     const room = await getRoomInfo(roomId);
-    setCurrentRoom(room.data);
+    dispatch(setCurrentRoom(room.data))
   }
 
   useEffect(() => {

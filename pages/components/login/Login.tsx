@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import apiServices from "../../../services/apiServices";
+import ApiServices from "../../../services/ApiServices";
 import {useRouter} from "next/router";
 import {Button, Fab, InputBase, TextField} from "@mui/material";
 import {useDispatch} from "react-redux";
@@ -18,7 +18,7 @@ const Login = ({locale} : {locale: string}) => {
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [onRegistration, setOnRegistration] = useState(false);
-    const { login, register, check } = apiServices();
+    const { login, register, check } = ApiServices();
 
     const onLoading = async () => {
         const res = await check()

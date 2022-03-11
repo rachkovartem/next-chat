@@ -7,7 +7,7 @@ import {useStyles} from "../../profile/id.styles";
 import {useState} from "react";
 import {useRouter} from "next/router";
 import {t} from "i18next";
-import apiServices from "../../../services/apiServices";
+import ApiServices from "../../../services/ApiServices";
 import {User} from "../../profile/[id]";
 import {useChat} from "../../../hooks/useChat";
 
@@ -27,7 +27,7 @@ export const FriendsListItem = (
   }) => {
   const {usersOnline} = useChat();
   const router = useRouter();
-  const { createRoom } = apiServices();
+  const { createRoom } = ApiServices();
   const classes = useStyles();
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
@@ -42,9 +42,9 @@ export const FriendsListItem = (
       await router.push(`/room/${res.data.roomId}`);
     }
   }
-
   const menuProps = {user, id, menuAnchorEl, setMenuAnchorEl, groupChatMembers, setGroupChatMembers, enqueueSnackbar}
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
+
   return <Paper
     className={classes.userPaper}
     key={user.id}
