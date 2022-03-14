@@ -2,30 +2,38 @@ import {useRouter} from "next/router";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import {useTranslation} from "next-i18next";
 import * as React from 'react';
-import {useEffect, useState} from "react";
+import {memo, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
 
 import {ChatWindow} from "../components/chatWindow/ChatWindow";
 import {SideBar} from "../components/sideBar/sideBar";
 import {InitialState} from "../../redux/reducers";
-import {usePages} from "../../hooks/usePages";
+import {PagesServices} from "../../services/PagesServices";
 import {useChat} from "../../hooks/useChat";
 import ApiServices from "../../services/ApiServices";
 import {ChatFriendList} from "../components/chatFriendsList/ChatFriendsList";
 import {setFullRooms} from "../../redux/actions";
-import {Room as RoomInterface} from "../profile/[id]";
 import {setCurrentRoom} from "../../redux/actions";
 
 export default function Room(props: any) {
   const { locale, id } = props;
-  const { getRoomInfo } = ApiServices()
+  const {
+    getRoomInfo,
+    getUserById,
+    getRequests,
+    getAllRoomsIds,
+    check,
+    apiError,
+    apiLoading,
+    clearApiError,
+  } = ApiServices();
   const { t } = useTranslation('common');
-  const router = useRouter();
-  const { connectToRoom, notification } = useChat();
-  const { onLoadingPage } = usePages();
+  const { notification, socketLoading } = useChat();
+  const { onLoadingPage } = PagesServices();
   const dispatch = useDispatch();
-  const { currentRoom, fullRooms } = useSelector((state: InitialState)  => state);
+  const { currentRoom, fullRooms, loading } = useSelector((state: InitialState)  => state);
 
   const loadRoom = async () => {
     let room = await getRoomInfo(id);
@@ -37,7 +45,7 @@ export default function Room(props: any) {
 
   useEffect(() => {
     loadRoom();
-    onLoadingPage({connectToRoom, dispatch, router});
+    onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, [])
 
   useEffect(() => {
@@ -54,6 +62,9 @@ export default function Room(props: any) {
     }
   }, [notification]);
 
+  const spinner = loading || socketLoading ? <CircularProgress /> : null;
+  const chatView = currentRoom && !loading && !socketLoading ? <ChatWindow {...currentRoom}/> : null;
+  console.log(111111111)
   return (
     <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
       <SideBar locale={locale}/>
@@ -75,9 +86,10 @@ export default function Room(props: any) {
             boxShadow: 'inset 1px 1px 10px #a8a8a8',
           },
         }}>
-          <ChatFriendList/>
+          <ChatFriendList />
         </Box>
-        {currentRoom ? <ChatWindow {...currentRoom}/> : null}
+        {spinner}
+        {chatView}
       </div>
     </div>
   )

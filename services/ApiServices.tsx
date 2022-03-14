@@ -1,168 +1,85 @@
-import axios from 'axios';
+
 import {useApi} from "../hooks/useApi";
 
 const ApiServices = () => {
-  const url = 'http://localhost:8080';
-  const api = axios.create({
-    baseURL: url,
-    withCredentials: true,
-  });
+  const { getRequest, postRequest, apiError, apiLoading, clearApiError } = useApi();
 
-  const refreshAccessToken = async ():Promise<any> => {
-    return await api.get(`/auth/refresh`)
-      .then(response => response)
-      .catch(error => error)
+  const login = async (email: string, password: string) => {
+    return await postRequest(`/auth/login`, {email, password});
   }
 
-  const login = (email: string, password: string) => api.post(`/auth/login`, { email, password })
-    .then((response) => {
-      return response.data;
-    })
-    .catch(error => error)
-
-  const register = (email: string, password: string, username: string) =>
-    api.post(
-      `/register`,
-      { email, password, username }
-    )
-    .then((response) => {
-      return response.data;
-    })
-    .catch(error => error)
-
-  const check = () => api.get('/check')
-    .then(response => response)
-    .catch(error => error)
-
-  const getUserById = async (id: string) => {
-    return api.get('/getUserById', {params: {id},})
-      .then(response => response)
-      .catch(error => error)
+  const register = async (email: string, password: string, username: string) => {
+    const res = await postRequest(`/register`,{email, password, username});
+    return res.data;
   }
 
-  const findUser = async (option: string, id: string) => {
-    return api.get('/findUser', {params: {option, id},})
-      .then(response => response)
-      .catch(error => error)
+  const check = async () => await getRequest('/check');
+
+  const getUserById = async (id: string) =>
+    await getRequest('/getUserById',  {id});
+
+  const findUser = async (option: string, id: string) =>
+    await getRequest('/findUser', {option, id});
+
+  const removeFriend = async (idUser: string, idFriend: string) =>
+    await postRequest('/removeFriend', {idUser, idFriend});
+
+  const getAllUserRooms = async (userId: string) =>
+    await postRequest('/rooms/getAllUserRooms', {userId});
+
+  const getAllUsers = async () => await getRequest('/allUsers');
+
+  const createRoom = async (participants: string[]) =>
+    await postRequest('/rooms/createRoom', { participants });
+
+  const friendRequest = async (idUser: string, idFriend: string) =>
+    await postRequest('/friendRequest', { idUser, idFriend })
+
+  const createGroupRoom = async (members: {username: string, id: string}[], idUser: string) =>
+    await postRequest('/rooms/createGroupRoom', { members, idUser });
+
+  const getRoomInfo = async (id: string) => await postRequest('/rooms/getRoomInfo',{ id });
+
+  const getAllRoomsIds = async (idUser: string) => await postRequest('/rooms/getAllRoomsIds',{ idUser });
+
+  const uploadImage = async (file: any, id: string) => {
+    let data = new FormData();
+    data.append('file', file);
+    data.append('id', id);
+    return await postRequest('/uploadImage', data, { headers: { 'Content-Type': 'multipart/form-data' }})
   }
 
-  const removeFriend = async (idUser: string, idFriend: string) => {
-    return api.post('/removeFriend',  {idUser, idFriend})
-      .then(response => response)
-      .catch(error => error)
+  const getRequests = async (friendReqsArr: string[], userId: string) =>
+    await postRequest('/getRequests', { friendReqsArr, userId });
+
+  const approveFriendReq = async (idUser: string, idFriend: string, idReq: string) =>
+    await postRequest('/approveFriendReq', { idUser, idFriend, idReq });
+
+  const rejectFriendReq = async (idUser: string, idFriend: string, idReq: string) =>
+    await postRequest('/rejectFriendReq', { idUser, idFriend, idReq });
+
+  return {
+    apiError,
+    apiLoading,
+    clearApiError,
+    login,
+    register,
+    check,
+    getUserById,
+    getAllUsers,
+    createRoom,
+    uploadImage,
+    friendRequest,
+    getRequests,
+    approveFriendReq,
+    rejectFriendReq,
+    findUser,
+    removeFriend,
+    createGroupRoom,
+    getRoomInfo,
+    getAllRoomsIds,
+    getAllUserRooms
   }
-
-  const getLastMessages = async (userId: string) => {
-    return api.post('/rooms/getLastMessages', {userId})
-      .then(response => response)
-      .catch(error => error)
-  }
-
-  const getAllUserRooms = async (userId: string) => {
-    return api.post('/rooms/getAllUserRooms', {userId})
-      .then(response => response)
-      .catch(error => error)
-  }
-
-    const getAllUsers = async () => {
-      return api.get('/allUsers')
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const createRoom = async (participants: string[]) => {
-      return api.post('/rooms/createRoom', { participants })
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const friendRequest = async (idUser: string, idFriend: string) => {
-      return api.post('/friendRequest', { idUser, idFriend })
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const createGroupRoom = async (members: {username: string, id: string}[], idUser: string) => {
-      return api.post('/rooms/createGroupRoom', { members, idUser })
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const getRoomInfo = (id: string) => {
-      return api.post('/rooms/getRoomInfo',{ id })
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const getAllRoomsIds = (idUser: string) => {
-      return api.post('/rooms/getAllRoomsIds',{ idUser })
-        .then(response => response)
-        .catch(error => error)
-  }
-
-    const uploadImage = async (file: any, id: string) => {
-      let data = new FormData();
-      data.append('file', file);
-      data.append('id', id);
-      return api.post('/uploadImage', data, { headers: { 'Content-Type': 'multipart/form-data' }})
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const getRequests = async (friendReqsArr: string[], userId: string) => {
-      return api.post('/getRequests', { friendReqsArr, userId })
-        .then(response => response)
-        .catch(error => error)
-    }
-
-    const approveFriendReq = async (idUser: string, idFriend: string, idReq: string) => {
-        return api.post('/approveFriendReq', { idUser, idFriend, idReq })
-            .then(response => response)
-            .catch(error => error)
-    }
-
-    const rejectFriendReq = async (idUser: string, idFriend: string, idReq: string) => {
-    return api.post('/rejectFriendReq', { idUser, idFriend, idReq })
-      .then(response => response)
-      .catch(error => error)
-  }
-
-    api.interceptors.response.use(
-      response => Promise.resolve(response),
-      async (error) => {
-        if (error.response.status === 401) {
-          const res = await refreshAccessToken();
-          if (res.status === 403) {
-            return Promise.reject(res);
-          }
-          return Promise.reject(error.response)
-        }
-        if (error.response.status === 403) {
-          return Promise.reject(error.response);
-        }
-        return Promise.reject(error);
-    });
-
-    return {
-      login,
-      register,
-      check,
-      getUserById,
-      getAllUsers,
-      createRoom,
-      uploadImage,
-      friendRequest,
-      getRequests,
-      approveFriendReq,
-      rejectFriendReq,
-      findUser,
-      removeFriend,
-      createGroupRoom,
-      getRoomInfo,
-      getAllRoomsIds,
-      getLastMessages,
-      getAllUserRooms
-    }
 }
 
 export default ApiServices;

@@ -11,7 +11,7 @@ import {useTranslation} from "next-i18next";
 import ApiServices from "../../services/ApiServices";
 import {useEffect, useRef, useState} from "react";
 import {useStyles} from "../profile/id.styles";
-import {useRouter} from "next/router";
+import {NextRouter, useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
 import {useChat} from "../../hooks/useChat";
@@ -21,7 +21,7 @@ import Paper from "@mui/material/Paper";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {AppContext} from "next/app";
 import {SideBar} from "../components/sideBar/sideBar";
-import  {usePages} from "../../hooks/usePages";
+import {PagesServices} from "../../services/PagesServices";
 
 interface Context extends AppContext {
   locale: string,
@@ -34,18 +34,19 @@ export default function Friends (props: {locale: string, id: string}) {
   const { t } = useTranslation('common');
   const { rejectFriendReq, createGroupRoom } = ApiServices();
   const classes = useStyles();
-  const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([])
+  const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
   const { user } = useSelector((state: InitialState)  => state);
   const { objFriends, inReqs, outReqs } = user;
   const dispatch = useDispatch();
-  const { connectToRoom, showNotification, notification } = useChat();
-  const { onLoadingPage } = usePages();
+  const { showNotification, notification, } = useChat();
+  const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
+  const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
 
   useEffect(() => {
-    onLoadingPage({connectToRoom, dispatch, router})
+    onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, [])
 
   useEffect(() => {
@@ -113,7 +114,7 @@ export default function Friends (props: {locale: string, id: string}) {
             marginTop: '10px',
           }} elevation={3}>
             <h3>{t('groups')}</h3>
-            <GroupsTab onClickRoom={onClickRoom} />
+            <GroupsTab onClickRoom={onClickRoom}/>
           </Paper>
         </div>
         <div>
@@ -145,7 +146,7 @@ export default function Friends (props: {locale: string, id: string}) {
           gridArea: 'outreqs',
         }} elevation={3}>
           <h3>{t('outRequests')}</h3>
-          <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} />
+         <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} />
         </Paper>
       </div>
     </div>

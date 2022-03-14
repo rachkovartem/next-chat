@@ -1,13 +1,9 @@
 import {io} from "socket.io-client";
 import {useEffect, useRef, useState} from "react";
 import {Message} from "../pages/profile/[id]";
-import ApiServices from "../services/ApiServices";
 import {Avatar} from "@mui/material";
 import * as React from "react";
 import {useSnackbar} from "notistack";
-import {useApi} from "./useApi";
-const debounce = require('lodash.debounce');
-
 
 export interface ServerMessage {
   messageId: string,
@@ -22,29 +18,21 @@ export interface ServerMessage {
 const SERVER_URL = 'http://localhost:8080';
 
 export const useChat = () => {
-  const [user, setUser] = useState<{id: string | null, username: string | null}>({id: null, username: null}),
-        [usersOnline, setUsersOnline] = useState<string[]>([]),
-        [messages, setMessages] = useState<ServerMessage[]>([]),
-        [notification, setNotification] = useState<ServerMessage | null>(null),
-        [lastMessages, setLastMessages] = useState<{[roomId: string]: Message}>({}),
-        { enqueueSnackbar } = useSnackbar(),
-        socketRef = useRef<any>(null),
-        { getLastMessages } = ApiServices(),
-        isServer = typeof window === "undefined"
-  let id: string | null,
-      username: string | null
+  const [user, setUser] = useState<{id: string | null, username: string | null}>({id: null, username: null});
+  const [usersOnline, setUsersOnline] = useState<string[]>([]);
+  const [messages, setMessages] = useState<ServerMessage[]>([]);
+  const [notification, setNotification] = useState<ServerMessage | null>(null);
+  const [lastMessages, setLastMessages] = useState<{[roomId: string]: Message}>({});
+  const [socketLoading, setSocketLoading] = useState<boolean>(true);
+  const  { enqueueSnackbar } = useSnackbar();
+  const socketRef = useRef<any>(null);
+  const isServer = typeof window === "undefined";
+  let id: string | null;
+  let username: string | null;
   if (!isServer) {
     id = localStorage.getItem('id');
     username = localStorage.getItem('username');
   }
-
-  const loadLastMessages = async () => {
-    if (!user.id) return
-    const messages = await getLastMessages(user.id)
-    setLastMessages(messages.data)
-  }
-
-  const dbSetUsersOnline = debounce(setUsersOnline, 0)
 
   const wentOfflineListener = (wentOfflineId: string) => {
     setUsersOnline((friendsOnline) => {
@@ -56,7 +44,12 @@ export const useChat = () => {
   }
 
   useEffect(() => {
-    loadLastMessages();
+    if (user.id) {
+      setSocketLoading(true);
+      connectToRoom(user.id);
+      getFriendsOnline();
+      socketRef.current.emit('messages:getLastMessages');
+    }
   }, [user])
 
   useEffect(() => {
@@ -69,13 +62,13 @@ export const useChat = () => {
     });
 
     socketRef.current.on('friends:online', (friendsOnline: string[]) => {
-      dbSetUsersOnline(friendsOnline);
+      setUsersOnline(friendsOnline);
     });
 
     socketRef.current.on('friends:wentOffline', wentOfflineListener);
 
     socketRef.current.on('friends:wentOnline', (wentOnlineId: string) => {
-      dbSetUsersOnline((friendsOnline: string[]) => {
+      setUsersOnline((friendsOnline: string[]) => {
         if (friendsOnline.includes(wentOnlineId)) return friendsOnline
         return [...friendsOnline.concat(wentOnlineId)]
       });
@@ -87,6 +80,12 @@ export const useChat = () => {
 
     socketRef.current.on(`messages:get${id}`, (serverMessages: any) => {
       setMessages([...serverMessages])
+      setSocketLoading(false);
+    });
+
+    socketRef.current.on(`messages:getLastMessages${id}`, (messages: any) => {
+      setLastMessages({...messages})
+      setSocketLoading(false);
     });
 
     socketRef.current.on('messages:add', (serverMessage: ServerMessage[]) => {
@@ -120,7 +119,12 @@ export const useChat = () => {
     await socketRef.current.emit('system:connect', { id, roomId });
   }
 
+  const getFriendsOnline = async () => {
+    await socketRef.current.emit('friends:online');
+  }
+
   const getMessages = async ( roomId: string ) => {
+    setSocketLoading(true);
     await socketRef.current.emit('messages:get', { roomId });
   }
 
@@ -160,5 +164,18 @@ export const useChat = () => {
     }
   }
 
-  return { user, usersOnline, messages, notification, lastMessages, sendMessage, setLastMessages, getMessages, connectToRoom, disconnect, showNotification }
+  return {
+    socketLoading,
+    user,
+    usersOnline,
+    messages,
+    notification,
+    lastMessages,
+    sendMessage,
+    setLastMessages,
+    getMessages,
+    connectToRoom,
+    disconnect,
+    showNotification
+  }
 }

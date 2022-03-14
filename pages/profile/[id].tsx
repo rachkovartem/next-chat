@@ -16,7 +16,8 @@ import {useStyles} from "./id.styles";
 import {InitialState} from "../../redux/reducers";
 import {ServerMessage, useChat} from "../../hooks/useChat";
 import {SideBar} from "../components/sideBar/sideBar";
-import {usePages} from "../../hooks/usePages";
+import {PagesServices} from "../../services/PagesServices";
+import ApiServices from "../../services/ApiServices";
 
 export interface User {
   id: string,
@@ -61,17 +62,15 @@ export default function Profile (props: {locale: string, id: string}) {
   const { t } = useTranslation('common');
   const [file, setFile] = useState<File | null>(null);
   const classes = useStyles();
-  const router = useRouter();
+  const {  getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
   const { user } = useSelector((state: InitialState)  => state);
   const { username, imagePath } = user;
-  const dispatch = useDispatch();
   const inputRef = useRef(null);
-  const { notification, connectToRoom, showNotification } = useChat();
-  const { enqueueSnackbar } = useSnackbar();
-  const { onLoadingPage } = usePages();
+  const { notification, showNotification } = useChat();
+  const { onLoadingPage } = PagesServices();
 
   useEffect(() => {
-    onLoadingPage({connectToRoom, dispatch, router})
+    onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, [])
 
   useEffect(() => {

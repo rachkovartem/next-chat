@@ -12,8 +12,8 @@ import {Avatar} from "@mui/material";
 import Header from "../header/Header";
 
 export const ChatWindow = (props: Room) => {
-  const {roomId, groupRoom, participants, avatars} = props;
-  const { user, messages, getMessages, connectToRoom } = useChat(roomId);
+  const {roomId, groupRoom, avatars} = props;
+  const { user, messages, getMessages, connectToRoom } = useChat();
   const [initial, setInitial] = useState(false);
   const { t } = useTranslation('common');
 

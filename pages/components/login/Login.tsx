@@ -63,7 +63,8 @@ const Login = ({locale} : {locale: string}) => {
             setError(true);
             return
         }
-        const resBody = await login(email, password);
+        const res = await login(email, password);
+        const resBody = res.data;
         if ('id' in resBody) {
             localStorage.setItem('email', resBody.email);
             localStorage.setItem('id', resBody.id);

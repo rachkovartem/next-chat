@@ -49,3 +49,10 @@ export const setUserImagePath = (value: string) => {
         payload: value
     }
 }
+
+export const setRequestLoading = (value: boolean, name: string) => {
+    return {
+        type: `SET_REQUEST_LOADING_${name}`,
+        payload: {name, value}
+    }
+}

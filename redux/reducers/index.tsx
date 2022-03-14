@@ -45,6 +45,7 @@ interface InitialState {
     user: User,
     fullRooms: FriendRoom[] | Room [],
     currentRoom: Room | null,
+    loading: boolean,
 }
 
 const initialState : InitialState = {
@@ -64,8 +65,9 @@ const initialState : InitialState = {
        fullRooms:[],
        password: ''
    },
-   fullRooms: [],
-   currentRoom: null,
+    fullRooms: [],
+    currentRoom: null,
+    loading: false,
 }
 
 const reducer = (state = initialState, action: { type: string, payload: any }) => {
@@ -116,6 +118,11 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                     ...state.user,
                     imagePath: action.payload,
                 }
+            }
+        case `SET_REQUEST_LOADING_${action.payload?.name || ''}`:
+            return {
+                ...state,
+                loading: action.payload.value,
             }
         default: return state
     }

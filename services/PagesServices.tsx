@@ -1,18 +1,21 @@
 import {setUser} from "../redux/actions";
-import ApiServices from "../services/ApiServices";
-import {NextRouter} from "next/router";
+import {NextRouter, useRouter} from "next/router";
+import ApiServices from "./ApiServices";
+import {useChat} from "../hooks/useChat";
+import {useDispatch} from "react-redux";
 
-export const usePages = () => {
-  const onLoadingPage = async ({
-      connectToRoom,
-      dispatch,
-      router
-    } : {
-      connectToRoom: Function,
-      dispatch: Function,
-      router: NextRouter
-    }) => {
-    const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
+export const PagesServices = () => {
+
+  const { connectToRoom } = useChat();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const onLoadingPage = async (
+    getUserById: Function,
+    getRequests: Function,
+    getAllRoomsIds: Function,
+    check: Function
+  ) => {
     const resCheck = await check();
     if ('status' in resCheck && resCheck.status !== 200) {
       await router.push('/')
