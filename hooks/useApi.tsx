@@ -1,7 +1,6 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {useState} from "react";
 import {useDispatch} from "react-redux";
-import {setRequestLoading} from "../redux/actions";
+import {setRequestError, setRequestLoading} from "../redux/actions";
 
 const url = 'http://localhost:8080';
 const api = axios.create({
@@ -27,24 +26,20 @@ api.interceptors.response.use(
 
 export const useApi = () => {
   const dispatch = useDispatch();
-  const [apiLoading, setApiLoading] = useState<boolean>(false);
-  const [apiError, setApiError] = useState<string>('');
 
   const responseHandler = (response: AxiosResponse, url: string) => {
-    // setApiLoading(false);
-    dispatch(setRequestLoading(false, url))
+    dispatch(setRequestLoading(false))
     return response
   }
 
   const errorHandler = (error: AxiosError) => {
-    setApiError(error.message);
-    setApiLoading(false);
+    dispatch(setRequestError(error.message));
+    dispatch(setRequestLoading(false));
     throw error
   }
 
   const getRequest = (url: string, params?: object) => {
-      // setApiLoading(true);
-      dispatch(setRequestLoading(true, url))
+      dispatch(setRequestLoading(true))
 
       return api.get(url, {params})
         .then(response => responseHandler(response, url))
@@ -52,14 +47,13 @@ export const useApi = () => {
     };
 
   const postRequest = (url: string, data: any, config?: any) => {
-      // setApiLoading(true);
-    dispatch(setRequestLoading(true, url))
+    dispatch(setRequestLoading(true))
       return api.post(url, data, config)
         .then(response => responseHandler(response, url))
         .catch(error => errorHandler(error))
     };
 
-  const clearApiError = () => setApiError('');
+  const clearApiError = () => dispatch(setRequestError(null));
 
-  return { getRequest, postRequest, apiError, apiLoading, clearApiError, setApiLoading }
+  return { getRequest, postRequest, clearApiError }
 }

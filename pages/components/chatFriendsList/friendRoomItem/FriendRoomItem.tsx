@@ -6,7 +6,8 @@ import {InitialState} from "../../../../redux/reducers";
 import {useSelector} from "react-redux";
 
 export const FriendRoomItem = ({friend, classes, clickItem}: {friend: any, classes: { userPaper: any , userPaperSelected: any}, clickItem: Function}) => {
-  const { usersOnline } = useChat();
+  const { useChatState } = useSelector((state: InitialState)  => state);
+  const { usersOnline } = useChatState;
   const { currentRoom } = useSelector((state: InitialState)  => state);
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
 

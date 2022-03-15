@@ -62,11 +62,12 @@ export default function Profile (props: {locale: string, id: string}) {
   const { t } = useTranslation('common');
   const [file, setFile] = useState<File | null>(null);
   const classes = useStyles();
-  const {  getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
-  const { user } = useSelector((state: InitialState)  => state);
+  const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
+  const { user, useChatState } = useSelector((state: InitialState)  => state);
   const { username, imagePath } = user;
+  const { notification } = useChatState;
   const inputRef = useRef(null);
-  const { notification, showNotification } = useChat();
+  const { showNotification } = useChat();
   const { onLoadingPage } = PagesServices();
 
   useEffect(() => {

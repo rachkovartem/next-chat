@@ -46,6 +46,16 @@ interface InitialState {
     fullRooms: FriendRoom[] | Room [],
     currentRoom: Room | null,
     loading: boolean,
+    error: string | null,
+    useChatState: {
+        connected: boolean,
+        user: {id: string | null, username: string | null},
+        usersOnline: string[],
+        messages: ServerMessage[],
+        notification: ServerMessage | null,
+        lastMessages: {[roomId: string]: Message},
+        socketLoading: boolean,
+    }
 }
 
 const initialState : InitialState = {
@@ -68,6 +78,16 @@ const initialState : InitialState = {
     fullRooms: [],
     currentRoom: null,
     loading: false,
+    error: null,
+    useChatState: {
+        connected: false,
+        user: {id: null, username: null},
+        usersOnline: [],
+        messages: [],
+        notification: null,
+        lastMessages: {},
+        socketLoading: false,
+    }
 }
 
 const reducer = (state = initialState, action: { type: string, payload: any }) => {
@@ -119,10 +139,74 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                     imagePath: action.payload,
                 }
             }
-        case `SET_REQUEST_LOADING_${action.payload?.name || ''}`:
+        case `SET_REQUEST_LOADING`:
             return {
                 ...state,
-                loading: action.payload.value,
+                loading: action.payload,
+            }
+        case `SET_REQUEST_ERROR`:
+            return {
+                ...state,
+                error: action.payload,
+            }
+        case 'SET_USECHATSTATE_CONNECTED':
+            return {
+                ...state,
+                useChatState: {
+                    ...state.useChatState,
+                    connected: action.payload
+                }
+            }
+        case 'SET_USECHATSTATE_USER':
+            return {
+                ...state,
+                useChatState: {
+                    ...state.useChatState,
+                    user: {
+                        id: action.payload.id,
+                        username: action.payload.username,
+                    }
+                }
+            }
+        case 'SET_USECHATSTATE_USERSONLINE':
+            return {
+                ...state,
+                useChatState: {
+                    ...state.useChatState,
+                    usersOnline: action.payload,
+                }
+            }
+        case 'SET_USECHATSTATE_MESSAGES':
+            return {
+                ...state,
+                useChatState: {
+                    ...state.useChatState,
+                    messages: action.payload,
+                }
+            }
+        case 'SET_USECHATSTATE_NOTIFICATION':
+            return {
+                ...state,
+                useChatState: {
+                    ...state.useChatState,
+                    notification: action.payload,
+                }
+            }
+        case 'SET_USECHATSTATE_LASTMESSAGES':
+            return {
+                ...state,
+                useChatState: {
+                    ...state.useChatState,
+                    lastMessages: action.payload,
+                }
+            }
+        case 'SET_USECHATSTATE_SOCKETLOADING':
+            return {
+                ...state,
+                useChatState: {
+                    ...state.useChatState,
+                    socketLoading: action.payload,
+                }
             }
         default: return state
     }

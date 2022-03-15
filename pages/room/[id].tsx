@@ -25,16 +25,14 @@ export default function Room(props: any) {
     getRequests,
     getAllRoomsIds,
     check,
-    apiError,
-    apiLoading,
-    clearApiError,
   } = ApiServices();
+
   const { t } = useTranslation('common');
-  const { notification, socketLoading } = useChat();
   const { onLoadingPage } = PagesServices();
   const dispatch = useDispatch();
-  const { currentRoom, fullRooms, loading } = useSelector((state: InitialState)  => state);
-
+  const { currentRoom, fullRooms, useChatState } = useSelector((state: InitialState)  => state);
+  const { notification, socketLoading } = useChatState;
+  const [pageLoading, setPageLoading] = useState(true);
   const loadRoom = async () => {
     let room = await getRoomInfo(id);
     if (!('data' in room)) {
@@ -44,7 +42,7 @@ export default function Room(props: any) {
   }
 
   useEffect(() => {
-    loadRoom();
+    loadRoom()
     onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, [])
 
@@ -62,9 +60,8 @@ export default function Room(props: any) {
     }
   }, [notification]);
 
-  const spinner = loading || socketLoading ? <CircularProgress /> : null;
-  const chatView = currentRoom && !loading && !socketLoading ? <ChatWindow {...currentRoom}/> : null;
-  console.log(111111111)
+  const spinner =  socketLoading ? <CircularProgress /> : null;
+  const chatView = currentRoom && !socketLoading ? <ChatWindow {...currentRoom}/> : null;
   return (
     <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
       <SideBar locale={locale}/>

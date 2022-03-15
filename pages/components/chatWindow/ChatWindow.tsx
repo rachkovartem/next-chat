@@ -10,17 +10,23 @@ import {ChatInput} from "../chatInput/ChatInput";
 import {Room} from "../../profile/[id]";
 import {Avatar} from "@mui/material";
 import Header from "../header/Header";
+import {useSelector} from "react-redux";
+import {InitialState} from "../../../redux/reducers";
 
 export const ChatWindow = (props: Room) => {
   const {roomId, groupRoom, avatars} = props;
-  const { user, messages, getMessages, connectToRoom } = useChat();
+  const { useChatState } = useSelector((state: InitialState)  => state);
+  const { user, messages } = useChatState;
+  const { getMessages, connectToRoom } = useChat();
   const [initial, setInitial] = useState(false);
   const { t } = useTranslation('common');
 
   const onLoading = async () => {
-    await connectToRoom(roomId);
+    if (!user.id) return
+    await connectToRoom({userId: user.id, roomId});
     await getMessages(roomId);
   }
+
   useEffect(() => {
     if (roomId === user.id) {
       setInitial(true)

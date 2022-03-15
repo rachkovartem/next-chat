@@ -5,16 +5,20 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/useApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useApi.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/useChat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useChat.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/usePages.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/PagesServices.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/ChatFriendsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/ChatFriendsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/login/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/header/Header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/friends/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/friends/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/profile/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/room/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/room/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/actions/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/actions/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/reducers/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/ApiServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/ApiServices.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/PagesServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/PagesServices.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +55,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../nest-chat-server" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -114,7 +118,8 @@
       <workItem from="1646634525334" duration="24785000" />
       <workItem from="1646809269519" duration="27507000" />
       <workItem from="1646894134737" duration="27679000" />
-      <workItem from="1647239468882" duration="31495000" />
+      <workItem from="1647239468882" duration="31584000" />
+      <workItem from="1647321118915" duration="21258000" />
     </task>
     <servers />
   </component>

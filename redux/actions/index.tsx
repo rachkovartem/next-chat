@@ -1,5 +1,6 @@
-import {Room} from "../../pages/profile/[id]";
+import {Message, Room} from "../../pages/profile/[id]";
 import {FriendRoom} from "../reducers";
+import {ServerMessage} from "../../hooks/useChat";
 
 export const setUser = (value: any) => {
     return {
@@ -50,9 +51,67 @@ export const setUserImagePath = (value: string) => {
     }
 }
 
-export const setRequestLoading = (value: boolean, name: string) => {
+export const setRequestLoading = (value: boolean) => {
     return {
-        type: `SET_REQUEST_LOADING_${name}`,
-        payload: {name, value}
+        type: 'SET_REQUEST_LOADING',
+        payload: value
     }
 }
+
+export const setRequestError = (value: string | null) => {
+    return {
+        type: 'SET_REQUEST_ERROR',
+        payload: value
+    }
+}
+
+export const setUseChatStateConnected = (value: boolean) => {
+    return {
+        type: 'SET_USECHATSTATE_CONNECTED',
+        payload: value
+    }
+}
+
+export const setUseChatSateUser = (id: string | null, username: string | null) => {
+    return {
+        type: 'SET_USECHATSTATE_USER',
+        payload: {id, username}
+    }
+}
+
+export const setUseChatSateUsersOnline = (users: string[]) => {
+    return {
+        type: 'SET_USECHATSTATE_USERSONLINE',
+        payload: users
+    }
+}
+
+export const setUseChatSateMessages = (messages: ServerMessage[]) => {
+    return {
+        type: 'SET_USECHATSTATE_MESSAGES',
+        payload: messages
+    }
+}
+
+export const setUseChatSateNotification = (message: ServerMessage) => {
+    return {
+        type: 'SET_USECHATSTATE_NOTIFICATION',
+        payload: message
+    }
+}
+
+export const setUseChatSateLastMessages = (messages: {[roomId: string]: Message}) => {
+    return {
+        type: 'SET_USECHATSTATE_LASTMESSAGES',
+        payload: messages
+    }
+}
+
+export const setUseChatSateSocketLoading = (value: boolean) => {
+    return {
+        type: 'SET_USECHATSTATE_SOCKETLOADING',
+        payload: value
+    }
+}
+
+

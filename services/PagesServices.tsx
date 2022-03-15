@@ -1,11 +1,12 @@
 import {setUser} from "../redux/actions";
-import {NextRouter, useRouter} from "next/router";
-import ApiServices from "./ApiServices";
+import {useRouter} from "next/router";
 import {useChat} from "../hooks/useChat";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {InitialState} from "../redux/reducers";
 
 export const PagesServices = () => {
-
+  const { useChatState } = useSelector((state: InitialState)  => state);
+  const { user } = useChatState;
   const { connectToRoom } = useChat();
   const dispatch = useDispatch();
   const router = useRouter();
@@ -26,10 +27,6 @@ export const PagesServices = () => {
       localStorage.setItem('username', resCheck.data.username);
     }
     const id = localStorage.getItem('id') || '';
-    const rooms = await getAllRoomsIds(id);
-    if ('data' in rooms) {
-      await Promise.all(rooms.data.map((roomId: string) => connectToRoom(roomId)))
-    }
     const responseUser = await getUserById(id);
     const { friendsRequests } = responseUser.data;
     const requests = await getRequests(friendsRequests, id);

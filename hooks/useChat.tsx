@@ -1,9 +1,19 @@
 import {io} from "socket.io-client";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Message} from "../pages/profile/[id]";
 import {Avatar} from "@mui/material";
 import * as React from "react";
 import {useSnackbar} from "notistack";
+import {useDispatch, useSelector} from "react-redux";
+import {InitialState} from "../redux/reducers";
+import {
+  setUseChatSateLastMessages,
+  setUseChatSateMessages,
+  setUseChatSateNotification, setUseChatSateSocketLoading,
+  setUseChatSateUser,
+  setUseChatSateUsersOnline, setUseChatStateConnected
+} from "../redux/actions";
+import ApiServices from "../services/ApiServices";
 
 export interface ServerMessage {
   messageId: string,
@@ -18,42 +28,33 @@ export interface ServerMessage {
 const SERVER_URL = 'http://localhost:8080';
 
 export const useChat = () => {
-  const [user, setUser] = useState<{id: string | null, username: string | null}>({id: null, username: null});
-  const [usersOnline, setUsersOnline] = useState<string[]>([]);
-  const [messages, setMessages] = useState<ServerMessage[]>([]);
-  const [notification, setNotification] = useState<ServerMessage | null>(null);
-  const [lastMessages, setLastMessages] = useState<{[roomId: string]: Message}>({});
-  const [socketLoading, setSocketLoading] = useState<boolean>(true);
-  const  { enqueueSnackbar } = useSnackbar();
+  const { getAllRoomsIds } = ApiServices();
+  const dispatch = useDispatch();
+  const { useChatState } = useSelector((state: InitialState)  => state);
+  const { connected, usersOnline, messages, lastMessages } = useChatState;
+  const { enqueueSnackbar } = useSnackbar();
   const socketRef = useRef<any>(null);
-  const isServer = typeof window === "undefined";
+  const isServer = useMemo(() => typeof window === "undefined", []);
   let id: string | null;
-  let username: string | null;
   if (!isServer) {
     id = localStorage.getItem('id');
-    username = localStorage.getItem('username');
   }
 
-  const wentOfflineListener = (wentOfflineId: string) => {
-    setUsersOnline((friendsOnline) => {
-      const index = friendsOnline.indexOf(wentOfflineId)
-      const newArr = [...friendsOnline]
-      newArr.splice(index, 1);
-      return newArr
-    });
-  }
+  const wentOfflineListener = useCallback((wentOfflineId: string) => {
+    const index = usersOnline.indexOf(wentOfflineId)
+    const newArr = [...usersOnline]
+    newArr.splice(index, 1);
+    dispatch(setUseChatSateUsersOnline(newArr));
+  }, [usersOnline]);
+
+  const handleLoading = useCallback(async (userId: string) => {
+    connectToRoom({userId});
+    getFriendsOnline();
+    getLastMessages();
+  }, []);
 
   useEffect(() => {
-    if (user.id) {
-      setSocketLoading(true);
-      connectToRoom(user.id);
-      getFriendsOnline();
-      socketRef.current.emit('messages:getLastMessages');
-    }
-  }, [user])
-
-  useEffect(() => {
-    setUser({ id, username });
+    if (!id) return
     socketRef.current = io(SERVER_URL, {
       query : {
         'id': id,
@@ -61,47 +62,42 @@ export const useChat = () => {
       },
     });
 
+    handleLoading(id)
+
     socketRef.current.on('friends:online', (friendsOnline: string[]) => {
-      setUsersOnline(friendsOnline);
+      dispatch(setUseChatSateUsersOnline(friendsOnline));
     });
 
     socketRef.current.on('friends:wentOffline', wentOfflineListener);
 
     socketRef.current.on('friends:wentOnline', (wentOnlineId: string) => {
-      setUsersOnline((friendsOnline: string[]) => {
-        if (friendsOnline.includes(wentOnlineId)) return friendsOnline
-        return [...friendsOnline.concat(wentOnlineId)]
-      });
+      const friendsOnline = usersOnline.includes(wentOnlineId) ? usersOnline : [...usersOnline.concat(wentOnlineId)]
+      dispatch(setUseChatSateUsersOnline(friendsOnline));
     });
 
-    socketRef.current.on('system:connected', (serverMessages: any) => {
-      // console.log(serverMessages);
-    });
+    // socketRef.current.on('system:connected', (serverMessages: any) => {
+    //   dispatch(setUseChatStateConnected(true))
+    //   // console.log(serverMessages);
+    // });
 
     socketRef.current.on(`messages:get${id}`, (serverMessages: any) => {
-      setMessages([...serverMessages])
-      setSocketLoading(false);
+      dispatch(setUseChatSateMessages([...serverMessages]));
     });
 
     socketRef.current.on(`messages:getLastMessages${id}`, (messages: any) => {
-      setLastMessages({...messages})
-      setSocketLoading(false);
+      dispatch(setUseChatSateLastMessages({...messages}));
     });
 
     socketRef.current.on('messages:add', (serverMessage: ServerMessage[]) => {
-      setMessages(prev => {
-        if (prev.length === 0 || serverMessage[0].roomId === prev[0].roomId) {
-          return [...prev, ...serverMessage]
-        }
-        return  [...prev]
-      });
-      setNotification(serverMessage[0]);
-      setLastMessages((prevState => {
-        const roomId = serverMessage[0].roomId;
-        const newState = {...prevState};
-        newState[roomId] = serverMessage[0];
-        return newState
-      }))
+      const newMessages = messages.length === 0 || serverMessage[0].roomId === messages[0].roomId
+        ? [...messages, ...serverMessage]
+        : [...messages]
+      dispatch(setUseChatSateMessages(newMessages));
+      dispatch(setUseChatSateNotification(serverMessage[0]));
+      const roomId = serverMessage[0].roomId;
+      const newLastMessages = {...lastMessages};
+      newLastMessages[roomId] = serverMessage[0];
+      dispatch(setUseChatSateLastMessages(newLastMessages));
     });
 
     socketRef.current.on('system', (serverMessage: any) => {
@@ -111,28 +107,32 @@ export const useChat = () => {
     return () => socketRef.current.disconnect()
   }, [])
 
-  const disconnect = async () => {
-    await socketRef.current.disconnect()
-  }
+  const disconnect = useCallback(() => {
+    socketRef.current.disconnect()
+  }, []);
 
-  const connectToRoom = async ( roomId: string ) => {
-    await socketRef.current.emit('system:connect', { id, roomId });
-  }
+  const connectToRoom = useCallback(({userId, roomId}: {userId: string | null, roomId?: string | undefined} ) => {
+    if (!roomId) return socketRef.current.emit('system:connect', { userId, roomId: userId });
+    socketRef.current.emit('system:connect', { userId, roomId });
+  }, [])
 
-  const getFriendsOnline = async () => {
-    await socketRef.current.emit('friends:online');
-  }
+  const getFriendsOnline = useCallback(() => {
+    socketRef.current.emit('friends:online');
+  }, []);
 
-  const getMessages = async ( roomId: string ) => {
-    setSocketLoading(true);
-    await socketRef.current.emit('messages:get', { roomId });
-  }
+  const getLastMessages = useCallback(() => {
+    socketRef.current.emit('messages:getLastMessages');
+  }, []);
 
-  const sendMessage = (roomId: string, message: string) => {
+  const getMessages = useCallback(( roomId: string ) => {
+    socketRef.current.emit('messages:get', { roomId });
+  }, []);
+
+  const sendMessage = useCallback((roomId: string, message: string, user: {id: string | null, username: string | null}) => {
     socketRef.current.emit('messages:add', {roomId, message, ...user});
-  }
+  }, [])
 
-  const showNotification = (notification: ServerMessage | null) => {
+  const showNotification = useCallback((notification: ServerMessage | null) => {
     if (notification) {
       enqueueSnackbar(<div>
         <div
@@ -162,17 +162,10 @@ export const useChat = () => {
         </div>
       </div>);
     }
-  }
+  }, [])
 
   return {
-    socketLoading,
-    user,
-    usersOnline,
-    messages,
-    notification,
-    lastMessages,
     sendMessage,
-    setLastMessages,
     getMessages,
     connectToRoom,
     disconnect,

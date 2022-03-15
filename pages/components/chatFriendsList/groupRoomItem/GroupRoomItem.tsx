@@ -15,9 +15,7 @@ export const GroupRoomItem = (
     classes,
     title,
     clickItem
-  }
-  :
-  {
+  } : {
     room: Room | FriendRoom,
     classes: {userPaper: any, userPaperSelected: any},
     title: string,

@@ -5,24 +5,27 @@ import {useChat} from "../../../hooks/useChat";
 import {useTranslation} from "next-i18next";
 import Paper from "@mui/material/Paper";
 import SendIcon from '@mui/icons-material/Send';
+import {useSelector} from "react-redux";
+import {InitialState} from "../../../redux/reducers";
 
 
 export const ChatInput = ({roomId}: { roomId: string }) => {
 
   const [userMessage, setUserMessage] = useState('');
+  const { useChatState } = useSelector((state: InitialState)  => state);
   const { sendMessage } = useChat();
   const { t } = useTranslation('common');
 
   const onClickSend = () => {
     if (userMessage.length === 0) return
-    sendMessage(roomId, userMessage);
+    sendMessage(roomId, userMessage, useChatState.user);
     setUserMessage('');
   }
 
   const onClickEnter = (e: any) => {
     if (userMessage.length === 0) return
     if (e.key === 'Enter') {
-      sendMessage(roomId, userMessage);
+      sendMessage(roomId, userMessage, useChatState.user);
       setUserMessage('');
     }
   }

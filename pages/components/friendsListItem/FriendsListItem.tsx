@@ -10,6 +10,8 @@ import {t} from "i18next";
 import ApiServices from "../../../services/ApiServices";
 import {User} from "../../profile/[id]";
 import {useChat} from "../../../hooks/useChat";
+import {useSelector} from "react-redux";
+import {InitialState} from "../../../redux/reducers";
 
 export const FriendsListItem = (
   {
@@ -25,7 +27,8 @@ export const FriendsListItem = (
     setGroupChatMembers: Function,
     enqueueSnackbar: Function
   }) => {
-  const {usersOnline} = useChat();
+  const { useChatState } = useSelector((state: InitialState)  => state);
+  const { usersOnline } = useChatState;
   const router = useRouter();
   const { createRoom } = ApiServices();
   const classes = useStyles();

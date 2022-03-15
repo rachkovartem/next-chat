@@ -19,8 +19,7 @@ export const ChatFriendList = () => {
   const router = useRouter();
   const { user, fullRooms } = useSelector((state: InitialState)  => state);
   const isBrowser = typeof window !== 'undefined';
-
-  const loadRoomInfo = async () => {
+  const loadRoomsInfo = async () => {
     if (user.id) {
       const res = await getAllUserRooms(user.id);
       dispatch(setFullRooms(res.data))
@@ -34,7 +33,7 @@ export const ChatFriendList = () => {
   }
 
   useEffect(() => {
-    loadRoomInfo()
+    loadRoomsInfo()
   }, [user.id])
 
   return <>

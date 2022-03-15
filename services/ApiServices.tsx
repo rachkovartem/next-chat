@@ -2,7 +2,7 @@
 import {useApi} from "../hooks/useApi";
 
 const ApiServices = () => {
-  const { getRequest, postRequest, apiError, apiLoading, clearApiError } = useApi();
+  const { getRequest, postRequest, clearApiError } = useApi();
 
   const login = async (email: string, password: string) => {
     return await postRequest(`/auth/login`, {email, password});
@@ -59,8 +59,6 @@ const ApiServices = () => {
     await postRequest('/rejectFriendReq', { idUser, idFriend, idReq });
 
   return {
-    apiError,
-    apiLoading,
     clearApiError,
     login,
     register,

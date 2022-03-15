@@ -2,9 +2,12 @@ import {Avatar, AvatarGroup, Button} from "@mui/material";
 import * as React from 'react';
 
 import {useChat} from '../../../hooks/useChat';
+import {useSelector} from "react-redux";
+import {InitialState} from "../../../redux/reducers";
 
 export default function Header(props: { room: any | null}) {
-  const {user} = useChat()
+  const { useChatState } = useSelector((state: InitialState)  => state);
+  const { user } = useChatState;
   const { room } = props;
 
   const avatar = (participant: {id: string, imagePath: string}) =>

@@ -1,27 +1,27 @@
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
-import ButtonGroup from "@mui/material/ButtonGroup";
-import {Button, Chip} from "@mui/material";
-import {setUser, setUserInReqs, setUserOutReqs} from "../../redux/actions";
-import {FriendsTab} from "../components/friendsTab/FriendsTab";
-import {GroupsTab} from "../components/groupsTab/GroupsTab";
-import {InReqsTab} from "../components/inReqsTab/InReqsTab";
-import {OutReqsTab} from "../components/outReqsTab/OutReqsTab";
+import { Chip} from "@mui/material";
 import * as React from "react";
 import {useTranslation} from "next-i18next";
-import ApiServices from "../../services/ApiServices";
-import {useEffect, useRef, useState} from "react";
-import {useStyles} from "../profile/id.styles";
-import {NextRouter, useRouter} from "next/router";
+import {useEffect, useState} from "react";
+import { useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";
-import {InitialState} from "../../redux/reducers";
-import {useChat} from "../../hooks/useChat";
 import {useSnackbar} from "notistack";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import Paper from "@mui/material/Paper";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {AppContext} from "next/app";
+
+import ApiServices from "../../services/ApiServices";
+import {useStyles} from "../profile/id.styles";
+import {useChat} from "../../hooks/useChat";
+import {InitialState} from "../../redux/reducers";
 import {SideBar} from "../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
+import { setUserInReqs, setUserOutReqs} from "../../redux/actions";
+import {FriendsTab} from "../components/friendsTab/FriendsTab";
+import {GroupsTab} from "../components/groupsTab/GroupsTab";
+import {InReqsTab} from "../components/inReqsTab/InReqsTab";
+import {OutReqsTab} from "../components/outReqsTab/OutReqsTab";
 
 interface Context extends AppContext {
   locale: string,
@@ -37,21 +37,22 @@ export default function Friends (props: {locale: string, id: string}) {
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
-  const { user } = useSelector((state: InitialState)  => state);
+  const { user, useChatState } = useSelector((state: InitialState)  => state);
   const { objFriends, inReqs, outReqs } = user;
+  const { notification } = useChatState;
   const dispatch = useDispatch();
-  const { showNotification, notification, } = useChat();
+  const { showNotification } = useChat();
   const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
   const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
 
   useEffect(() => {
     onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
-  }, [])
+  }, []);
 
   useEffect(() => {
     showNotification(notification)
-  }, [notification])
+  }, [notification]);
 
   const onClickRejectReq = async (idUser: string, idFriend: string, idReq: string) => {
     const res = await rejectFriendReq(idUser, idFriend, idReq);
@@ -67,7 +68,7 @@ export default function Friends (props: {locale: string, id: string}) {
     } else if ('data' in res) {
       await router.push(`/room/${res.data.roomRes.roomId}`);
     } else {
-      console.log('err')
+      console.log('err');
     }
   }
 
