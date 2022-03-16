@@ -1,0 +1,54 @@
+import {useCallback} from "react";
+import {Avatar} from "@mui/material";
+import * as React from "react";
+import {useSnackbar} from "notistack";
+
+export interface ServerMessage {
+  messageId: string,
+  roomId: string,
+  senderId: string,
+  senderUsername: string,
+  message: string,
+  sendingDate: string,
+  senderAvatar: string,
+}
+
+export const useNotification= () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const showNotification = useCallback((notification: ServerMessage | null) => {
+    if (notification) {
+      enqueueSnackbar(<div>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '10px',
+          }}>
+          <Avatar
+            alt="Avatar"
+            src={notification ? `http://localhost:8080/${notification.senderAvatar}` : ''}
+          />
+          <div
+            style={{
+              maxWidth: '288px',
+              marginLeft: '10px',
+              fontWeight: 'bold',
+            }}
+          >
+          </div>
+          {notification?.senderUsername}
+        </div>
+        <div
+          style={{maxWidth: '288px'}}
+        >
+          {notification?.message}
+        </div>
+      </div>);
+    }
+  }, [])
+
+  return {
+    showNotification
+  }
+}

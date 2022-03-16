@@ -14,10 +14,12 @@ import {useSnackbar} from 'notistack';
 import { Crop } from '../components/crop/Crop';
 import {useStyles} from "./id.styles";
 import {InitialState} from "../../redux/reducers";
-import {ServerMessage, useChat} from "../../hooks/useChat";
 import {SideBar} from "../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";
+import {setSocket} from "../../redux/actions";
+import {useSocket} from "../../hooks/useSocket";
+import {useNotification, ServerMessage} from "../../hooks/useNotification";
 
 export interface User {
   id: string,
@@ -58,21 +60,30 @@ interface Context extends AppContext {
 }
 
 export default function Profile (props: {locale: string, id: string}) {
+  const { createSocket, setOnlineListeners } = useSocket();
+  const dispatch = useDispatch();
   const {locale, id} = props;
   const { t } = useTranslation('common');
   const [file, setFile] = useState<File | null>(null);
   const classes = useStyles();
   const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
-  const { user, useChatState } = useSelector((state: InitialState)  => state);
+  const { socket, user, useChatState } = useSelector((state: InitialState)  => state);
   const { username, imagePath } = user;
-  const { notification } = useChatState;
+  const { notification, usersOnline } = useChatState;
   const inputRef = useRef(null);
-  const { showNotification } = useChat();
+  const { showNotification } = useNotification();
   const { onLoadingPage } = PagesServices();
 
   useEffect(() => {
+    dispatch(setSocket(createSocket()))
     onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, [])
+
+  useEffect(() => {
+    if (socket) {
+      setOnlineListeners({socket, usersOnline})
+    }
+  }, [socket])
 
   useEffect(() => {
     showNotification(notification)

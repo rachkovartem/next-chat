@@ -2,22 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/hooks/useNotification.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useSocket.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useChat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useChat.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useChat.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/ChatFriendsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/ChatFriendsList.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/header/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/sideBar/sideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/sideBar/sideBar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/friends/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/friends/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/profile/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/room/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/room/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/actions/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/actions/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/reducers/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/ApiServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/ApiServices.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/services/PagesServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/PagesServices.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

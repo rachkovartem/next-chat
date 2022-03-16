@@ -1,6 +1,7 @@
 import {Message, Room} from "../../pages/profile/[id]";
 import {FriendRoom} from "../reducers";
 import {ServerMessage} from "../../hooks/useChat";
+import {Socket} from "socket.io-client";
 
 export const setUser = (value: any) => {
     return {
@@ -93,7 +94,7 @@ export const setUseChatSateMessages = (messages: ServerMessage[]) => {
     }
 }
 
-export const setUseChatSateNotification = (message: ServerMessage) => {
+export const setUseChatSateNotification = (message: ServerMessage | null) => {
     return {
         type: 'SET_USECHATSTATE_NOTIFICATION',
         payload: message
@@ -110,6 +111,13 @@ export const setUseChatSateLastMessages = (messages: {[roomId: string]: Message}
 export const setUseChatSateSocketLoading = (value: boolean) => {
     return {
         type: 'SET_USECHATSTATE_SOCKETLOADING',
+        payload: value
+    }
+}
+
+export const setSocket = (value: Socket) => {
+    return {
+        type: 'SET_SOCKET',
         payload: value
     }
 }

@@ -10,21 +10,26 @@ import {ChatInput} from "../chatInput/ChatInput";
 import {Room} from "../../profile/[id]";
 import {Avatar} from "@mui/material";
 import Header from "../header/Header";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
+import {setUseChatSateMessages} from "../../../redux/actions";
 
 export const ChatWindow = (props: Room) => {
+  const dispatch = useDispatch();
   const {roomId, groupRoom, avatars} = props;
-  const { useChatState } = useSelector((state: InitialState)  => state);
-  const { user, messages } = useChatState;
-  const { getMessages, connectToRoom } = useChat();
+  const { user, socket, useChatState } = useSelector((state: InitialState)  => state);
+  const { messages } = useChatState;
   const [initial, setInitial] = useState(false);
   const { t } = useTranslation('common');
 
   const onLoading = async () => {
-    if (!user.id) return
-    await connectToRoom({userId: user.id, roomId});
-    await getMessages(roomId);
+    if (!user.id || !socket) return
+    socket.on(`messages:get${user.id}`, (serverMessages: any) => {
+      dispatch(setUseChatSateMessages([...serverMessages]));
+    });
+
+    socket.emit('system:connect', { userId: user.id, roomId });
+    socket.emit('messages:get', { roomId });
   }
 
   useEffect(() => {

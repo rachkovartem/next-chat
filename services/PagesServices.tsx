@@ -7,7 +7,6 @@ import {InitialState} from "../redux/reducers";
 export const PagesServices = () => {
   const { useChatState } = useSelector((state: InitialState)  => state);
   const { user } = useChatState;
-  const { connectToRoom } = useChat();
   const dispatch = useDispatch();
   const router = useRouter();
 

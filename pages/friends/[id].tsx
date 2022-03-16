@@ -13,15 +13,16 @@ import {AppContext} from "next/app";
 
 import ApiServices from "../../services/ApiServices";
 import {useStyles} from "../profile/id.styles";
-import {useChat} from "../../hooks/useChat";
 import {InitialState} from "../../redux/reducers";
 import {SideBar} from "../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
-import { setUserInReqs, setUserOutReqs} from "../../redux/actions";
+import {setSocket, setUserInReqs, setUserOutReqs} from "../../redux/actions";
 import {FriendsTab} from "../components/friendsTab/FriendsTab";
 import {GroupsTab} from "../components/groupsTab/GroupsTab";
 import {InReqsTab} from "../components/inReqsTab/InReqsTab";
 import {OutReqsTab} from "../components/outReqsTab/OutReqsTab";
+import {useSocket} from "../../hooks/useSocket";
+import {useNotification} from "../../hooks/useNotification";
 
 interface Context extends AppContext {
   locale: string,
@@ -29,7 +30,7 @@ interface Context extends AppContext {
 }
 
 export default function Friends (props: {locale: string, id: string}) {
-
+  const { createSocket, setOnlineListeners } = useSocket();
   const {locale, id} = props;
   const { t } = useTranslation('common');
   const { rejectFriendReq, createGroupRoom } = ApiServices();
@@ -37,18 +38,25 @@ export default function Friends (props: {locale: string, id: string}) {
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
-  const { user, useChatState } = useSelector((state: InitialState)  => state);
+  const { socket, user, useChatState } = useSelector((state: InitialState)  => state);
   const { objFriends, inReqs, outReqs } = user;
-  const { notification } = useChatState;
+  const { notification, usersOnline } = useChatState;
   const dispatch = useDispatch();
-  const { showNotification } = useChat();
+  const { showNotification } = useNotification();
   const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
   const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
 
   useEffect(() => {
+    dispatch(setSocket(createSocket()));
     onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      setOnlineListeners({socket, usersOnline})
+    }
+  }, [socket])
 
   useEffect(() => {
     showNotification(notification)

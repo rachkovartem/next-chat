@@ -11,11 +11,11 @@ import {ChatWindow} from "../components/chatWindow/ChatWindow";
 import {SideBar} from "../components/sideBar/sideBar";
 import {InitialState} from "../../redux/reducers";
 import {PagesServices} from "../../services/PagesServices";
-import {useChat} from "../../hooks/useChat";
 import ApiServices from "../../services/ApiServices";
 import {ChatFriendList} from "../components/chatFriendsList/ChatFriendsList";
-import {setFullRooms} from "../../redux/actions";
+import {setFullRooms, setSocket, setUseChatSateUsersOnline} from "../../redux/actions";
 import {setCurrentRoom} from "../../redux/actions";
+import {useSocket} from "../../hooks/useSocket";
 
 export default function Room(props: any) {
   const { locale, id } = props;
@@ -27,11 +27,12 @@ export default function Room(props: any) {
     check,
   } = ApiServices();
 
+  const { createSocket, setOnlineListeners } = useSocket();
   const { t } = useTranslation('common');
   const { onLoadingPage } = PagesServices();
   const dispatch = useDispatch();
-  const { currentRoom, fullRooms, useChatState } = useSelector((state: InitialState)  => state);
-  const { notification, socketLoading } = useChatState;
+  const { socket, currentRoom, fullRooms, useChatState } = useSelector((state: InitialState)  => state);
+  const { notification, socketLoading, usersOnline } = useChatState;
   const [pageLoading, setPageLoading] = useState(true);
   const loadRoom = async () => {
     let room = await getRoomInfo(id);
@@ -42,9 +43,16 @@ export default function Room(props: any) {
   }
 
   useEffect(() => {
+    dispatch(setSocket(createSocket()));
     loadRoom()
     onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, [])
+
+  useEffect(() => {
+    if (socket) {
+      setOnlineListeners({socket, usersOnline})
+    }
+  }, [socket])
 
   useEffect(() => {
     if (notification) {

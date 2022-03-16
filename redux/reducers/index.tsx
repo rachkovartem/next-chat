@@ -1,5 +1,6 @@
 import {Message, Room} from "../../pages/profile/[id]";
-import {ServerMessage} from "../../hooks/useChat";
+import {ServerMessage} from "../../hooks/useNotification";
+import {Socket} from "socket.io-client";
 
 export interface InReq {
     id: string,
@@ -55,7 +56,8 @@ interface InitialState {
         notification: ServerMessage | null,
         lastMessages: {[roomId: string]: Message},
         socketLoading: boolean,
-    }
+    },
+    socket: null | Socket,
 }
 
 const initialState : InitialState = {
@@ -87,7 +89,8 @@ const initialState : InitialState = {
         notification: null,
         lastMessages: {},
         socketLoading: false,
-    }
+    },
+    socket: null,
 }
 
 const reducer = (state = initialState, action: { type: string, payload: any }) => {
@@ -207,6 +210,11 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                     ...state.useChatState,
                     socketLoading: action.payload,
                 }
+            }
+        case 'SET_SOCKET':
+            return {
+                ...state,
+                socket: action.payload,
             }
         default: return state
     }

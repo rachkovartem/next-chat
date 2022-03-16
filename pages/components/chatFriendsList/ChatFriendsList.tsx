@@ -14,7 +14,7 @@ import {GroupRoomItem} from "./groupRoomItem/GroupRoomItem";
 
 export const ChatFriendList = () => {
   const dispatch = useDispatch();
-  const {getAllUserRooms, getRoomInfo} = ApiServices();
+  const { getAllUserRooms, getRoomInfo } = ApiServices();
   const classes = roomStyles();
   const router = useRouter();
   const { user, fullRooms } = useSelector((state: InitialState)  => state);

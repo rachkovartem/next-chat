@@ -20,13 +20,13 @@ export const SideBar = ({locale}: {locale: string}) => {
   const drawerWidth = 88;
   const router = useRouter();
   const { pathname, asPath, query } = router;
+  const { socket } = useSelector((state: InitialState)  => state);
   const routerOptionLocale = locale === 'ru' ? 'en' : 'ru';
-  const {disconnect} = useChat()
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
 
   const onClickLogout = async () => {
-    await disconnect();
+    socket?.disconnect();
     await router.push(`/`);
     localStorage.clear();
     document.cookie = 'access_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
