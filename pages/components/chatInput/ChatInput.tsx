@@ -17,20 +17,6 @@ export const ChatInput = ({roomId}: { roomId: string }) => {
   const { messages, lastMessages } = useChatState;
   const { t } = useTranslation('common');
 
-  useEffect(() => {
-    if (!socket) return
-    socket.on('messages:add', (serverMessage: ServerMessage[]) => {
-      const newMessages = messages.length === 0 || serverMessage[0].roomId === messages[0].roomId
-        ? [...messages, ...serverMessage]
-        : [...messages]
-      dispatch(setUseChatSateMessages(newMessages));
-      dispatch(setUseChatSateNotification(serverMessage[0]));
-      const roomId = serverMessage[0].roomId;
-      const newLastMessages = {...lastMessages};
-      newLastMessages[roomId] = serverMessage[0];
-      dispatch(setUseChatSateLastMessages(newLastMessages));
-    });
-  }, [])
 
   const sendMessage = (roomId: string, message: string, user: {id: string | null, username: string | null}) => {
     if (!socket) return

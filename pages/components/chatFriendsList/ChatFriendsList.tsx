@@ -19,6 +19,7 @@ export const ChatFriendList = () => {
   const router = useRouter();
   const { user, fullRooms } = useSelector((state: InitialState)  => state);
   const isBrowser = typeof window !== 'undefined';
+
   const loadRoomsInfo = async () => {
     if (user.id) {
       const res = await getAllUserRooms(user.id);

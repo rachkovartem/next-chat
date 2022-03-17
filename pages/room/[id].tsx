@@ -13,9 +13,13 @@ import {InitialState} from "../../redux/reducers";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";
 import {ChatFriendList} from "../components/chatFriendsList/ChatFriendsList";
-import {setFullRooms, setSocket, setUseChatSateUsersOnline} from "../../redux/actions";
+import {
+  setFullRooms,
+  setSocket,
+} from "../../redux/actions";
 import {setCurrentRoom} from "../../redux/actions";
 import {useSocket} from "../../hooks/useSocket";
+import {ServerMessage} from "../../hooks/useNotification";
 
 export default function Room(props: any) {
   const { locale, id } = props;
@@ -32,9 +36,11 @@ export default function Room(props: any) {
   const { onLoadingPage } = PagesServices();
   const dispatch = useDispatch();
   const { socket, currentRoom, fullRooms, useChatState } = useSelector((state: InitialState)  => state);
+  const [messages, setMessages] = useState<ServerMessage[]>([])
   const { notification, socketLoading, usersOnline } = useChatState;
-  const [pageLoading, setPageLoading] = useState(true);
-  const loadRoom = async () => {
+  const [initialRender, setInitialRender] = useState(true);
+
+  const loadRoom = async (id: string) => {
     let room = await getRoomInfo(id);
     if (!('data' in room)) {
       room.data = null
@@ -43,8 +49,37 @@ export default function Room(props: any) {
   }
 
   useEffect(() => {
-    dispatch(setSocket(createSocket()));
-    loadRoom()
+    if (initialRender) {
+      loadRoom(id)
+      setInitialRender(false);
+    }
+
+    return () => {
+      dispatch(setCurrentRoom(null))
+    };
+  }, [])
+
+  useEffect(() => {
+    console.log(fullRooms)
+  }, [messages])
+
+  useEffect(() => {
+    const socket = createSocket()
+    socket.on('messages:add', (serverMessage: ServerMessage[]) => {
+      setMessages(prev => [...prev, ...serverMessage])
+      // dispatch(setFullRooms(fullRooms.map(room => {
+      //   if (room.roomId === serverMessage[0].roomId) {
+      //     room.lastMessage = serverMessage[0];
+      //     return room
+      //   } else {
+      //     return  room
+      //   }
+      // })))
+    });
+    socket.on(`messages:get${localStorage.getItem('id')}`, (serverMessages: any) => {
+      setMessages([...serverMessages])
+    });
+    dispatch(setSocket(socket));
     onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
   }, [])
 
@@ -68,8 +103,7 @@ export default function Room(props: any) {
     }
   }, [notification]);
 
-  const spinner =  socketLoading ? <CircularProgress /> : null;
-  const chatView = currentRoom && !socketLoading ? <ChatWindow {...currentRoom}/> : null;
+  const chatView = currentRoom ? <ChatWindow {...currentRoom} messages={messages}/> : null;
   return (
     <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
       <SideBar locale={locale}/>
@@ -93,7 +127,6 @@ export default function Room(props: any) {
         }}>
           <ChatFriendList />
         </Box>
-        {spinner}
         {chatView}
       </div>
     </div>

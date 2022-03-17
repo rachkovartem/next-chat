@@ -5,40 +5,39 @@ import {useEffect, useState} from "react";
 import {useTranslation} from "next-i18next";
 import Stack from '@mui/material/Stack';
 
-import {useChat} from "../../../hooks/useChat";
 import {ChatInput} from "../chatInput/ChatInput";
 import {Room} from "../../profile/[id]";
 import {Avatar} from "@mui/material";
 import Header from "../header/Header";
 import {useDispatch, useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
-import {setUseChatSateMessages} from "../../../redux/actions";
+import {setUseChatSateMessages, setUseChatSateNotification} from "../../../redux/actions";
+import {ServerMessage} from "../../../hooks/useNotification";
+import {Socket} from "socket.io-client";
 
-export const ChatWindow = (props: Room) => {
-  const dispatch = useDispatch();
-  const {roomId, groupRoom, avatars} = props;
-  const { user, socket, useChatState } = useSelector((state: InitialState)  => state);
-  const { messages } = useChatState;
+interface Props extends Room {
+  messages: ServerMessage[]
+}
+
+export const ChatWindow = (props: Props) => {
+  const {roomId, groupRoom, avatars, messages} = props;
+  const { user, socket } = useSelector((state: InitialState)  => state);
   const [initial, setInitial] = useState(false);
   const { t } = useTranslation('common');
 
-  const onLoading = async () => {
-    if (!user.id || !socket) return
-    socket.on(`messages:get${user.id}`, (serverMessages: any) => {
-      dispatch(setUseChatSateMessages([...serverMessages]));
-    });
-
+  useEffect(() => {
+    if (!socket) return
     socket.emit('system:connect', { userId: user.id, roomId });
     socket.emit('messages:get', { roomId });
-  }
+  }, [roomId])
 
   useEffect(() => {
     if (roomId === user.id) {
       setInitial(true)
       return
     }
-    onLoading()
-  }, [roomId])
+  }, [roomId, user.id])
+
 
   const getTime = (timestamp: string) => {
     const date = new Date(+timestamp);

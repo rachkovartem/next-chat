@@ -1,7 +1,7 @@
 import {Message, Room} from "../../pages/profile/[id]";
 import {FriendRoom} from "../reducers";
-import {ServerMessage} from "../../hooks/useChat";
 import {Socket} from "socket.io-client";
+import {ServerMessage} from "../../hooks/useNotification";
 
 export const setUser = (value: any) => {
     return {

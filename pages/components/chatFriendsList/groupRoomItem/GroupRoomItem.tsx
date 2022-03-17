@@ -3,7 +3,6 @@ import {EllipseText} from "../../ellipseText/EllipseText";
 import Paper from "@mui/material/Paper";
 import * as React from "react";
 import {Message, Room} from "../../../profile/[id]";
-import {useChat} from "../../../../hooks/useChat";
 import {useEffect, useState} from "react";
 import {FriendRoom, InitialState} from "../../../../redux/reducers";
 import {useSelector} from "react-redux";
