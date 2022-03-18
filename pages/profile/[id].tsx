@@ -1,6 +1,5 @@
 import 'react-image-crop/dist/ReactCrop.css';
 import {Avatar, Button, Modal} from "@mui/material";
-import {useRouter} from "next/router";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
@@ -9,7 +8,6 @@ import {useState, useEffect, useRef} from "react";
 import type { AppContext } from 'next/app';
 import {useTranslation} from "next-i18next";
 import {useDispatch, useSelector} from "react-redux";
-import {useSnackbar} from 'notistack';
 
 import { Crop } from '../components/crop/Crop';
 import {useStyles} from "./id.styles";
@@ -17,7 +15,7 @@ import {InitialState} from "../../redux/reducers";
 import {SideBar} from "../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";
-import {setSocket} from "../../redux/actions";
+import {setSocket, setUser} from "../../redux/actions";
 import {useSocket} from "../../hooks/useSocket";
 import {useNotification, ServerMessage} from "../../hooks/useNotification";
 
@@ -76,7 +74,8 @@ export default function Profile (props: {locale: string, id: string}) {
 
   useEffect(() => {
     dispatch(setSocket(createSocket()))
-    onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
+    const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
+    res.then(res => dispatch(setUser(res)))
   }, [])
 
   useEffect(() => {

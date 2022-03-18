@@ -1,21 +1,16 @@
-import {setUser} from "../redux/actions";
 import {useRouter} from "next/router";
-import {useChat} from "../hooks/useChat";
-import {useDispatch, useSelector} from "react-redux";
-import {InitialState} from "../redux/reducers";
+import {useState} from "react";
 
 export const PagesServices = () => {
-  const { useChatState } = useSelector((state: InitialState)  => state);
-  const { user } = useChatState;
-  const dispatch = useDispatch();
+  const [pageLoading, setPageLoading] = useState(true);
   const router = useRouter();
-
   const onLoadingPage = async (
     getUserById: Function,
     getRequests: Function,
     getAllRoomsIds: Function,
     check: Function
   ) => {
+    setPageLoading(true);
     const resCheck = await check();
     if ('status' in resCheck && resCheck.status !== 200) {
       await router.push('/')
@@ -29,13 +24,13 @@ export const PagesServices = () => {
     const responseUser = await getUserById(id);
     const { friendsRequests } = responseUser.data;
     const requests = await getRequests(friendsRequests, id);
-    const res = {
+    setPageLoading(false);
+    return {
       ...responseUser.data,
       inReqs: requests.data.inReqs,
       outReqs: requests.data.outReqs,
     }
-    dispatch(setUser(res));
   }
 
-  return {onLoadingPage}
+  return {pageLoading, onLoadingPage}
 }

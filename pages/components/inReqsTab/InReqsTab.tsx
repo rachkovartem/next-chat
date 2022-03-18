@@ -3,14 +3,12 @@ import {Avatar} from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import * as React from "react";
-import {setProfileTab, setUserInReqs, setUserObjFriends} from "../../../redux/actions";
+import {setUserInReqs, setUserObjFriends} from "../../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
 import ApiServices from "../../../services/ApiServices";
 import {useTranslation} from "next-i18next";
 import {useStyles} from "../../profile/id.styles";
 import {InReq} from "../../../redux/reducers";
-
-
 
 export const InReqsTab =
   ({
@@ -36,7 +34,6 @@ export const InReqsTab =
     }
     dispatch(setUserObjFriends(res.data.objFriends));
     dispatch(setUserInReqs(res.data.inReqs));
-    dispatch(setProfileTab('friends'));
   }
 
   return <div style={{width: '100%'}}>
@@ -45,7 +42,7 @@ export const InReqsTab =
       return <Paper
         className={classes.userPaperNoCursor}
         key={req.id}
-        elevation={3}
+        elevation={0}
       >
         <Avatar
           sx={{marginLeft: '6px'}}

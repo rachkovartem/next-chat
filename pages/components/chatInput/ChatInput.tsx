@@ -1,20 +1,16 @@
-import {Button, IconButton, InputBase, TextField} from "@mui/material";
+import {IconButton, InputBase} from "@mui/material";
 import * as React from "react";
-import {useEffect, useState} from "react";
-import {ServerMessage} from "../../../hooks/useNotification";
+import {useState} from "react";
 import {useTranslation} from "next-i18next";
 import Paper from "@mui/material/Paper";
 import SendIcon from '@mui/icons-material/Send';
 import {useDispatch, useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
-import {setUseChatSateLastMessages, setUseChatSateMessages, setUseChatSateNotification} from "../../../redux/actions";
 
 
 export const ChatInput = ({roomId}: { roomId: string }) => {
-  const dispatch = useDispatch();
   const [userMessage, setUserMessage] = useState('');
-  const { user, socket, useChatState } = useSelector((state: InitialState)  => state);
-  const { messages, lastMessages } = useChatState;
+  const { user, socket } = useSelector((state: InitialState)  => state);
   const { t } = useTranslation('common');
 
 

@@ -1,6 +1,6 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {useDispatch} from "react-redux";
-import {setRequestError, setRequestLoading} from "../redux/actions";
+import {setRequestError} from "../redux/actions";
 
 const url = 'http://localhost:8080';
 const api = axios.create({
@@ -28,26 +28,21 @@ export const useApi = () => {
   const dispatch = useDispatch();
 
   const responseHandler = (response: AxiosResponse, url: string) => {
-    dispatch(setRequestLoading(false))
     return response
   }
 
   const errorHandler = (error: AxiosError) => {
     dispatch(setRequestError(error.message));
-    dispatch(setRequestLoading(false));
     throw error
   }
 
   const getRequest = (url: string, params?: object) => {
-      dispatch(setRequestLoading(true))
-
       return api.get(url, {params})
         .then(response => responseHandler(response, url))
         .catch(error => errorHandler(error))
     };
 
   const postRequest = (url: string, data: any, config?: any) => {
-    dispatch(setRequestLoading(true))
       return api.post(url, data, config)
         .then(response => responseHandler(response, url))
         .catch(error => errorHandler(error))

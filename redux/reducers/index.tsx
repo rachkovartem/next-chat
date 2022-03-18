@@ -45,17 +45,13 @@ interface User {
 interface InitialState {
     user: User,
     fullRooms: FriendRoom[] | Room [],
+    chatWindowLoading: boolean,
     currentRoom: Room | null,
-    loading: boolean,
+    currentRoomId: string | null,
     error: string | null,
     useChatState: {
-        connected: boolean,
-        user: {id: string | null, username: string | null},
         usersOnline: string[],
-        messages: ServerMessage[],
         notification: ServerMessage | null,
-        lastMessages: {[roomId: string]: Message},
-        socketLoading: boolean,
     },
     socket: null | Socket,
 }
@@ -75,20 +71,15 @@ const initialState : InitialState = {
        inReqs: [],
        outReqs: [],
        fullRooms:[],
-       password: ''
    },
     fullRooms: [],
+    chatWindowLoading: true,
     currentRoom: null,
-    loading: false,
+    currentRoomId: null,
     error: null,
     useChatState: {
-        connected: false,
-        user: {id: null, username: null},
         usersOnline: [],
-        messages: [],
         notification: null,
-        lastMessages: {},
-        socketLoading: false,
     },
     socket: null,
 }
@@ -105,11 +96,39 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                 ...state,
                 fullRooms: [...action.payload],
             }
+        case 'SET_CHAT_WINDOW_LOADING':
+            return {
+                ...state,
+                chatWindowLoading: action.payload,
+            }
+        case 'UPDATE_FULL_ROOMS':
+            const newFullRooms = [...state.fullRooms];
+            const index = newFullRooms.findIndex(item => item.roomId === action.payload);
+            if (index < 1) {
+                return {
+                    ...state,
+                    fullRooms: newFullRooms,
+                }
+            } else {
+                const deleted = newFullRooms.splice(index, 1);
+                newFullRooms.unshift(deleted[0]);
+                return {
+                    ...state,
+                    fullRooms: newFullRooms,
+                }
+            }
         case 'SET_CURRENT_ROOM':
             return {
                 ...state,
                 currentRoom: action.payload ? {...action.payload} : null,
             }
+
+        case 'SET_CURRENT_ROOM_ID':
+            return {
+                ...state,
+                currentRoomId: action.payload,
+            }
+
         case 'SET_USER_OBJFRIENDS':
             return {
                 ...state,
@@ -142,34 +161,10 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                     imagePath: action.payload,
                 }
             }
-        case `SET_REQUEST_LOADING`:
-            return {
-                ...state,
-                loading: action.payload,
-            }
         case `SET_REQUEST_ERROR`:
             return {
                 ...state,
                 error: action.payload,
-            }
-        case 'SET_USECHATSTATE_CONNECTED':
-            return {
-                ...state,
-                useChatState: {
-                    ...state.useChatState,
-                    connected: action.payload
-                }
-            }
-        case 'SET_USECHATSTATE_USER':
-            return {
-                ...state,
-                useChatState: {
-                    ...state.useChatState,
-                    user: {
-                        id: action.payload.id,
-                        username: action.payload.username,
-                    }
-                }
             }
         case 'SET_USECHATSTATE_USERSONLINE':
             return {
@@ -179,36 +174,12 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                     usersOnline: action.payload,
                 }
             }
-        case 'SET_USECHATSTATE_MESSAGES':
-            return {
-                ...state,
-                useChatState: {
-                    ...state.useChatState,
-                    messages: action.payload,
-                }
-            }
         case 'SET_USECHATSTATE_NOTIFICATION':
             return {
                 ...state,
                 useChatState: {
                     ...state.useChatState,
                     notification: action.payload,
-                }
-            }
-        case 'SET_USECHATSTATE_LASTMESSAGES':
-            return {
-                ...state,
-                useChatState: {
-                    ...state.useChatState,
-                    lastMessages: action.payload,
-                }
-            }
-        case 'SET_USECHATSTATE_SOCKETLOADING':
-            return {
-                ...state,
-                useChatState: {
-                    ...state.useChatState,
-                    socketLoading: action.payload,
                 }
             }
         case 'SET_SOCKET':

@@ -1,6 +1,5 @@
 import Paper from "@mui/material/Paper";
 import {Avatar, AvatarGroup} from "@mui/material";
-import LinesEllipsis from "react-lines-ellipsis";
 import * as React from "react";
 import {useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
@@ -31,7 +30,7 @@ export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
             className={classes.userPaper}
             key={room.roomId}
             onClick={() => onClickRoom(room.roomId)}
-            elevation={3}
+            elevation={0}
           >
             <AvatarGroup sx={{paddingLeft: '20px'}} max={4} spacing={'small'} total={room.fullParticipants.length}>
               {room.fullParticipants

@@ -1,18 +1,41 @@
 import {Avatar, Badge} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import * as React from "react";
-import {useChat} from "../../../../hooks/useChat";
 import {InitialState} from "../../../../redux/reducers";
 import {useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {ServerMessage} from "../../../../hooks/useNotification";
 
 export const FriendRoomItem = ({friend, classes, clickItem}: {friend: any, classes: { userPaper: any , userPaperSelected: any}, clickItem: Function}) => {
-  const { useChatState } = useSelector((state: InitialState)  => state);
-  const { usersOnline } = useChatState;
-  const { currentRoom } = useSelector((state: InitialState)  => state);
+  const { useChatState, currentRoomId, socket } = useSelector((state: InitialState)  => state);
+  const { usersOnline, notification } = useChatState;
+  const [isMounted, setIsMounted] = useState(false);
+  const [lastMessage, setLastMessage] = useState(friend.lastMessage)
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
 
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false)
+  }, []);
+
+  useEffect(() => {
+    if (socket && isMounted) {
+      socket.on('messages:add', (serverMessage: ServerMessage[]) => {
+        if (serverMessage[0].roomId === friend.roomId) {
+          setLastMessage(serverMessage[0])
+        }
+      });
+    }
+  }, [socket, isMounted])
+
+  useEffect(() => {
+    if (notification && isMounted) {
+      setLastMessage(notification)
+    }
+  }, [notification, isMounted]);
+
   return <Paper
-    className={currentRoom?.roomId === friend.roomId ? classes.userPaperSelected : classes.userPaper}
+    className={currentRoomId === friend.roomId ? classes.userPaperSelected : classes.userPaper}
     key={friend.id}
     elevation={0}
     onClick={() => clickItem(friend.roomId)}
@@ -46,7 +69,7 @@ export const FriendRoomItem = ({friend, classes, clickItem}: {friend: any, class
       <div style={{
         fontSize: '12px',
       }}>
-        {friend.lastMessage.message}
+        {lastMessage.message}
       </div>
     </div>
   </Paper>

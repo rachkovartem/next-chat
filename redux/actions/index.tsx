@@ -1,4 +1,4 @@
-import {Message, Room} from "../../pages/profile/[id]";
+import {Room} from "../../pages/profile/[id]";
 import {FriendRoom} from "../reducers";
 import {Socket} from "socket.io-client";
 import {ServerMessage} from "../../hooks/useNotification";
@@ -17,6 +17,20 @@ export const setFullRooms = (value: (FriendRoom | Room)[]) => {
     }
 }
 
+export const updateFullRooms = (roomId: string) => {
+    return {
+        type: 'UPDATE_FULL_ROOMS',
+        payload: roomId
+    }
+}
+
+export const setChatWindowLoading = (value: boolean) => {
+    return {
+        type: 'SET_CHAT_WINDOW_LOADING',
+        payload: value
+    }
+}
+
 export const setUserObjFriends = (value: any) => {
     return {
         type: 'SET_USER_OBJFRIENDS',
@@ -27,6 +41,13 @@ export const setUserObjFriends = (value: any) => {
 export const setCurrentRoom = (value: Room | null) => {
     return {
         type: 'SET_CURRENT_ROOM',
+        payload: value
+    }
+}
+
+export const setCurrentRoomId = (value: string | null) => {
+    return {
+        type: 'SET_CURRENT_ROOM_ID',
         payload: value
     }
 }
@@ -52,31 +73,10 @@ export const setUserImagePath = (value: string) => {
     }
 }
 
-export const setRequestLoading = (value: boolean) => {
-    return {
-        type: 'SET_REQUEST_LOADING',
-        payload: value
-    }
-}
-
 export const setRequestError = (value: string | null) => {
     return {
         type: 'SET_REQUEST_ERROR',
         payload: value
-    }
-}
-
-export const setUseChatStateConnected = (value: boolean) => {
-    return {
-        type: 'SET_USECHATSTATE_CONNECTED',
-        payload: value
-    }
-}
-
-export const setUseChatSateUser = (id: string | null, username: string | null) => {
-    return {
-        type: 'SET_USECHATSTATE_USER',
-        payload: {id, username}
     }
 }
 
@@ -87,31 +87,10 @@ export const setUseChatSateUsersOnline = (users: string[]) => {
     }
 }
 
-export const setUseChatSateMessages = (messages: ServerMessage[]) => {
-    return {
-        type: 'SET_USECHATSTATE_MESSAGES',
-        payload: messages
-    }
-}
-
 export const setUseChatSateNotification = (message: ServerMessage | null) => {
     return {
         type: 'SET_USECHATSTATE_NOTIFICATION',
         payload: message
-    }
-}
-
-export const setUseChatSateLastMessages = (messages: {[roomId: string]: Message}) => {
-    return {
-        type: 'SET_USECHATSTATE_LASTMESSAGES',
-        payload: messages
-    }
-}
-
-export const setUseChatSateSocketLoading = (value: boolean) => {
-    return {
-        type: 'SET_USECHATSTATE_SOCKETLOADING',
-        payload: value
     }
 }
 

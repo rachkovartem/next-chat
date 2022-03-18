@@ -54,19 +54,53 @@ export const useStyles = makeStyles({
         fontSize: '10px!important',
     },
     userPaper: {
+        position: 'relative',
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
         cursor: 'pointer',
         marginTop: '5px',
-        m: 1,
         height: 50,
+        '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: '33px',
+            transform: 'translateX(26px)',
+            width: '200px',
+            height: '20px',
+            borderBottom: '1px solid black'
+        },
+        '&:last-child': {
+            '&::after': {
+                content: '',
+                width: '0',
+                height: '0',
+                borderBottom: '0px solid black'
+            },
+        }
     },
     userPaperNoCursor: {
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        marginTop: '5px'
+        marginTop: '5px',
+        '&::after': {
+            content: '""',
+            position: 'absolute',
+            top: '33px',
+            transform: 'translateX(26px)',
+            width: '200px',
+            height: '20px',
+            borderBottom: '1px solid black'
+        },
+        '&:last-child': {
+            '&::after': {
+                content: '',
+                width: '0',
+                height: '0',
+                borderBottom: '0px solid black'
+            },
+        }
     },
     groupChatPaper: {
         width: '100%',

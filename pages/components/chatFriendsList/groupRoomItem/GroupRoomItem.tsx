@@ -2,10 +2,11 @@ import {Avatar} from "@mui/material";
 import {EllipseText} from "../../ellipseText/EllipseText";
 import Paper from "@mui/material/Paper";
 import * as React from "react";
-import {Message, Room} from "../../../profile/[id]";
+import {Room} from "../../../profile/[id]";
 import {useEffect, useState} from "react";
 import {FriendRoom, InitialState} from "../../../../redux/reducers";
 import {useSelector} from "react-redux";
+import {ServerMessage} from "../../../../hooks/useNotification";
 
 
 export const GroupRoomItem = (
@@ -21,10 +22,34 @@ export const GroupRoomItem = (
     clickItem: Function,
   }) => {
 
-  const { currentRoom } = useSelector((state: InitialState)  => state);
+  const [lastMessage, setLastMessage] = useState(room.lastMessage);
+  const [isMounted, setIsMounted] = useState(false);
+  const { currentRoomId, socket, useChatState } = useSelector((state: InitialState)  => state);
+  const { notification } = useChatState;
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
+
+  useEffect(() => {
+    if (socket && isMounted) {
+      socket.on('messages:add', (serverMessage: ServerMessage[]) => {
+        if (serverMessage[0].roomId === room.roomId) {
+          setLastMessage(serverMessage[0])
+        }
+      });
+    }
+  }, [socket, isMounted]);
+
+  useEffect(() => {
+    if (notification && isMounted) {
+      setLastMessage(notification)
+    }
+  }, [notification, isMounted]);
 
   return <Paper
-    className={currentRoom?.roomId === room.roomId ? classes.userPaperSelected : classes.userPaper}
+    className={currentRoomId === room.roomId ? classes.userPaperSelected : classes.userPaper}
     key={room.roomId}
     onClick={() => clickItem(room.roomId)}
     elevation={0}
@@ -54,7 +79,7 @@ export const GroupRoomItem = (
         }}>
         <EllipseText text={title} maxLine={1}/>
       </div>
-      <div>{room.lastMessage.message}</div>
+      <div>{lastMessage.message}</div>
     </div>
   </Paper>
 }

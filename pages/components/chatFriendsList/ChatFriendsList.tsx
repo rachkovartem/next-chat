@@ -5,19 +5,20 @@ import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
 
 import ApiServices from "../../../services/ApiServices";
-import {setFullRooms} from "../../../redux/actions";
+import {setChatWindowLoading, setCurrentRoomId, setFullRooms, updateFullRooms} from "../../../redux/actions";
 import {setCurrentRoom} from "../../../redux/actions";
 import {InitialState} from "../../../redux/reducers";
 import {roomStyles} from "../../room/id.styles";
 import {FriendRoomItem} from "./friendRoomItem/FriendRoomItem";
 import {GroupRoomItem} from "./groupRoomItem/GroupRoomItem";
+import {ServerMessage} from "../../../hooks/useNotification";
 
 export const ChatFriendList = () => {
   const dispatch = useDispatch();
   const { getAllUserRooms, getRoomInfo } = ApiServices();
   const classes = roomStyles();
   const router = useRouter();
-  const { user, fullRooms } = useSelector((state: InitialState)  => state);
+  const { socket, user, fullRooms } = useSelector((state: InitialState)  => state);
   const isBrowser = typeof window !== 'undefined';
 
   const loadRoomsInfo = async () => {
@@ -27,15 +28,26 @@ export const ChatFriendList = () => {
     }
   }
 
-  const clickItem = async  (roomId: string) => {
+  const clickItem = async (roomId: string) => {
+    dispatch(setChatWindowLoading(true));
+    dispatch(setCurrentRoomId(roomId));
     await router.push(`/room/${roomId}`,undefined, { shallow: true });
     const room = await getRoomInfo(roomId);
     dispatch(setCurrentRoom(room.data));
+    dispatch(setChatWindowLoading(false));
   }
 
   useEffect(() => {
     loadRoomsInfo()
   }, [user.id])
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('messages:add', (serverMessage: ServerMessage[]) => {
+        dispatch(updateFullRooms(serverMessage[0].roomId))
+      });
+    }
+  }, [socket])
 
   return <>
       {isBrowser ? fullRooms.map((room) => {

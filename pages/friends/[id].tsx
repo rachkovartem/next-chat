@@ -16,13 +16,13 @@ import {useStyles} from "../profile/id.styles";
 import {InitialState} from "../../redux/reducers";
 import {SideBar} from "../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
-import {setSocket, setUserInReqs, setUserOutReqs} from "../../redux/actions";
+import {setSocket, setUser, setUserInReqs, setUserOutReqs} from "../../redux/actions";
 import {FriendsTab} from "../components/friendsTab/FriendsTab";
 import {GroupsTab} from "../components/groupsTab/GroupsTab";
 import {InReqsTab} from "../components/inReqsTab/InReqsTab";
 import {OutReqsTab} from "../components/outReqsTab/OutReqsTab";
 import {useSocket} from "../../hooks/useSocket";
-import {useNotification} from "../../hooks/useNotification";
+import {ServerMessage, useNotification} from "../../hooks/useNotification";
 
 interface Context extends AppContext {
   locale: string,
@@ -48,15 +48,24 @@ export default function Friends (props: {locale: string, id: string}) {
   const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
 
   useEffect(() => {
-    dispatch(setSocket(createSocket()));
-    onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
+    const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
+    res.then(res => dispatch(setUser(res)));
   }, []);
 
   useEffect(() => {
-    if (socket) {
-      setOnlineListeners({socket, usersOnline})
+    if (!socket) {
+      dispatch(setSocket(createSocket()));
     }
-  }, [socket])
+    if (socket) {
+      socket.on('messages:add', (serverMessage: ServerMessage[]) => {
+        showNotification(serverMessage[0])
+      })
+      setOnlineListeners({socket, usersOnline});
+    }
+    return () => {
+      socket?.removeAllListeners();
+    }
+  }, [socket]);
 
   useEffect(() => {
     showNotification(notification)

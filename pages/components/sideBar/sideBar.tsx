@@ -9,7 +9,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LanguageIcon from '@mui/icons-material/Language';
 import * as React from "react";
 import {useRouter} from "next/router";
-import {useChat} from "../../../hooks/useChat";
 import {useTranslation} from "next-i18next";
 import {useDispatch, useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";

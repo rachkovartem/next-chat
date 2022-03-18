@@ -9,34 +9,65 @@ import {ChatInput} from "../chatInput/ChatInput";
 import {Room} from "../../profile/[id]";
 import {Avatar} from "@mui/material";
 import Header from "../header/Header";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
-import {setUseChatSateMessages, setUseChatSateNotification} from "../../../redux/actions";
 import {ServerMessage} from "../../../hooks/useNotification";
-import {Socket} from "socket.io-client";
 
 interface Props extends Room {
   messages: ServerMessage[]
 }
 
-export const ChatWindow = (props: Props) => {
-  const {roomId, groupRoom, avatars, messages} = props;
+export const ChatWindow = (props: Room) => {
+  const {roomId, groupRoom, avatars} = props;
   const { user, socket } = useSelector((state: InitialState)  => state);
   const [initial, setInitial] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { t } = useTranslation('common');
+  const [messages, setMessages] = useState<ServerMessage[]>([
+    {
+      messageId: 'initial',
+      roomId,
+      senderId: 'initial',
+      senderUsername: 'initial',
+      message: 'initial',
+      sendingDate: 'initial',
+      senderAvatar: 'initial'
+    }
+    ]);
 
   useEffect(() => {
-    if (!socket) return
-    socket.emit('system:connect', { userId: user.id, roomId });
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  })
+
+  useEffect(() => {
+    if (!socket || !isMounted) return
     socket.emit('messages:get', { roomId });
-  }, [roomId])
+  }, [roomId, isMounted])
 
   useEffect(() => {
-    if (roomId === user.id) {
+    if (roomId === user.id && isMounted) {
       setInitial(true)
       return
     }
   }, [roomId, user.id])
+
+  useEffect(() => {
+    if (socket && isMounted) {
+      socket.on('messages:add', (serverMessage: ServerMessage[]) => {
+        setMessages(prev => {
+          if (prev[0].roomId === serverMessage[0].roomId) {
+            return [...prev, ...serverMessage]
+          } else {
+            return  [...prev]
+          }
+        })
+      });
+      socket.on(`messages:get${localStorage.getItem('id')}`, (serverMessages: any) => {
+        setMessages([...serverMessages])
+      });
+    }
+  }, [socket, isMounted])
 
 
   const getTime = (timestamp: string) => {
@@ -94,8 +125,10 @@ export const ChatWindow = (props: Props) => {
         spacing={1}
       >
         {
-          messages.map(item =>
-            <div
+          messages.map(item => {
+            return item.messageId === 'initial'
+              ? null
+              : <div
               style={{
                 display: 'flex',
                 width: '100%',
@@ -142,7 +175,8 @@ export const ChatWindow = (props: Props) => {
                   {getTime(item.sendingDate)}
                 </p>
               </Paper>
-            </div>)
+            </div>
+          })
         }
       </Stack>
     </Paper>

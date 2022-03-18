@@ -6,10 +6,8 @@ import * as React from "react";
 import {useStyles} from "../../profile/id.styles";
 import {useState} from "react";
 import {useRouter} from "next/router";
-import {t} from "i18next";
 import ApiServices from "../../../services/ApiServices";
 import {User} from "../../profile/[id]";
-import {useChat} from "../../../hooks/useChat";
 import {useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
 
@@ -51,7 +49,7 @@ export const FriendsListItem = (
   return <Paper
     className={classes.userPaper}
     key={user.id}
-    elevation={3}
+    elevation={0}
     onClick={() => onClickUser(id, user.id)}
   >
       <Badge

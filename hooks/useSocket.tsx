@@ -16,12 +16,14 @@ export const useSocket = () => {
   }
 
   const createSocket = (): Socket => {
-    return socketRef.current = io(SERVER_URL, {
+    socketRef.current = io(SERVER_URL, {
       query: {
         'id': id,
         'cookies': document.cookie
       },
     })
+    socketRef.current.emit('system:connect');
+    return socketRef.current
   }
 
   const setOnlineListeners = ({socket, usersOnline}: {socket: Socket, usersOnline: string[]}) => {
