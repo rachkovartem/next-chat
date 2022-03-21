@@ -20,6 +20,7 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
   const [options, setOptions] = useState<any[]>([]);
   const [text, setText] = useState('');
   const { friendRequest } = ApiServices();
+  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL || process.env.SERVER_URL;
 
   const onChange = (e: any) => {
     if (initialSearch) {
@@ -77,7 +78,7 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
         elevation={0}
       >
         <Avatar sx={{marginLeft: '6px', width: 26, height: 26}} alt="Avatar"
-                src={option.imagePath ? `http://localhost:8080/${option.imagePath}` : ''}/>
+                src={option.imagePath ? `${serverUrl}/${option.imagePath}` : ''}/>
         <div style={{marginLeft: '12px'}}>{option.username}</div>
         <PersonAddIcon
           sx={{

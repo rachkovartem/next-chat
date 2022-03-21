@@ -1,9 +1,7 @@
 
 import {useApi} from "../hooks/useApi";
-import {useDispatch} from "react-redux";
 
 const ApiServices = () => {
-  const dispatch = useDispatch();
   const { getRequest, postRequest } = useApi();
 
   const login = async (email: string, password: string) => {

@@ -1,6 +1,5 @@
-import axios, {AxiosError, AxiosResponse} from "axios";
-
-const url = 'http://localhost:8080';
+import axios from "axios";
+const url = process.env.NEXT_PUBLIC_SERVER_URL || process.env.SERVER_URL;
 const api = axios.create({
   baseURL: url,
   withCredentials: true,
