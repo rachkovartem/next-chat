@@ -17,6 +17,7 @@
     "@mui/material": "^5.4.1",
     "@mui/styles": "^5.4.2",
     "@types/bcrypt": "^5.0.0",
+    "aws-sdk": "^2.1096.0",
     "axios": "^0.25.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
