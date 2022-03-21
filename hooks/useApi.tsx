@@ -1,6 +1,4 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {useDispatch} from "react-redux";
-import {setRequestError} from "../redux/actions";
 
 const url = 'http://localhost:8080';
 const api = axios.create({
@@ -25,30 +23,19 @@ api.interceptors.response.use(
   });
 
 export const useApi = () => {
-  const dispatch = useDispatch();
-
-  const responseHandler = (response: AxiosResponse, url: string) => {
-    return response
-  }
-
-  const errorHandler = (error: AxiosError) => {
-    dispatch(setRequestError(error.message));
-    throw error
-  }
 
   const getRequest = (url: string, params?: object) => {
       return api.get(url, {params})
-        .then(response => responseHandler(response, url))
-        .catch(error => errorHandler(error))
+        .then(response => response)
+        .catch(error => error)
     };
 
   const postRequest = (url: string, data: any, config?: any) => {
       return api.post(url, data, config)
-        .then(response => responseHandler(response, url))
-        .catch(error => errorHandler(error))
+        .then(response => response)
+        .catch(error => error)
     };
 
-  const clearApiError = () => dispatch(setRequestError(null));
 
-  return { getRequest, postRequest, clearApiError }
+  return { getRequest, postRequest }
 }

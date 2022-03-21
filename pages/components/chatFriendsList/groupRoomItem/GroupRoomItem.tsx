@@ -12,12 +12,10 @@ import {ServerMessage} from "../../../../hooks/useNotification";
 export const GroupRoomItem = (
   {
     room,
-    classes,
     title,
     clickItem
   } : {
     room: Room | FriendRoom,
-    classes: {userPaper: any, userPaperSelected: any},
     title: string,
     clickItem: Function,
   }) => {
@@ -49,7 +47,15 @@ export const GroupRoomItem = (
   }, [notification, isMounted]);
 
   return <Paper
-    className={currentRoomId === room.roomId ? classes.userPaperSelected : classes.userPaper}
+    sx={{
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      cursor: 'pointer',
+      marginTop: '5px',
+      height: 50,
+      backgroundColor: currentRoomId === room.roomId ? '#e8e8e8' : 'rgba(232,232,232,0)',
+    }}
     key={room.roomId}
     onClick={() => clickItem(room.roomId)}
     elevation={0}

@@ -31,19 +31,6 @@ export const useStyles = makeStyles({
     avatarButton: {
         marginTop: '10px'
     },
-    friendsWrapper: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gridTemplateAreas: `
-            'groups friends recents'
-            'groups friends inreqs'
-            'groups friends outreqs'
-        `,
-        gap: '10px',
-        margin: '10px',
-        maxHeight: '100vh',
-        flexWrap: 'wrap',
-    },
     buttonsGroup: {
         width: '100%',
         display: 'grid!important',
@@ -65,10 +52,10 @@ export const useStyles = makeStyles({
             content: '""',
             position: 'absolute',
             top: '33px',
-            transform: 'translateX(26px)',
-            width: '200px',
+            transform: 'translateX(10%)',
+            width: '80%',
             height: '20px',
-            borderBottom: '1px solid black'
+            borderBottom: '1px solid rgba(0, 0, 0, 0.25)'
         },
         '&:last-child': {
             '&::after': {
@@ -91,7 +78,7 @@ export const useStyles = makeStyles({
             transform: 'translateX(26px)',
             width: '200px',
             height: '20px',
-            borderBottom: '1px solid black'
+            borderBottom: '1px solid rgba(0, 0, 0, 0.25)'
         },
         '&:last-child': {
             '&::after': {
@@ -101,14 +88,5 @@ export const useStyles = makeStyles({
                 borderBottom: '0px solid black'
             },
         }
-    },
-    groupChatPaper: {
-        width: '100%',
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '5px',
-        justifyContent: 'flex-start',
-        marginBottom: '10px',
-        padding: '5px'
     },
 });

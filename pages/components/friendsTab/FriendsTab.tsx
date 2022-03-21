@@ -1,4 +1,4 @@
-import {FriendsListItem} from "../friendsListItem/FriendsListItem";
+import {FriendsListItem} from "./friendsListItem/FriendsListItem";
 import * as React from "react";
 import {User} from "../../profile/[id]";
 
@@ -7,18 +7,17 @@ export const FriendsTab = (
   {
     isBrowser,
     objFriends,
-    ...props}
-    :
-    {
+    ...props
+  }:{
       isBrowser: boolean,
       objFriends: User[],
       id: string,
-      groupChatMembers: {username: string, id: string}[],
+      groupChatMembers: { username: string, id: string }[],
       setGroupChatMembers: Function,
       enqueueSnackbar: Function
     }) => {
 
-  return <div style={{width: '100%'}}>
+  return <div style={{ width: '100%' }}>
     {
       isBrowser ? objFriends
         .filter((user) => user.id !== props.id)

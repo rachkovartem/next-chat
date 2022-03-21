@@ -20,8 +20,9 @@ const Login = ({locale} : {locale: string}) => {
 
     const onLoading = async () => {
         const res = await check()
-        if (res.status === 201) {
-            router.push(`/profile/${res.data.sub}`);
+        if (res.status === 403) return
+        if (res.status >= 200 || res.status < 300) {
+            router.push(`/profile/${res.data.id}`);
         }
     }
 

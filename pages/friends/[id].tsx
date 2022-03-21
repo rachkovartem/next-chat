@@ -1,5 +1,5 @@
 import {AutocompleteFriendInput} from "../components/autocompleteFriendInput/AutocompleteFriendInput";
-import { Chip} from "@mui/material";
+import {Chip, SxProps} from "@mui/material";
 import * as React from "react";
 import {useTranslation} from "next-i18next";
 import {useEffect, useState} from "react";
@@ -12,7 +12,6 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {AppContext} from "next/app";
 
 import ApiServices from "../../services/ApiServices";
-import {useStyles} from "../profile/id.styles";
 import {InitialState} from "../../redux/reducers";
 import {SideBar} from "../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
@@ -23,6 +22,8 @@ import {InReqsTab} from "../components/inReqsTab/InReqsTab";
 import {OutReqsTab} from "../components/outReqsTab/OutReqsTab";
 import {useSocket} from "../../hooks/useSocket";
 import {ServerMessage, useNotification} from "../../hooks/useNotification";
+import {Theme} from "@mui/system";
+import {fiendsStyles} from "./id.styles";
 
 interface Context extends AppContext {
   locale: string,
@@ -34,7 +35,7 @@ export default function Friends (props: {locale: string, id: string}) {
   const {locale, id} = props;
   const { t } = useTranslation('common');
   const { rejectFriendReq, createGroupRoom } = ApiServices();
-  const classes = useStyles();
+  const classes = fiendsStyles();
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
@@ -46,6 +47,22 @@ export default function Friends (props: {locale: string, id: string}) {
   const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
   const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
+  const scrollStyle: SxProps<Theme> = {
+    overflowY: 'scroll',
+    scrollbarColor: '#a8a8a8 rgba(255,255,255,0)',     /* «цвет ползунка» «цвет полосы скроллбара» */
+    scrollbarWidth: 'thin',  /* толщина */
+    '&::-webkit-scrollbar': {
+      width: '3px', /* ширина для вертикального скролла */
+      height: '3px', /* высота для горизонтального скролла */
+      backgroundColor: 'rgba(255,255,255,0)',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#a8a8a8',
+      borderRadius: '9px',
+      boxShadow: 'inset 1px 1px 10px #a8a8a8',
+    }
+  }
+  const boxShadow = '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)';
 
   useEffect(() => {
     const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
@@ -66,10 +83,6 @@ export default function Friends (props: {locale: string, id: string}) {
       socket?.removeAllListeners();
     }
   }, [socket]);
-
-  useEffect(() => {
-    showNotification(notification)
-  }, [notification]);
 
   const onClickRejectReq = async (idUser: string, idFriend: string, idReq: string) => {
     const res = await rejectFriendReq(idUser, idFriend, idReq);
@@ -102,7 +115,11 @@ export default function Friends (props: {locale: string, id: string}) {
           <Chip
             key={member.id}
             label={member.username}
-            onDelete={() => setGroupChatMembers((prevState) => prevState.filter(item => item.id !== member.id))}
+            onDelete={() =>
+              setGroupChatMembers(
+                (prevState) =>
+                  prevState.filter(item => item.id !== member.id)
+              )}
           />
         );
       })}
@@ -115,59 +132,126 @@ export default function Friends (props: {locale: string, id: string}) {
     </Paper>
     : null;
 
-  return <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
+  return <div style={{display: 'grid', gridTemplateColumns: '88px 1fr', backgroundColor: '#EAEAEA', height: '100%'}}>
     <SideBar locale={locale}/>
-      <div className={classes.friendsWrapper}>
-        <div>
+    <div className={classes.friendsWrapper}>
+      <div style={{height: '100%', gridArea: 'groups', display: 'flex', flexDirection: 'column'}}>
+        <Paper
+          sx={{
+            padding: '5px 10px 10px',
+            borderRadius: '20px',
+          }}
+          elevation={3}
+        >
+          <AutocompleteFriendInput enqueueSnackbar={enqueueSnackbar} id={id}/>
+        </Paper>
+        <div
+          style={{
+          gridArea: 'groups',
+          marginTop: '22px',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          height: '100%',
+          boxShadow
+          }}
+        >
           <Paper
             sx={{
-              padding: '10px 10px 10px',
-              gridArea: 'groups',
-            }} elevation={3}>
-            <AutocompleteFriendInput enqueueSnackbar={enqueueSnackbar} id={id}/>
-          </Paper>
-          <Paper sx={{
-            padding: '5px 10px 10px',
-            gridArea: 'groups',
-            marginTop: '10px',
-          }} elevation={3}>
+            padding: '13px 10px 10px 20px',
+            borderRadius: '20px',
+            height: '100%',
+            ...scrollStyle,
+          }}
+            elevation={3}
+          >
             <h3>{t('groups')}</h3>
             <GroupsTab onClickRoom={onClickRoom}/>
           </Paper>
         </div>
-        <div>
-          <Paper
-            sx={{
-              padding: '5px 10px 10px',
-              gridArea: 'friends',
-            }} elevation={3}>
-            <h3>{t('friends')}</h3>
-            {groupChatInput}
-            <FriendsTab {...friendsTabProps} />
-          </Paper>
-        </div>
-        <Paper sx={{
-          padding: '5px 10px 10px',
-          gridArea: 'recents',
-        }} elevation={3}>
+      </div>
+      <div style={{
+        gridArea: 'friends',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        boxShadow,
+      }}
+      >
+        <Paper
+          sx={{
+            padding: '13px 10px 10px 20px',
+            borderRadius: '20px',
+            height: '100%',
+            ...scrollStyle,
+          }}
+          elevation={3}
+        >
+          <h3>{t('friends')}</h3>
+          {groupChatInput}
+          <FriendsTab {...friendsTabProps} />
+        </Paper>
+      </div>
+      <div style={{
+        gridArea: 'recents',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        boxShadow,
+        }}
+      >
+        <Paper
+          sx={{
+          padding: '13px 10px 10px 20px',
+
+          borderRadius: '20px',
+          height: '100%',
+          ...scrollStyle,
+        }}
+          elevation={3}
+        >
           <h3>{t('recents')}</h3>
         </Paper>
-        <Paper sx={{
-          padding: '5px 10px 10px',
-          gridArea: 'inreqs',
-        }} elevation={3}>
+      </div>
+      <div style={{
+        gridArea: 'inreqs',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        boxShadow,
+        }}
+      >
+        <Paper
+          sx={{
+          padding: '13px 10px 10px 20px',
+          borderRadius: '20px',
+          height: '100%',
+          ...scrollStyle,
+        }}
+          elevation={3}
+        >
           <h3>{t('inRequests')}</h3>
           <InReqsTab enqueueSnackbar={enqueueSnackbar} inReqs={inReqs} id={id} onClickRejectReq={onClickRejectReq}/>
         </Paper>
-        <Paper sx={{
-          padding: '5px 10px 10px',
-          gridArea: 'outreqs',
-        }} elevation={3}>
+      </div>
+      <div style={{
+        gridArea: 'outreqs',
+        borderRadius: '20px',
+        overflow: 'hidden',
+        boxShadow,
+      }}
+      >
+        <Paper
+          sx={{
+          padding: '13px 10px 10px 20px',
+          borderRadius: '20px',
+          height: '100%',
+          ...scrollStyle,
+        }}
+          elevation={3}
+        >
           <h3>{t('outRequests')}</h3>
          <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} />
         </Paper>
       </div>
     </div>
+  </div>
 }
 
 export async function getServerSideProps(context: Context) {

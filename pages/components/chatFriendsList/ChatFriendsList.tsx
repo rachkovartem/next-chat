@@ -8,7 +8,6 @@ import ApiServices from "../../../services/ApiServices";
 import {setChatWindowLoading, setCurrentRoomId, setFullRooms, updateFullRooms} from "../../../redux/actions";
 import {setCurrentRoom} from "../../../redux/actions";
 import {InitialState} from "../../../redux/reducers";
-import {roomStyles} from "../../room/id.styles";
 import {FriendRoomItem} from "./friendRoomItem/FriendRoomItem";
 import {GroupRoomItem} from "./groupRoomItem/GroupRoomItem";
 import {ServerMessage} from "../../../hooks/useNotification";
@@ -16,9 +15,8 @@ import {ServerMessage} from "../../../hooks/useNotification";
 export const ChatFriendList = () => {
   const dispatch = useDispatch();
   const { getAllUserRooms, getRoomInfo } = ApiServices();
-  const classes = roomStyles();
   const router = useRouter();
-  const { socket, user, fullRooms } = useSelector((state: InitialState)  => state);
+  const { currentRoomId, socket, user, fullRooms } = useSelector((state: InitialState)  => state);
   const isBrowser = typeof window !== 'undefined';
 
   const loadRoomsInfo = async () => {
@@ -29,8 +27,9 @@ export const ChatFriendList = () => {
   }
 
   const clickItem = async (roomId: string) => {
-    dispatch(setChatWindowLoading(true));
+    if (roomId === currentRoomId) return
     dispatch(setCurrentRoomId(roomId));
+    dispatch(setChatWindowLoading(true));
     await router.push(`/room/${roomId}`,undefined, { shallow: true });
     const room = await getRoomInfo(roomId);
     dispatch(setCurrentRoom(room.data));
@@ -56,9 +55,9 @@ export const ChatFriendList = () => {
             .filter(participant => (participant.id !== user.id))
             .map(user => user.username)
             .join(', ')
-          return <GroupRoomItem clickItem={clickItem} key={room.roomId} room={room} classes={classes} title={title}/>
+          return <GroupRoomItem clickItem={clickItem} key={room.roomId} room={room} title={title}/>
         } else if (!room.groupRoom) {
-          return <FriendRoomItem clickItem={clickItem} key={room.roomId} friend={room} classes={classes} />
+          return <FriendRoomItem clickItem={clickItem} key={room.roomId} friend={room}/>
         }
       }) : null}
     </>

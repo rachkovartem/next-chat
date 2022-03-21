@@ -1,15 +1,15 @@
 import Paper from "@mui/material/Paper";
 import {Avatar, Badge} from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import MenuComponent from "../friendMenu/FriendMenu";
+import MenuComponent from "../../friendMenu/FriendMenu";
 import * as React from "react";
-import {useStyles} from "../../profile/id.styles";
 import {useState} from "react";
 import {useRouter} from "next/router";
-import ApiServices from "../../../services/ApiServices";
-import {User} from "../../profile/[id]";
+import ApiServices from "../../../../services/ApiServices";
+import {User} from "../../../profile/[id]";
 import {useSelector} from "react-redux";
-import {InitialState} from "../../../redux/reducers";
+import {InitialState} from "../../../../redux/reducers";
+import {friendListItemStyles} from "./friendListItem.styles";
 
 export const FriendsListItem = (
   {
@@ -29,7 +29,7 @@ export const FriendsListItem = (
   const { usersOnline } = useChatState;
   const router = useRouter();
   const { createRoom } = ApiServices();
-  const classes = useStyles();
+  const classes = friendListItemStyles();
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
   const handleClickMenuIcon = (event: any) => {
@@ -57,6 +57,13 @@ export const FriendsListItem = (
           marginLeft: '6px',
           '& .MuiBadge-colorSecondary': {
             backgroundColor: '#b2b2b2',
+            left: '5px',
+            bottom: '5px',
+          },
+          '& .MuiBadge-colorSuccess': {
+            backgroundColor: '#4bb34b',
+            bottom: '5px',
+            left: '5px',
           }
         }}
         anchorOrigin={{
@@ -69,7 +76,12 @@ export const FriendsListItem = (
       </Badge>
     <div style={{marginLeft: '12px'}}>{user.username}</div>
     <KeyboardArrowDownIcon
-      sx={{marginLeft: 'auto', marginRight: '10px', width: '18px', cursor: 'pointer'}}
+      sx={{
+        marginLeft: 'auto',
+        marginRight: '10px',
+        width: '18px',
+        cursor: 'pointer'
+      }}
       onClick={handleClickMenuIcon}
     />
     <MenuComponent {...menuProps} user={user}/>

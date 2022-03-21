@@ -6,7 +6,7 @@ import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {ServerMessage} from "../../../../hooks/useNotification";
 
-export const FriendRoomItem = ({friend, classes, clickItem}: {friend: any, classes: { userPaper: any , userPaperSelected: any}, clickItem: Function}) => {
+export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Function}) => {
   const { useChatState, currentRoomId, socket } = useSelector((state: InitialState)  => state);
   const { usersOnline, notification } = useChatState;
   const [isMounted, setIsMounted] = useState(false);
@@ -35,7 +35,15 @@ export const FriendRoomItem = ({friend, classes, clickItem}: {friend: any, class
   }, [notification, isMounted]);
 
   return <Paper
-    className={currentRoomId === friend.roomId ? classes.userPaperSelected : classes.userPaper}
+    sx={{
+        display: 'flex',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        cursor: 'pointer',
+        marginTop: '5px',
+        height: 50,
+        backgroundColor: currentRoomId === friend.roomId ? '#e8e8e8' : 'rgba(232,232,232,0)',
+    }}
     key={friend.id}
     elevation={0}
     onClick={() => clickItem(friend.roomId)}
@@ -45,6 +53,13 @@ export const FriendRoomItem = ({friend, classes, clickItem}: {friend: any, class
         marginLeft: '6px',
         '& .MuiBadge-colorSecondary': {
           backgroundColor: '#b2b2b2',
+          bottom: '5px',
+          left: '5px',
+        },
+        '& .MuiBadge-colorSuccess': {
+          backgroundColor: '#4bb34b',
+          bottom: '5px',
+          left: '5px',
         }
       }}
       anchorOrigin={{

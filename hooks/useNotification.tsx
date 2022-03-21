@@ -2,6 +2,7 @@ import {useCallback} from "react";
 import {Avatar} from "@mui/material";
 import * as React from "react";
 import {useSnackbar} from "notistack";
+import {useRouter} from "next/router";
 
 export interface ServerMessage {
   messageId: string,
@@ -15,10 +16,16 @@ export interface ServerMessage {
 
 export const useNotification= () => {
   const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
 
   const showNotification = useCallback((notification: ServerMessage | null) => {
     if (notification) {
-      enqueueSnackbar(<div>
+      enqueueSnackbar(<div
+      style={{
+        cursor: 'pointer',
+      }}
+      onClick={() => router.push(`/room/${notification?.roomId}`)}
+      >
         <div
           style={{
             display: 'flex',
@@ -44,7 +51,10 @@ export const useNotification= () => {
         >
           {notification?.message}
         </div>
-      </div>);
+      </div>, {
+        onClick: () => router.push(`/room/${notification?.roomId}`),
+        style: { cursor: 'pointer' },
+      });
     }
   }, [])
 

@@ -20,12 +20,17 @@ export default function Header(props: { room: any | null}) {
     ? room.groupRoom
       ? <div style={{
         display: 'flex',
-        marginTop: '10px',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%',
+        backgroundColor: '#EAEAEA',
       }}
       >
-        <AvatarGroup sx={{justifyContent: 'flex-end'}} max={4} spacing={'small'} total={room.participants.length}>
+        <AvatarGroup sx={{
+          marginTop: '5px',
+          marginBottom: '5px',
+          justifyContent: 'flex-end',
+        }} max={4} spacing={'small'} total={room.participants.length}>
           {room.participants
             .filter((participant: any) => participant.id !== user.id)
             .map((participant: any) => {
@@ -35,7 +40,11 @@ export default function Header(props: { room: any | null}) {
         </AvatarGroup>
         <p style={{margin: '0 0 0 10px'}}>{room.roomId}</p>
       </div>
-      : <div>{room.participants.filter((participant: any) => participant.id !== user.id).map((participant: any) => {
+      : <div style={{
+        width: '100%',
+        backgroundColor: '#EAEAEA',
+      }}>
+        {room.participants.filter((participant: any) => participant.id !== user.id).map((participant: any) => {
         return (
           <div
             key={participant.id}
@@ -44,6 +53,7 @@ export default function Header(props: { room: any | null}) {
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: '5px',
+              marginBottom: '5px',
             }}
           >
             {avatar(participant)}

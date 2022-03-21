@@ -2,30 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/pages/components/autocompleteFriendInput/autocompleteFriendInput.style.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/components/friendsTab/friendsListItem/friendListItem.styles.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pages/friends/id.styles.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/useApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useApi.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useSocket.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useSocket.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useNotification.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useNotification.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/ChatFriendsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/ChatFriendsList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatInput/ChatInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/chatWindow/ChatWindow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/groupsTab/GroupsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/groupsTab/GroupsTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendsTab/friendsListItem/FriendsListItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/components/friendsTab/FriendsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/friendsTab/FriendsTab.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/header/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/inReqsTab/InReqsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/inReqsTab/InReqsTab.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/login/Login.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/outReqsTab/OutReqsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/outReqsTab/OutReqsTab.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/components/sideBar/sideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/sideBar/sideBar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/snackBar/SnackBar.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/components/tooltip/Tooltip.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/components/tooltip/Tooltip.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/friends/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/friends/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/profile/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/profile/id.styles.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/id.styles.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/room/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/room/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redux/actions/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/actions/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redux/reducers/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/PagesServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/PagesServices.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/room/id.styles.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/ApiServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/ApiServices.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles/globals.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +60,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../nest-chat-server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -79,11 +77,11 @@
       <recent name="$PROJECT_DIR$/../to-do-server/src/authModule/guards" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pages/components/friendsTab" />
       <recent name="$PROJECT_DIR$/services" />
       <recent name="$PROJECT_DIR$/pages/components/chatFriendsList" />
       <recent name="$PROJECT_DIR$/pages/components/sideBar" />
       <recent name="$PROJECT_DIR$/pages/components" />
-      <recent name="$PROJECT_DIR$/public" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -128,7 +126,8 @@
       <workItem from="1647239468882" duration="31584000" />
       <workItem from="1647321118915" duration="21258000" />
       <workItem from="1647497380071" duration="25046000" />
-      <workItem from="1647584424632" duration="28050000" />
+      <workItem from="1647584424632" duration="28228000" />
+      <workItem from="1647842816550" duration="22865000" />
     </task>
     <servers />
   </component>

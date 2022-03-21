@@ -79,14 +79,19 @@ export default function Profile (props: {locale: string, id: string}) {
   }, [])
 
   useEffect(() => {
-    if (socket) {
-      setOnlineListeners({socket, usersOnline})
+    if (!socket) {
+      dispatch(setSocket(createSocket()));
     }
-  }, [socket])
-
-  useEffect(() => {
-    showNotification(notification)
-  }, [notification])
+    if (socket) {
+      socket.on('messages:add', (serverMessage: ServerMessage[]) => {
+        showNotification(serverMessage[0])
+      })
+      setOnlineListeners({socket, usersOnline});
+    }
+    return () => {
+      socket?.removeAllListeners();
+    }
+  }, [socket]);
 
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);

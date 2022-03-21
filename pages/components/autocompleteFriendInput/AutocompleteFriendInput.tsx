@@ -7,13 +7,13 @@ import {Avatar} from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import Paper from "@mui/material/Paper";
 import {useDispatch} from "react-redux";
-import {useStyles} from "../../profile/id.styles";
 import ApiServices from "../../../services/ApiServices";
 import {setUserOutReqs} from "../../../redux/actions";
+import {autocompleteFriendInputStyle} from "./autocompleteFriendInput.style";
 
 export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar: Function, id: string}) => {
   const dispatch = useDispatch();
-  const classes = useStyles();
+  const classes = autocompleteFriendInputStyle();
   const { t } = useTranslation('common');
   const { findUser } = ApiServices();
   const [initialSearch, setInitialSearch] = useState(true)
@@ -80,7 +80,12 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
                 src={option.imagePath ? `http://localhost:8080/${option.imagePath}` : ''}/>
         <div style={{marginLeft: '12px'}}>{option.username}</div>
         <PersonAddIcon
-          sx={{marginLeft: 'auto', marginRight: '10px', width: '18px', cursor: 'pointer'}}
+          sx={{
+            marginLeft: 'auto',
+            marginRight: '10px',
+            width: '18px',
+            cursor: 'pointer'
+          }}
           onClick={e => onClickAddFriend(e, id, option.id)}
         />
       </Paper>)
@@ -89,7 +94,9 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
       <>
         <TextField
           {...params}
-          label={t('autocompleteLabel')}
+          variant="standard"
+          sx={{padding: '5px'}}
+          // label={t('autocompleteLabel')}
           value={text}
           onBlur={() => setInitialSearch(true)}
           onChange={onChange}

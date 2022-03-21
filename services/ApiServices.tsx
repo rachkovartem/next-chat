@@ -1,8 +1,10 @@
 
 import {useApi} from "../hooks/useApi";
+import {useDispatch} from "react-redux";
 
 const ApiServices = () => {
-  const { getRequest, postRequest, clearApiError } = useApi();
+  const dispatch = useDispatch();
+  const { getRequest, postRequest } = useApi();
 
   const login = async (email: string, password: string) => {
     return await postRequest(`/auth/login`, {email, password});
@@ -59,7 +61,6 @@ const ApiServices = () => {
     await postRequest('/rejectFriendReq', { idUser, idFriend, idReq });
 
   return {
-    clearApiError,
     login,
     register,
     check,

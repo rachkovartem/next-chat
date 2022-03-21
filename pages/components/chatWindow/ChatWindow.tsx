@@ -38,7 +38,7 @@ export const ChatWindow = (props: Room) => {
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
-  })
+  }, [])
 
   useEffect(() => {
     if (!socket || !isMounted) return
@@ -92,7 +92,7 @@ export const ChatWindow = (props: Room) => {
     <Paper
       sx={
         {
-          m: 1,
+          marginTop: 0,
           marginBottom: 0,
           borderBottomLeftRadius: 0,
           borderBottomRightRadius: 0,
