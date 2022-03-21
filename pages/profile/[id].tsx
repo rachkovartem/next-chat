@@ -9,15 +9,15 @@ import type { AppContext } from 'next/app';
 import {useTranslation} from "next-i18next";
 import {useDispatch, useSelector} from "react-redux";
 
-import { Crop } from '../components/crop/Crop';
-import {useStyles} from "./id.styles";
+import { Crop } from '../../components/crop/Crop';
 import {InitialState} from "../../redux/reducers";
-import {SideBar} from "../components/sideBar/sideBar";
+import {SideBar} from "../../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";
 import {setSocket, setUser} from "../../redux/actions";
 import {useSocket} from "../../hooks/useSocket";
 import {useNotification, ServerMessage} from "../../hooks/useNotification";
+import {profileStyles} from "../../styles/profile.styles";
 
 export interface User {
   id: string,
@@ -63,7 +63,7 @@ export default function Profile (props: {locale: string, id: string}) {
   const {locale, id} = props;
   const { t } = useTranslation('common');
   const [file, setFile] = useState<File | null>(null);
-  const classes = useStyles();
+  const classes = profileStyles();
   const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
   const { socket, user, useChatState } = useSelector((state: InitialState)  => state);
   const { username, imagePath } = user;

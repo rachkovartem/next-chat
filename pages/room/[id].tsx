@@ -6,12 +6,12 @@ import {useDispatch, useSelector} from "react-redux";
 import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
 
-import {ChatWindow} from "../components/chatWindow/ChatWindow";
-import {SideBar} from "../components/sideBar/sideBar";
+import {ChatWindow} from "../../components/chatWindow/ChatWindow";
+import {SideBar} from "../../components/sideBar/sideBar";
 import {InitialState} from "../../redux/reducers";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";
-import {ChatFriendList} from "../components/chatFriendsList/ChatFriendsList";
+import {ChatFriendList} from "../../components/chatFriendsList/ChatFriendsList";
 import {
   setChatWindowLoading,
   setCurrentRoomId,
