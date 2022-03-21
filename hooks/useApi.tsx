@@ -1,6 +1,13 @@
 import axios from "axios";
+const aws = require('aws-sdk');
+
+let s3 = new aws.S3({
+  local: process.env.NEXT_PUBLIC_SERVER_URL,
+  server: process.env.SERVER_URL
+});
+console.log(s3)
 const url = process.env.NEXT_PUBLIC_SERVER_URL ? process.env.NEXT_PUBLIC_SERVER_URL : process.env.SERVER_URL;
-console.log('process.env', process.env)
+
 const api = axios.create({
   baseURL: url,
   withCredentials: true,
