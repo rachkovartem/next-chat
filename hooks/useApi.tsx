@@ -1,7 +1,6 @@
 import axios from "axios";
 const url = process.env.NEXT_PUBLIC_SERVER_URL ? process.env.NEXT_PUBLIC_SERVER_URL : process.env.SERVER_URL;
-console.log('process.env.NEXT_PUBLIC_SERVER_URL', process.env.NEXT_PUBLIC_SERVER_URL)
-console.log('process.env.SERVER_URL', process.env.SERVER_URL)
+console.log('process.env', process.env)
 const api = axios.create({
   baseURL: url,
   withCredentials: true,
