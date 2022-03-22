@@ -20,12 +20,8 @@ const Login = ({locale} : {locale: string}) => {
 
     const onLoading = async () => {
         const res = await check()
-        console.log(res)
         if (res.status === 403) return
         if (res.status >= 200 && res.status < 300) {
-            document.cookie = `access_token=${res.data.access_token}; maxAge=${res.data.access_token_expire}; path=/`
-            document.cookie = `refresh_token=${res.data.refresh_token}; maxAge=${res.data.refresh_token_expire}; path=/`
-            console.log(document.cookie)
             router.push(`/profile/${res.data.id}`);
         }
     }
@@ -70,6 +66,9 @@ const Login = ({locale} : {locale: string}) => {
         const resBody = res.data;
         console.log(res)
         if ('id' in resBody) {
+            document.cookie = `access_token=${res.data.access_token}; maxAge=${res.data.access_token_expire}; path=/`
+            document.cookie = `refresh_token=${res.data.refresh_token}; maxAge=${res.data.refresh_token_expire}; path=/`
+            console.log(document.cookie)
             localStorage.setItem('email', resBody.email);
             localStorage.setItem('id', resBody.id);
             localStorage.setItem('username', resBody.username);
