@@ -20,6 +20,7 @@ const Login = ({locale} : {locale: string}) => {
 
     const onLoading = async () => {
         const res = await check()
+        console.log(res)
         if (res.status === 403) return
         if (res.status >= 200 || res.status < 300) {
             router.push(`/profile/${res.data.id}`);
@@ -64,7 +65,7 @@ const Login = ({locale} : {locale: string}) => {
         }
         const res = await login(email, password);
         const resBody = res.data;
-        console.log(resBody)
+        console.log(res)
         if ('id' in resBody) {
             localStorage.setItem('email', resBody.email);
             localStorage.setItem('id', resBody.id);
