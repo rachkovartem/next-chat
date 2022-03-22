@@ -64,6 +64,7 @@ const Login = ({locale} : {locale: string}) => {
         }
         const res = await login(email, password);
         const resBody = res.data;
+        console.log(resBody)
         if ('id' in resBody) {
             localStorage.setItem('email', resBody.email);
             localStorage.setItem('id', resBody.id);
