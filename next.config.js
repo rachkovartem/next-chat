@@ -5,7 +5,7 @@ const nextConfig = {
   i18n,
   reactStrictMode: true,
   env: {
-    SERVER_URL: "https://nestchat-server.herokuapp.com:8080",
+    SERVER_URL: "https://nestchat-server.herokuapp.com",
   },
 }
 
