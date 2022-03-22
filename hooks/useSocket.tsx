@@ -4,7 +4,7 @@ import * as React from "react";
 import {setUseChatSateUsersOnline} from "../redux/actions";
 import {useDispatch} from "react-redux";
 
-const SERVER_URL = 'http://localhost:8080';
+const url = process.env.NEXT_PUBLIC_SERVER_URL ? process.env.NEXT_PUBLIC_SERVER_URL : process.env.SERVER_URL;
 
 export const useSocket = () => {
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export const useSocket = () => {
   }
 
   const createSocket = (): Socket => {
-    socketRef.current = io(SERVER_URL, {
+    socketRef.current = io(url || '', {
       query: {
         'id': id,
         'cookies': document.cookie
