@@ -25,6 +25,7 @@ const Login = ({locale} : {locale: string}) => {
         if (res.status >= 200 && res.status < 300) {
             document.cookie = `access_token=${res.data.access_token}; maxAge=${res.data.access_token_expire}; path=/`
             document.cookie = `refresh_token=${res.data.refresh_token}; maxAge=${res.data.refresh_token_expire}; path=/`
+            console.log(document.cookie)
             router.push(`/profile/${res.data.id}`);
         }
     }
