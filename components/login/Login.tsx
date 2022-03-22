@@ -22,7 +22,7 @@ const Login = ({locale} : {locale: string}) => {
         const res = await check()
         console.log(res)
         if (res.status === 403) return
-        if (res.status >= 200 || res.status < 300) {
+        if (res.status >= 200 && res.status < 300) {
             router.push(`/profile/${res.data.id}`);
         }
     }
