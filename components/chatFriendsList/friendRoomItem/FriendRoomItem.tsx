@@ -69,7 +69,7 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
       }}
       color={isOnline(friend.id) ? "success" : "secondary"}
       variant="dot">
-      <Avatar alt="Avatar" src={friend.imagePath.includes('imagekit') ? friend.imagePath : `${url}/${friend.imagePath}`}/>
+      <Avatar alt="Avatar" src={friend.imagePath}/>
     </Badge>
     <div style={{
       display: 'grid',

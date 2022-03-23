@@ -107,7 +107,7 @@ export default function Profile (props: {locale: string, id: string}) {
             <Avatar
               className='avatarProfile'
               alt="Avatar"
-              src={imagePath.includes('imagekit') ? imagePath : `${url}/${imagePath}`}
+              src={imagePath}
             />
             <p className={classes.username}>{username}</p>
             <Button

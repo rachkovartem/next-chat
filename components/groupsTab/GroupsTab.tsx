@@ -41,7 +41,7 @@ export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
                       key={user.id}
                       sx={{marginLeft: '6px'}}
                       alt="Avatar"
-                      src={user.imagePath.includes('imagekit') ? user.imagePath : `${url}/${user.imagePath}`}
+                      src={user.imagePath}
                     />)
                 })}
             </AvatarGroup>

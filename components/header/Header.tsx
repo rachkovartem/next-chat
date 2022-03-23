@@ -14,7 +14,7 @@ export default function Header(props: { room: any | null}) {
       key={participant.id}
       sx={{marginLeft: '6px'}}
       alt="Avatar"
-      src={participant.imagePath.includes('imagekit') ? participant.imagePath : `${url}/${participant.imagePath}`}
+      src={participant.imagePath}
     />
 
   return room && user.id

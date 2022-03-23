@@ -145,7 +145,7 @@ export const ChatWindow = (props: Room) => {
                   alignSelf: 'end',
                 }}
                 alt="Avatar"
-                src={avatars[item.senderId].includes('imagekit') ? avatars[item.senderId] : `${url}/${avatars[item.senderId]}`}
+                src={avatars[item.senderId]}
               />
               <Paper
                 sx={{

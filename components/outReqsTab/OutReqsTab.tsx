@@ -28,7 +28,7 @@ export const OutReqsTab = (
       >
         <Avatar
           sx={{marginLeft: '6px'}} alt="Avatar"
-          src={req.recipient.imagePath.includes('imagekit') ? req.recipient.imagePath : `${url}/${req.recipient.imagePath}`}
+          src={req.recipient.imagePath}
         />
         <div
           style={{marginLeft: '12px'}}>{req.recipient.username}
