@@ -17,9 +17,12 @@ export const useSocket = () => {
 
   const createSocket = (): Socket => {
     socketRef.current = io(url || '', {
+      extraHeaders: {
+        "Authorization": `${localStorage.getItem('access_token')}`
+      },
       query: {
         'id': id,
-        'cookies': document.cookie
+        'cookies': document.cookie,
       },
     })
     socketRef.current.emit('system:connect');

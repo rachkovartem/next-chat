@@ -64,11 +64,7 @@ const Login = ({locale} : {locale: string}) => {
         }
         const res = await login(email, password);
         const resBody = res.data;
-        console.log(res)
         if ('id' in resBody) {
-            document.cookie = `access_token=${res.data.access_token}; maxAge=${res.data.access_token_expire}; path=/`
-            document.cookie = `refresh_token=${res.data.refresh_token}; maxAge=${res.data.refresh_token_expire}; path=/`
-            console.log(document.cookie)
             localStorage.setItem('email', resBody.email);
             localStorage.setItem('id', resBody.id);
             localStorage.setItem('username', resBody.username);

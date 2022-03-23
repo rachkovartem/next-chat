@@ -5,7 +5,12 @@ const ApiServices = () => {
   const { getRequest, postRequest } = useApi();
 
   const login = async (email: string, password: string) => {
-    return await postRequest(`/auth/login`, {email, password});
+    const res = await postRequest(`/auth/login`, {email, password});
+    if ('data' in res && 'access_token' in res.data) {
+      localStorage.setItem('access_token', res.data.access_token);
+      localStorage.setItem('refresh_token', res.data.refresh_token);
+    }
+    return res
   }
 
   const register = async (email: string, password: string, username: string) => {
@@ -75,7 +80,8 @@ const ApiServices = () => {
     createGroupRoom,
     getRoomInfo,
     getAllRoomsIds,
-    getAllUserRooms
+    getAllUserRooms,
+    getRequest
   }
 }
 

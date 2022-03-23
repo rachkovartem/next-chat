@@ -1,8 +1,6 @@
-import axios from "axios";
+import axios, {AxiosRequestHeaders, AxiosRequestConfig} from "axios";
 
 const url = process.env.NEXT_PUBLIC_SERVER_URL ? process.env.NEXT_PUBLIC_SERVER_URL : process.env.SERVER_URL;
-
-console.log('process.env', process.env)
 
 const api = axios.create({
   baseURL: url,
@@ -14,6 +12,9 @@ api.interceptors.response.use(
   async (error) => {
     if (error.response.status === 401) {
       const res = await useApi().getRequest(`/auth/refresh`);
+      if ('data' in res && 'access_token' in res.data) {
+        localStorage.setItem('access_token', res.data.access_token);
+      }
       if (res.status === 403) {
         return Promise.reject(res);
       }
@@ -28,17 +29,21 @@ api.interceptors.response.use(
 export const useApi = () => {
 
   const getRequest = (url: string, params?: object) => {
-      return api.get(url, {params})
+      const headers: AxiosRequestHeaders = {};
+      headers['Authorization'] = `${localStorage.getItem('access_token')}`;
+      return api.get(url, {params, headers})
         .then(response => response)
         .catch(error => error)
     };
 
   const postRequest = (url: string, data: any, config?: any) => {
-      return api.post(url, data, config)
+      const headers: AxiosRequestHeaders = {};
+      headers['Authorization'] = `${localStorage.getItem('access_token')}`;
+      const axiosConfig: AxiosRequestConfig = {...config, headers};
+      return api.post(url, data, axiosConfig)
         .then(response => response)
         .catch(error => error)
     };
-
 
   return { getRequest, postRequest }
 }
