@@ -5,6 +5,7 @@ import {InitialState} from "../../../redux/reducers";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {ServerMessage} from "../../../hooks/useNotification";
+import {url} from "../../../helpers/constants";
 
 export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Function}) => {
   const { useChatState, currentRoomId, socket } = useSelector((state: InitialState)  => state);
@@ -68,7 +69,7 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
       }}
       color={isOnline(friend.id) ? "success" : "secondary"}
       variant="dot">
-      <Avatar alt="Avatar" src={friend.imagePath ? `http://localhost:8080/${friend.imagePath}` : ''}/>
+      <Avatar alt="Avatar" src={friend.imagePath ? `${url}/${friend.imagePath}` : ''}/>
     </Badge>
     <div style={{
       display: 'grid',

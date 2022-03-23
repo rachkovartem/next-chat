@@ -4,6 +4,7 @@ import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutl
 import * as React from "react";
 import {OutReq} from "../../redux/reducers";
 import {profileStyles} from "../../styles/profile.styles";
+import {url} from "../../helpers/constants";
 
 export const OutReqsTab = (
   {
@@ -27,7 +28,7 @@ export const OutReqsTab = (
       >
         <Avatar
           sx={{marginLeft: '6px'}} alt="Avatar"
-          src={req.recipient.imagePath ? `http://localhost:8080/${req.recipient.imagePath}` : ''}
+          src={req.recipient.imagePath ? `${url}/${req.recipient.imagePath}` : ''}
         />
         <div
           style={{marginLeft: '12px'}}>{req.recipient.username}

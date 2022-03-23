@@ -18,6 +18,7 @@ import {setSocket, setUser} from "../../redux/actions";
 import {useSocket} from "../../hooks/useSocket";
 import {useNotification, ServerMessage} from "../../hooks/useNotification";
 import {profileStyles} from "../../styles/profile.styles";
+import {url} from "../../helpers/constants";
 
 export interface User {
   id: string,
@@ -106,7 +107,7 @@ export default function Profile (props: {locale: string, id: string}) {
             <Avatar
               className='avatarProfile'
               alt="Avatar"
-              src={imagePath ? `http://localhost:8080/${imagePath}` : ''}
+              src={imagePath ? `${url}/${imagePath}` : ''}
             />
             <p className={classes.username}>{username}</p>
             <Button

@@ -10,6 +10,7 @@ import {User} from "../../../pages/profile/[id]";
 import {useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
 import {friendListItemStyles} from "./friendListItem.styles";
+import {url} from "../../../helpers/constants";
 
 export const FriendsListItem = (
   {
@@ -72,7 +73,7 @@ export const FriendsListItem = (
         }}
         color={isOnline(user.id) ? "success" : "secondary"}
         variant="dot">
-        <Avatar alt="Avatar" src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}/>
+        <Avatar alt="Avatar" src={user.imagePath ? `${url}/${user.imagePath}` : ''}/>
       </Badge>
     <div style={{marginLeft: '12px'}}>{user.username}</div>
     <KeyboardArrowDownIcon

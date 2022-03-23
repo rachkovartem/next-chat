@@ -12,6 +12,7 @@ import Header from "../header/Header";
 import {useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
 import {ServerMessage} from "../../hooks/useNotification";
+import {url} from "../../helpers/constants";
 
 interface Props extends Room {
   messages: ServerMessage[]
@@ -144,7 +145,7 @@ export const ChatWindow = (props: Room) => {
                   alignSelf: 'end',
                 }}
                 alt="Avatar"
-                src={avatars[item.senderId] ? `http://localhost:8080/${avatars[item.senderId]}` : ''}
+                src={avatars[item.senderId] ? `${url}/${avatars[item.senderId]}` : ''}
               />
               <Paper
                 sx={{

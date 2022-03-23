@@ -3,8 +3,7 @@ import {useMemo, useRef} from "react";
 import * as React from "react";
 import {setUseChatSateUsersOnline} from "../redux/actions";
 import {useDispatch} from "react-redux";
-
-const url = process.env.NEXT_PUBLIC_SERVER_URL ? process.env.NEXT_PUBLIC_SERVER_URL : process.env.SERVER_URL;
+import {url} from "../helpers/constants";
 
 export const useSocket = () => {
   const dispatch = useDispatch();

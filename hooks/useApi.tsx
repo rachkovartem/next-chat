@@ -1,6 +1,5 @@
 import axios, {AxiosRequestHeaders, AxiosRequestConfig} from "axios";
-
-const url = process.env.NEXT_PUBLIC_SERVER_URL ? process.env.NEXT_PUBLIC_SERVER_URL : process.env.SERVER_URL;
+import {url} from "../helpers/constants";
 
 const api = axios.create({
   baseURL: url,

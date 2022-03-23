@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import {useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
+import {url} from "../../helpers/constants";
 
 export default function Header(props: { room: any | null}) {
   const { user } = useSelector((state: InitialState)  => state);
@@ -13,7 +14,7 @@ export default function Header(props: { room: any | null}) {
       key={participant.id}
       sx={{marginLeft: '6px'}}
       alt="Avatar"
-      src={participant.imagePath ? `http://localhost:8080/${participant.imagePath}` : ''}
+      src={participant.imagePath ? `${url}/${participant.imagePath}` : ''}
     />
 
   return room && user.id

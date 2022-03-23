@@ -9,6 +9,7 @@ import ApiServices from "../../services/ApiServices";
 import {useTranslation} from "next-i18next";
 import {InReq} from "../../redux/reducers";
 import {profileStyles} from "../../styles/profile.styles";
+import {url} from "../../helpers/constants";
 
 export const InReqsTab =
   ({
@@ -47,7 +48,7 @@ export const InReqsTab =
         <Avatar
           sx={{marginLeft: '6px'}}
           alt="Avatar"
-          src={req.sender.imagePath ? `http://localhost:8080/${req.sender.imagePath}` : ''}/>
+          src={req.sender.imagePath ? `${url}/${req.sender.imagePath}` : ''}/>
         <div style={{marginLeft: '12px'}}>{req.sender.username}</div>
         <AddCircleRoundedIcon
           sx={{marginLeft: 'auto', width: '18px', cursor: 'pointer'}}

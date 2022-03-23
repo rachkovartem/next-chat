@@ -3,6 +3,7 @@ import {Avatar} from "@mui/material";
 import * as React from "react";
 import {useSnackbar} from "notistack";
 import {useRouter} from "next/router";
+import {url} from "../helpers/constants";
 
 export interface ServerMessage {
   messageId: string,
@@ -34,7 +35,7 @@ export const useNotification= () => {
           }}>
           <Avatar
             alt="Avatar"
-            src={notification ? `http://localhost:8080/${notification.senderAvatar}` : ''}
+            src={notification ? `${url}/${notification.senderAvatar}` : ''}
           />
           <div
             style={{

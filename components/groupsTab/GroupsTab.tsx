@@ -6,7 +6,7 @@ import {InitialState} from "../../redux/reducers";
 import {EllipseText} from "../ellipseText/EllipseText";
 import {ArrowTooltips} from "../tooltip/Tooltip";
 import {profileStyles} from "../../styles/profile.styles";
-
+import {url} from "../../helpers/constants";
 
 export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
   const isBrowser = typeof window !== 'undefined';
@@ -41,7 +41,7 @@ export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
                       key={user.id}
                       sx={{marginLeft: '6px'}}
                       alt="Avatar"
-                      src={user.imagePath ? `http://localhost:8080/${user.imagePath}` : ''}
+                      src={user.imagePath ? `${url}/${user.imagePath}` : ''}
                     />)
                 })}
             </AvatarGroup>
