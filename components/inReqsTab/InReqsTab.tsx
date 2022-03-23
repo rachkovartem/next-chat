@@ -48,7 +48,7 @@ export const InReqsTab =
         <Avatar
           sx={{marginLeft: '6px'}}
           alt="Avatar"
-          src={req.sender.imagePath ? `${url}/${req.sender.imagePath}` : ''}/>
+          src={req.sender.imagePath.includes('imagekit') ? req.sender.imagePath : `${url}/${req.sender.imagePath}`}/>
         <div style={{marginLeft: '12px'}}>{req.sender.username}</div>
         <AddCircleRoundedIcon
           sx={{marginLeft: 'auto', width: '18px', cursor: 'pointer'}}

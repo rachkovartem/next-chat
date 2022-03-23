@@ -35,7 +35,7 @@ export const useNotification= () => {
           }}>
           <Avatar
             alt="Avatar"
-            src={notification ? `${url}/${notification.senderAvatar}` : ''}
+            src={notification && notification.senderAvatar.includes('imagekit') ? notification.senderAvatar : `${url}/${notification.senderAvatar}`}
           />
           <div
             style={{
