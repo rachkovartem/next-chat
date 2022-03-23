@@ -9,7 +9,6 @@ import ApiServices from "../../services/ApiServices";
 import {useTranslation} from "next-i18next";
 import {InReq} from "../../redux/reducers";
 import {profileStyles} from "../../styles/profile.styles";
-import {url} from "../../helpers/constants";
 
 export const InReqsTab =
   ({
@@ -24,15 +23,17 @@ export const InReqsTab =
     onClickRejectReq: Function,
   }) => {
   const dispatch = useDispatch();
-  const { approveFriendReq } = ApiServices();
+  const { approveFriendReq, createRoom } = ApiServices();
   const classes = profileStyles();
   const { t } = useTranslation('common');
+
   const onClickApproveReq = async (idUser: string, idFriend: string, idReq: string) => {
     const res = await approveFriendReq(idUser, idFriend, idReq);
     if (typeof res.data === 'string') {
       enqueueSnackbar(t(res.data))
       return
     }
+    await createRoom([idUser, idFriend]);
     dispatch(setUserObjFriends(res.data.objFriends));
     dispatch(setUserInReqs(res.data.inReqs));
   }

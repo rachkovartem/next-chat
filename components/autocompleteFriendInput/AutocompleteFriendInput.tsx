@@ -78,7 +78,7 @@ export const AutocompleteFriendInput = ({enqueueSnackbar, id}: {enqueueSnackbar:
         elevation={0}
       >
         <Avatar sx={{marginLeft: '6px', width: 26, height: 26}} alt="Avatar"
-                src={option.imagePath ? `${serverUrl}/${option.imagePath}` : ''}/>
+                src={option.imagePath}/>
         <div style={{marginLeft: '12px'}}>{option.username}</div>
         <PersonAddIcon
           sx={{

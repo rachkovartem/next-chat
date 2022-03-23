@@ -3,15 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/friendsTab/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/friendsTab/friendsListItem/FriendsListItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/groupsTab/GroupsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/groupsTab/GroupsTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/header/Header.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/inReqsTab/InReqsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/inReqsTab/InReqsTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/outReqsTab/OutReqsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/outReqsTab/OutReqsTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useNotification.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useNotification.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/profile/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/[id].tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +113,7 @@
       <workItem from="1647842816550" duration="32673000" />
       <workItem from="1647933517554" duration="7727000" />
       <workItem from="1648017600657" duration="8341000" />
-      <workItem from="1648035263675" duration="2976000" />
+      <workItem from="1648035263675" duration="6062000" />
     </task>
     <servers />
   </component>

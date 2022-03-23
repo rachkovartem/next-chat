@@ -85,7 +85,7 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
       <div style={{
         fontSize: '12px',
       }}>
-        {lastMessage.message}
+        {lastMessage ? lastMessage.message : null}
       </div>
     </div>
   </Paper>

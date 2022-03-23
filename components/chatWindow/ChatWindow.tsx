@@ -23,7 +23,6 @@ export const ChatWindow = (props: Room) => {
   const { user, socket } = useSelector((state: InitialState)  => state);
   const [initial, setInitial] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const { t } = useTranslation('common');
   const [messages, setMessages] = useState<ServerMessage[]>([
     {
       messageId: 'initial',
@@ -57,6 +56,7 @@ export const ChatWindow = (props: Room) => {
     if (socket && isMounted) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
         setMessages(prev => {
+          if (!prev[0]) return  [...serverMessage]
           if (prev[0].roomId === serverMessage[0].roomId) {
             return [...prev, ...serverMessage]
           } else {
