@@ -1,10 +1,9 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app';
-import {Provider, useDispatch} from 'react-redux';
+import {Provider} from 'react-redux';
 import store from "../redux/store/store";
 import { appWithTranslation } from 'next-i18next';
 import {SnackbarProvider} from "notistack";
-import {setUseChatSateNotification} from "../redux/actions";
 
 function SafeHydrate({ children }: any) {
   return (

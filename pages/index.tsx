@@ -1,9 +1,8 @@
 import Login from "../components/login/Login";
-import {useEffect} from "react";
-import {router} from "next/client";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 
 const Index = (props: any) => {
+    console.log(props)
     return (<Login {...props}/>)
 }
 

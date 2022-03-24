@@ -59,6 +59,7 @@ export const GroupRoomItem = (
     key={room.roomId}
     onClick={() => clickItem(room.roomId)}
     elevation={0}
+    data-testid="roomItem"
   >
     <Avatar
       key={room.roomId}

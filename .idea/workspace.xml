@@ -2,11 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/__tests__/ChatFriendList.test.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__tests__/Login.test.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/helpers/withTestRouter.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/jest.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/autocompleteFriendInput/AutocompleteFriendInput.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/changeLocal/ChangeLocal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/changeLocal/ChangeLocal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/chatFriendsList/ChatFriendsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/ChatFriendsList.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/inReqsTab/InReqsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/inReqsTab/InReqsTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/login/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redux/reducers/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +39,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="24vceUqxVwqFuO9XisfnMftr3X0" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -46,6 +57,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../nest-chat-server" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="nodejs.jest.jest_package" value="$PROJECT_DIR$/node_modules/jest" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
@@ -66,6 +78,41 @@
       <recent name="$PROJECT_DIR$/services" />
       <recent name="$PROJECT_DIR$/pages/components/chatFriendsList" />
     </key>
+  </component>
+  <component name="RunManager" selected="Jest.Render Index">
+    <configuration name="Render Index" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/__tests__/index.test.tsx" />
+      <test-names>
+        <test-name value="Render Index" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="square.test2" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/helpers/constants.test.ts" />
+      <test-names>
+        <test-name value="square" />
+        <test-name value="test2" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Jest.Render Index" />
+        <item itemvalue="Jest.square.test2" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

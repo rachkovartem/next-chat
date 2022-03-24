@@ -15,6 +15,7 @@ export const ChangeLocal = (props: any) => {
       color: '#3b3b3b'}}
     onClick={() => router.push({ pathname, query }, asPath, { locale: routerOptionLocale })}
     variant="contained"
+    data-testid="changeLocale"
   >{routerOptionLocale}
   </Button>
 }

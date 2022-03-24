@@ -114,6 +114,7 @@ const Login = ({locale} : {locale: string}) => {
               onInput={onInputEmail}
               type="email"
               error={error || loginError}
+              data-testid="inputEmail"
             />
             <TextField
               sx={{display: displayOnRegistration}}
@@ -125,6 +126,7 @@ const Login = ({locale} : {locale: string}) => {
               onInput={onInputUsername}
               type="text"
               error={error || loginError}
+              data-testid="inputUsername"
             />
             <TextField
               required
@@ -135,12 +137,14 @@ const Login = ({locale} : {locale: string}) => {
               onInput={onInputPassword}
               type="password"
               error={error || loginError}
+              data-testid="inputPassword"
             />
           </div>
           <Button
             sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}}
             onClick={onClickLogin}
             variant="contained"
+            data-testid="buttonLogin"
           >
               {t('login')}
           </Button>
@@ -153,6 +157,7 @@ const Login = ({locale} : {locale: string}) => {
             sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}}
             onClick={onClickRegister}
             variant="contained"
+            data-testid="buttonRegister"
           >
               {t('register')}
           </Button>

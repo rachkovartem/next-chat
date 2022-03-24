@@ -48,6 +48,7 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
     key={friend.id}
     elevation={0}
     onClick={() => clickItem(friend.roomId)}
+    data-testid="roomItem"
   >
     <Badge
       sx={{

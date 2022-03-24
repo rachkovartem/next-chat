@@ -17,7 +17,6 @@ export const ChatFriendList = () => {
   const { getAllUserRooms, getRoomInfo } = ApiServices();
   const router = useRouter();
   const { currentRoomId, socket, user, fullRooms } = useSelector((state: InitialState)  => state);
-  const isBrowser = typeof window !== 'undefined';
 
   const loadRoomsInfo = async () => {
     if (user.id) {
@@ -49,7 +48,7 @@ export const ChatFriendList = () => {
   }, [socket])
 
   return <>
-      {isBrowser ? fullRooms.map((room) => {
+      {fullRooms.map((room) => {
         if (room.groupRoom && room.fullParticipants) {
           const title = room.fullParticipants
             .filter(participant => (participant.id !== user.id))
@@ -59,6 +58,6 @@ export const ChatFriendList = () => {
         } else if (!room.groupRoom) {
           return <FriendRoomItem clickItem={clickItem} key={room.roomId} friend={room}/>
         }
-      }) : null}
+      })}
     </>
 }

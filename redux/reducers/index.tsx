@@ -56,7 +56,7 @@ interface InitialState {
     socket: null | Socket,
 }
 
-const initialState : InitialState = {
+export const initialState : InitialState = {
     user: {
        id: '',
        email: '',
