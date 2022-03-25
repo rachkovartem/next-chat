@@ -14,7 +14,8 @@ export const FriendsTab = (
       id: string,
       groupChatMembers: { username: string, id: string }[],
       setGroupChatMembers: Function,
-      enqueueSnackbar: Function
+      enqueueSnackbar: Function,
+      onClickUser: Function
     }) => {
 
   return <div style={{ width: '100%' }}>

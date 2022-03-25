@@ -18,13 +18,15 @@ export const FriendsListItem = (
     id,
     groupChatMembers,
     setGroupChatMembers,
-    enqueueSnackbar
+    enqueueSnackbar,
+    onClickUser
   } : {
     user: User,
     id: string,
     groupChatMembers: {username: string, id: string}[],
     setGroupChatMembers: Function,
-    enqueueSnackbar: Function
+    enqueueSnackbar: Function,
+    onClickUser: Function
   }) => {
   const { useChatState } = useSelector((state: InitialState)  => state);
   const { usersOnline } = useChatState;
@@ -38,12 +40,12 @@ export const FriendsListItem = (
     setMenuAnchorEl(event.currentTarget);
   };
 
-  const onClickUser = async (id1: string, id2: string) => {
-    const res = await createRoom([id1, id2])
-    if (res.status === 201) {
-      await router.push(`/room/${res.data.roomId}`);
-    }
-  }
+  // const onClickUser = async (id1: string, id2: string) => {
+  //   const res = await createRoom([id1, id2])
+  //   if (res.status === 201) {
+  //     await router.push(`/room/${res.data.roomId}`);
+  //   }
+  // }
   const menuProps = {user, id, menuAnchorEl, setMenuAnchorEl, groupChatMembers, setGroupChatMembers, enqueueSnackbar}
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
 
@@ -52,6 +54,7 @@ export const FriendsListItem = (
     key={user.id}
     elevation={0}
     onClick={() => onClickUser(id, user.id)}
+    data-testid="friendListItem"
   >
       <Badge
         sx={{

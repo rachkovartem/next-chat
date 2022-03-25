@@ -15,7 +15,7 @@ import ApiServices from "../../services/ApiServices";
 import {InitialState} from "../../redux/reducers";
 import {SideBar} from "../../components/sideBar/sideBar";
 import {PagesServices} from "../../services/PagesServices";
-import {setSocket, setUser, setUserInReqs, setUserOutReqs} from "../../redux/actions";
+import {setFullRooms, setSocket, setUser, setUserInReqs, setUserOutReqs, updateFullRooms} from "../../redux/actions";
 import {FriendsTab} from "../../components/friendsTab/FriendsTab";
 import {GroupsTab} from "../../components/groupsTab/GroupsTab";
 import {InReqsTab} from "../../components/inReqsTab/InReqsTab";
@@ -24,6 +24,9 @@ import {useSocket} from "../../hooks/useSocket";
 import {ServerMessage, useNotification} from "../../hooks/useNotification";
 import {Theme} from "@mui/system";
 import {friendsStyles} from "../../styles/friends.styles";
+import {GroupRoomItem} from "../../components/chatFriendsList/groupRoomItem/GroupRoomItem";
+import {FriendRoomItem} from "../../components/chatFriendsList/friendRoomItem/FriendRoomItem";
+import {RecentsTab} from "../../components/recentsTab/RecentsTab";
 
 interface Context extends AppContext {
   locale: string,
@@ -39,14 +42,14 @@ export default function Friends (props: {locale: string, id: string}) {
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
-  const { socket, user, useChatState } = useSelector((state: InitialState)  => state);
+  const { socket, user, useChatState, fullRooms } = useSelector((state: InitialState)  => state);
   const { objFriends, inReqs, outReqs } = user;
   const { notification, usersOnline } = useChatState;
   const dispatch = useDispatch();
   const { showNotification } = useNotification();
   const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
-  const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
+  const { getUserById, getRequests, getAllRoomsIds, check, getAllUserRooms, createRoom } = ApiServices();
   const scrollStyle: SxProps<Theme> = {
     overflowY: 'scroll',
     scrollbarColor: '#a8a8a8 rgba(255,255,255,0)',     /* «цвет ползунка» «цвет полосы скроллбара» */
@@ -70,12 +73,19 @@ export default function Friends (props: {locale: string, id: string}) {
   }, []);
 
   useEffect(() => {
+    if (!user.id) return
+    const resFullRooms = getAllUserRooms(user.id)
+    resFullRooms.then(res => dispatch(setFullRooms(res.data)))
+  }, [user.id])
+
+  useEffect(() => {
     if (!socket) {
       dispatch(setSocket(createSocket()));
     }
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
         showNotification(serverMessage[0])
+        dispatch(updateFullRooms(serverMessage[0].roomId))
       })
       setOnlineListeners({socket, usersOnline});
     }
@@ -102,32 +112,46 @@ export default function Friends (props: {locale: string, id: string}) {
     }
   }
 
+  const onClickUser = async (id1: string, id2: string) => {
+    const res = await createRoom([id1, id2])
+    if (res.status === 201) {
+      await router.push(`/room/${res.data.roomId}`);
+    }
+  }
+
   const onClickRoom = async (roomId: string) => {
     await router.push(`/room/${roomId}`);
   }
 
-  const friendsTabProps = {isBrowser, objFriends, id, groupChatMembers, setGroupChatMembers, enqueueSnackbar};
+  const friendsTabProps = {isBrowser, objFriends, id, groupChatMembers, setGroupChatMembers, enqueueSnackbar, onClickUser};
 
   const groupChatInput = groupChatMembers.length > 0
     ? <Paper className={classes.groupChatPaper}>
-      {groupChatMembers.map((member) => {
-        return (
-          <Chip
-            key={member.id}
-            label={member.username}
-            onDelete={() =>
-              setGroupChatMembers(
-                (prevState) =>
-                  prevState.filter(item => item.id !== member.id)
-              )}
-          />
-        );
-      })}
+      {
+        groupChatMembers.map((member) => {
+          return (
+            <Chip
+              key={member.id}
+              label={member.username}
+              onDelete={() =>
+                setGroupChatMembers(
+                  (prevState) =>
+                    prevState.filter(item => item.id !== member.id)
+                )}
+            />
+          );
+        })
+      }
       <AddCircleIcon
-        sx={{alignSelf: 'center', marginLeft: 'auto', cursor: 'pointer'}}
+        sx={{
+          alignSelf: 'center',
+          marginLeft: 'auto',
+          cursor: 'pointer'
+          }}
         onClick={() => onClickCreateGroupChat(
           [...groupChatMembers, { username: user.username, id: user.id }],
-          user.id)}
+          user.id
+        )}
       />
     </Paper>
     : null;
@@ -208,6 +232,9 @@ export default function Friends (props: {locale: string, id: string}) {
           elevation={3}
         >
           <h3>{t('recents')}</h3>
+          <div>
+            <RecentsTab fullRooms={fullRooms} user={user} onClickRoom={onClickRoom} onClickUser={onClickUser} />
+          </div>
         </Paper>
       </div>
       <div style={{
@@ -219,35 +246,41 @@ export default function Friends (props: {locale: string, id: string}) {
       >
         <Paper
           sx={{
-          padding: '13px 10px 10px 20px',
-          borderRadius: '20px',
-          height: '100%',
-          ...scrollStyle,
-        }}
+            padding: '13px 10px 10px 20px',
+            borderRadius: '20px',
+            height: '100%',
+            ...scrollStyle,
+          }}
           elevation={3}
         >
           <h3>{t('inRequests')}</h3>
-          <InReqsTab enqueueSnackbar={enqueueSnackbar} inReqs={inReqs} id={id} onClickRejectReq={onClickRejectReq}/>
+          <InReqsTab
+            enqueueSnackbar={enqueueSnackbar}
+            inReqs={inReqs}
+            id={id}
+            onClickRejectReq={onClickRejectReq}
+          />
         </Paper>
       </div>
-      <div style={{
-        gridArea: 'outreqs',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        boxShadow,
-      }}
+      <div
+        style={{
+          gridArea: 'outreqs',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          boxShadow,
+        }}
       >
         <Paper
           sx={{
-          padding: '13px 10px 10px 20px',
-          borderRadius: '20px',
-          height: '100%',
-          ...scrollStyle,
-        }}
+            padding: '13px 10px 10px 20px',
+            borderRadius: '20px',
+            height: '100%',
+            ...scrollStyle,
+          }}
           elevation={3}
         >
           <h3>{t('outRequests')}</h3>
-         <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} />
+          <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} />
         </Paper>
       </div>
     </div>
@@ -256,7 +289,6 @@ export default function Friends (props: {locale: string, id: string}) {
 
 export async function getServerSideProps(context: Context) {
   const { locale, params } = context;
-
   return {
     props: {
       locale,

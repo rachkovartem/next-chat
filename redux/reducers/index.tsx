@@ -25,7 +25,7 @@ export interface FriendRoom extends User {
     fullParticipants?: User[],
   }
 
-interface User {
+export interface User {
     id: string,
     email: string,
     username: string,

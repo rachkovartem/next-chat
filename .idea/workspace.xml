@@ -2,21 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/__tests__/ChatFriendList.test.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/__tests__/Login.test.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpers/withTestRouter.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jest.config.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__tests__/FriendsTab.test.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/chatWindow/message/Message.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/recentsTab/RecentsTab.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/changeLocal/ChangeLocal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/changeLocal/ChangeLocal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/chatFriendsList/ChatFriendsList.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/ChatFriendsList.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/__tests__/ChatFriendList.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/__tests__/ChatFriendList.test.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/login/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/friendsTab/FriendsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/friendsTab/FriendsTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/friendsTab/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/friendsTab/friendsListItem/FriendsListItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/helpers/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/_app.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/_app.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/friends/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/friends/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/redux/reducers/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/redux/reducers/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,10 +47,11 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../nest-chat-server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs.jest.jest_package" value="$PROJECT_DIR$/node_modules/jest" />
@@ -79,7 +76,20 @@
       <recent name="$PROJECT_DIR$/pages/components/chatFriendsList" />
     </key>
   </component>
-  <component name="RunManager" selected="Jest.Render Index">
+  <component name="RunManager" selected="Jest.ChatFriendList element">
+    <configuration name="ChatFriendList element" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/jest" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/__tests__/ChatFriendList.test.tsx" />
+      <test-names>
+        <test-name value="ChatFriendList element" />
+      </test-names>
+      <method v="2" />
+    </configuration>
     <configuration name="Render Index" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <node-options value="" />
@@ -109,6 +119,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Jest.ChatFriendList element" />
         <item itemvalue="Jest.Render Index" />
         <item itemvalue="Jest.square.test2" />
       </list>
@@ -161,6 +172,7 @@
       <workItem from="1647933517554" duration="7727000" />
       <workItem from="1648017600657" duration="8341000" />
       <workItem from="1648035263675" duration="6062000" />
+      <workItem from="1648191317731" duration="25302000" />
     </task>
     <servers />
   </component>
@@ -179,6 +191,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

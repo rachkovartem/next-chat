@@ -6,9 +6,10 @@ import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {ServerMessage} from "../../../hooks/useNotification";
 import {url} from "../../../helpers/constants";
+import {EllipseText} from "../../ellipseText/EllipseText";
 
 export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Function}) => {
-  const { useChatState, currentRoomId, socket } = useSelector((state: InitialState)  => state);
+  const { useChatState, currentRoomId, socket, user } = useSelector((state: InitialState)  => state);
   const { usersOnline, notification } = useChatState;
   const [isMounted, setIsMounted] = useState(false);
   const [lastMessage, setLastMessage] = useState(friend.lastMessage)
@@ -79,14 +80,32 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
     }}>
       <div style={{
         fontSize: '12px',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
       }}>
         {friend.username}
       </div>
       <div style={{
+        display: 'flex',
         fontSize: '12px',
       }}>
-        {lastMessage ? lastMessage.message : null}
+        {
+          lastMessage
+            ? <>
+              {
+              lastMessage.senderId === user.id
+                ? <span
+                  style={{
+                    color: '#939393',
+                    marginRight: '3px'
+                  }}>Вы:</span>
+                : null
+              }
+              <EllipseText text={lastMessage.message} maxLine={1}/>
+            </>
+          : null
+
+        }
+
       </div>
     </div>
   </Paper>
