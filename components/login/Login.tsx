@@ -141,7 +141,7 @@ const Login = ({locale} : {locale: string}) => {
             />
           </div>
           <Button
-            sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}}
+            sx={{margin: '0 auto', background: 'rgba(168,237,234,0)', color: '#3b3b3b'}}
             onClick={onClickLogin}
             variant="contained"
             data-testid="buttonLogin"
@@ -154,7 +154,7 @@ const Login = ({locale} : {locale: string}) => {
               {t('or')}
           </span>
           <Button
-            sx={{margin: '0 auto', background: '#a8edea', color: '#3b3b3b'}}
+            sx={{margin: '0 auto', background: 'rgba(168,237,234,0)', color: '#3b3b3b'}}
             onClick={onClickRegister}
             variant="contained"
             data-testid="buttonRegister"

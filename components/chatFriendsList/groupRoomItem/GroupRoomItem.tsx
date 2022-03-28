@@ -24,7 +24,6 @@ export const GroupRoomItem = (
   const [lastMessage, setLastMessage] = useState(room.lastMessage);
   const [isMounted, setIsMounted] = useState(false);
   const { currentRoomId, socket, useChatState } = useSelector((state: InitialState)  => state);
-  const { notification } = useChatState;
 
   useEffect(() => {
     setIsMounted(true);
@@ -40,12 +39,6 @@ export const GroupRoomItem = (
       });
     }
   }, [socket, isMounted]);
-
-  useEffect(() => {
-    if (notification && isMounted) {
-      setLastMessage(notification)
-    }
-  }, [notification, isMounted]);
 
   return <Paper
     sx={{

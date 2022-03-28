@@ -82,7 +82,7 @@ export default function Room(props: any) {
         margin: '50% auto'
       }}
     >
-      Выберите чат, чтобы начать переписку. Или добавьте кого нибудь в друзья, если ещё не сделали этого.
+      {t('unselectedChatText')}
     </div>
     : null;
 

@@ -1,5 +1,4 @@
 import {AutocompleteFriendInput} from "../../components/autocompleteFriendInput/AutocompleteFriendInput";
-import {Chip, SxProps} from "@mui/material";
 import * as React from "react";
 import {useTranslation} from "next-i18next";
 import {useEffect, useState} from "react";
@@ -8,7 +7,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {useSnackbar} from "notistack";
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 import Paper from "@mui/material/Paper";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {AppContext} from "next/app";
 
 import ApiServices from "../../services/ApiServices";
@@ -22,11 +20,10 @@ import {InReqsTab} from "../../components/inReqsTab/InReqsTab";
 import {OutReqsTab} from "../../components/outReqsTab/OutReqsTab";
 import {useSocket} from "../../hooks/useSocket";
 import {ServerMessage, useNotification} from "../../hooks/useNotification";
-import {Theme} from "@mui/system";
 import {friendsStyles} from "../../styles/friends.styles";
-import {GroupRoomItem} from "../../components/chatFriendsList/groupRoomItem/GroupRoomItem";
-import {FriendRoomItem} from "../../components/chatFriendsList/friendRoomItem/FriendRoomItem";
 import {RecentsTab} from "../../components/recentsTab/RecentsTab";
+import {GroupChatInput} from "../../components/groupChatInput/GroupChatInput";
+import {CircularProgress} from "@mui/material";
 
 interface Context extends AppContext {
   locale: string,
@@ -40,42 +37,35 @@ export default function Friends (props: {locale: string, id: string}) {
   const { rejectFriendReq, createGroupRoom } = ApiServices();
   const classes = friendsStyles();
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
+  const [userLoading, setUserLoading] = useState(true);
+  const [fullRoomsLoading, setFullRoomsLoading] = useState(true);
+  const loading = userLoading && fullRoomsLoading;
   const isBrowser = typeof window !== 'undefined';
   const router = useRouter();
   const { socket, user, useChatState, fullRooms } = useSelector((state: InitialState)  => state);
   const { objFriends, inReqs, outReqs } = user;
-  const { notification, usersOnline } = useChatState;
+  const { usersOnline } = useChatState;
   const dispatch = useDispatch();
   const { showNotification } = useNotification();
   const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
   const { getUserById, getRequests, getAllRoomsIds, check, getAllUserRooms, createRoom } = ApiServices();
-  const scrollStyle: SxProps<Theme> = {
-    overflowY: 'scroll',
-    scrollbarColor: '#a8a8a8 rgba(255,255,255,0)',     /* «цвет ползунка» «цвет полосы скроллбара» */
-    scrollbarWidth: 'thin',  /* толщина */
-    '&::-webkit-scrollbar': {
-      width: '3px', /* ширина для вертикального скролла */
-      height: '3px', /* высота для горизонтального скролла */
-      backgroundColor: 'rgba(255,255,255,0)',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#a8a8a8',
-      borderRadius: '9px',
-      boxShadow: 'inset 1px 1px 10px #a8a8a8',
-    }
-  }
-  const boxShadow = '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)';
 
   useEffect(() => {
     const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
-    res.then(res => dispatch(setUser(res)));
+    res.then(res => {
+      dispatch(setUser(res));
+      setUserLoading(false);
+    });
   }, []);
 
   useEffect(() => {
     if (!user.id) return
     const resFullRooms = getAllUserRooms(user.id)
-    resFullRooms.then(res => dispatch(setFullRooms(res.data)))
+    resFullRooms.then(res => {
+      dispatch(setFullRooms(res.data))
+      setFullRoomsLoading(false);
+    })
   }, [user.id])
 
   useEffect(() => {
@@ -126,160 +116,94 @@ export default function Friends (props: {locale: string, id: string}) {
   const friendsTabProps = {isBrowser, objFriends, id, groupChatMembers, setGroupChatMembers, enqueueSnackbar, onClickUser};
 
   const groupChatInput = groupChatMembers.length > 0
-    ? <Paper className={classes.groupChatPaper}>
-      {
-        groupChatMembers.map((member) => {
-          return (
-            <Chip
-              key={member.id}
-              label={member.username}
-              onDelete={() =>
-                setGroupChatMembers(
-                  (prevState) =>
-                    prevState.filter(item => item.id !== member.id)
-                )}
-            />
-          );
-        })
-      }
-      <AddCircleIcon
-        sx={{
-          alignSelf: 'center',
-          marginLeft: 'auto',
-          cursor: 'pointer'
-          }}
-        onClick={() => onClickCreateGroupChat(
-          [...groupChatMembers, { username: user.username, id: user.id }],
-          user.id
-        )}
+    ? <GroupChatInput
+        groupChatMembers={groupChatMembers}
+        onClickCreateGroupChat={onClickCreateGroupChat}
+        setGroupChatMembers={setGroupChatMembers}
+        user={user}
       />
-    </Paper>
     : null;
 
-  return <div style={{display: 'grid', gridTemplateColumns: '88px 1fr', backgroundColor: '#EAEAEA', height: '100%'}}>
+  return <div className={classes.friendsPage}>
     <SideBar locale={locale}/>
     <div className={classes.friendsWrapper}>
-      <div style={{height: '100%', gridArea: 'groups', display: 'flex', flexDirection: 'column'}}>
+      <div className={classes.groupsInputPaperWrapper}>
         <Paper
-          sx={{
-            padding: '5px 10px 10px',
-            borderRadius: '20px',
-          }}
+          className={classes.groupsInputPaper}
+          sx={{borderRadius: '20px'}}
           elevation={3}
         >
           <AutocompleteFriendInput enqueueSnackbar={enqueueSnackbar} id={id}/>
         </Paper>
-        <div
-          style={{
-          gridArea: 'groups',
-          marginTop: '22px',
-          borderRadius: '20px',
-          overflow: 'hidden',
-          height: '100%',
-          boxShadow
-          }}
-        >
+        <div className={classes.groupsPaperWrapper}>
           <Paper
-            sx={{
-            padding: '13px 10px 10px 20px',
-            borderRadius: '20px',
-            height: '100%',
-            ...scrollStyle,
-          }}
+            className={classes.groupsPaper}
+            sx={loading ? {display: 'flex', flexDirection: 'column'} : null}
             elevation={3}
           >
             <h3>{t('groups')}</h3>
-            <GroupsTab onClickRoom={onClickRoom}/>
+            {loading ? <CircularProgress sx={{margin: 'auto'}}/> : <GroupsTab onClickRoom={onClickRoom}/>}
           </Paper>
         </div>
       </div>
-      <div style={{
-        gridArea: 'friends',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        boxShadow,
-      }}
-      >
+      <div className={classes.friendsPaperWrapper}>
         <Paper
-          sx={{
-            padding: '13px 10px 10px 20px',
-            borderRadius: '20px',
-            height: '100%',
-            ...scrollStyle,
-          }}
+          className={classes.friendPaper}
+          sx={loading ? {display: 'flex', flexDirection: 'column'} : null}
           elevation={3}
         >
           <h3>{t('friends')}</h3>
           {groupChatInput}
-          <FriendsTab {...friendsTabProps} />
+          {loading ? <CircularProgress sx={{margin: 'auto'}}/> : <FriendsTab {...friendsTabProps} />}
         </Paper>
       </div>
-      <div style={{
-        gridArea: 'recents',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        boxShadow,
-        }}
-      >
+      <div className={classes.recentsPaperWrapper}>
         <Paper
-          sx={{
-          padding: '13px 10px 10px 20px',
-          borderRadius: '20px',
-          height: '100%',
-          ...scrollStyle,
-        }}
+          className={classes.recentsPaper}
+          sx={loading ? {display: 'flex', flexDirection: 'column'} : null}
           elevation={3}
         >
           <h3>{t('recents')}</h3>
           <div>
-            <RecentsTab fullRooms={fullRooms} user={user} onClickRoom={onClickRoom} onClickUser={onClickUser} />
+            {
+              loading
+              ? <CircularProgress sx={{margin: 'auto'}}/>
+              : <RecentsTab fullRooms={fullRooms} user={user} onClickRoom={onClickRoom} onClickUser={onClickUser} />
+            }
           </div>
         </Paper>
       </div>
-      <div style={{
-        gridArea: 'inreqs',
-        borderRadius: '20px',
-        overflow: 'hidden',
-        boxShadow,
-        }}
-      >
+      <div className={classes.inReqsPaperWrapper}>
         <Paper
-          sx={{
-            padding: '13px 10px 10px 20px',
-            borderRadius: '20px',
-            height: '100%',
-            ...scrollStyle,
-          }}
+          className={classes.inReqsPaper}
+          sx={loading ? {display: 'flex', flexDirection: 'column'} : null}
           elevation={3}
         >
           <h3>{t('inRequests')}</h3>
-          <InReqsTab
-            enqueueSnackbar={enqueueSnackbar}
-            inReqs={inReqs}
-            id={id}
-            onClickRejectReq={onClickRejectReq}
-          />
+          {
+            loading
+            ? <CircularProgress sx={{margin: 'auto'}}/>
+            : <InReqsTab
+              enqueueSnackbar={enqueueSnackbar}
+              inReqs={inReqs}
+              id={id}
+              onClickRejectReq={onClickRejectReq}
+            />
+          }
         </Paper>
       </div>
-      <div
-        style={{
-          gridArea: 'outreqs',
-          borderRadius: '20px',
-          overflow: 'hidden',
-          boxShadow,
-        }}
-      >
+      <div className={classes.outReqsPaperWrapper}>
         <Paper
-          sx={{
-            padding: '13px 10px 10px 20px',
-            borderRadius: '20px',
-            height: '100%',
-            ...scrollStyle,
-          }}
+          className={classes.outReqsPaper}
+          sx={loading ? {display: 'flex', flexDirection: 'column'} : null}
           elevation={3}
         >
           <h3>{t('outRequests')}</h3>
-          <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} />
+          {
+            loading
+              ? <CircularProgress sx={{margin: 'auto'}}/>
+              : <OutReqsTab outReqs={outReqs} id={id} onClickRejectReq={onClickRejectReq} />
+          }
         </Paper>
       </div>
     </div>

@@ -51,7 +51,6 @@ interface InitialState {
     error: string | null,
     useChatState: {
         usersOnline: string[],
-        notification: ServerMessage | null,
     },
     socket: null | Socket,
 }
@@ -79,7 +78,6 @@ export const initialState : InitialState = {
     error: null,
     useChatState: {
         usersOnline: [],
-        notification: null,
     },
     socket: null,
 }
@@ -172,14 +170,6 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
                 useChatState: {
                     ...state.useChatState,
                     usersOnline: action.payload,
-                }
-            }
-        case 'SET_USECHATSTATE_NOTIFICATION':
-            return {
-                ...state,
-                useChatState: {
-                    ...state.useChatState,
-                    notification: action.payload,
                 }
             }
         case 'SET_SOCKET':

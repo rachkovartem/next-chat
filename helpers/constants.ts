@@ -1,7 +1,7 @@
 export const url = process.env.NEXT_PUBLIC_SERVER_URL ? process.env.NEXT_PUBLIC_SERVER_URL : process.env.SERVER_URL;
-export const square = (x: number) => {
-  return Math.pow(x,x)
-};
+
+export const boxShadow = '0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%)';
+
 export const testState = {
   user: {
     id: '27d314e7-427f-494e-a672-37c013a16255',

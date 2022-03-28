@@ -87,13 +87,6 @@ export const setUseChatSateUsersOnline = (users: string[]) => {
     }
 }
 
-export const setUseChatSateNotification = (message: ServerMessage | null) => {
-    return {
-        type: 'SET_USECHATSTATE_NOTIFICATION',
-        payload: message
-    }
-}
-
 export const setSocket = (value: Socket) => {
     return {
         type: 'SET_SOCKET',

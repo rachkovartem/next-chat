@@ -5,13 +5,12 @@ import {InitialState} from "../../../redux/reducers";
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {ServerMessage} from "../../../hooks/useNotification";
-import {url} from "../../../helpers/constants";
 import {EllipseText} from "../../ellipseText/EllipseText";
 import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
 
 export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Function}) => {
   const { useChatState, currentRoomId, socket, user } = useSelector((state: InitialState)  => state);
-  const { usersOnline, notification } = useChatState;
+  const { usersOnline } = useChatState;
   const [isMounted, setIsMounted] = useState(false);
   const [lastMessage, setLastMessage] = useState(friend.lastMessage)
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
@@ -30,12 +29,6 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
       });
     }
   }, [socket, isMounted])
-
-  useEffect(() => {
-    if (notification && isMounted) {
-      setLastMessage(notification)
-    }
-  }, [notification, isMounted]);
 
   return <Paper
     sx={{

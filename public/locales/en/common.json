@@ -34,5 +34,6 @@
   "reqSended": "The request has been sent",
   "friendDeleted": "Successfully deleted",
   "groupAlreadyExists": "The group already exist",
-  "recents": "Recents"
+  "recents": "Recents",
+  "unselectedChatText": "Select a chat to start a conversation. Or add someone as a friend if you haven't already."
 }
