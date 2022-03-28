@@ -35,7 +35,7 @@ export default function Friends (props: {locale: string, id: string}) {
   const {locale, id} = props;
   const { t } = useTranslation('common');
   const { rejectFriendReq, createGroupRoom } = ApiServices();
-  const classes = friendsStyles(undefined);
+  const classes = friendsStyles();
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
   const [userLoading, setUserLoading] = useState(true);
   const [fullRoomsLoading, setFullRoomsLoading] = useState(true);
