@@ -3,8 +3,7 @@ import {Avatar} from "@mui/material";
 import RemoveCircleOutlineRoundedIcon from "@mui/icons-material/RemoveCircleOutlineRounded";
 import * as React from "react";
 import {OutReq} from "../../redux/reducers";
-import {profileStyles} from "../../styles/profile.styles";
-import {url} from "../../helpers/constants";
+import {OutReqsTabStyle} from "./OutReqsTab.style";
 
 export const OutReqsTab = (
   {
@@ -17,7 +16,7 @@ export const OutReqsTab = (
     onClickRejectReq: Function,
   }) => {
 
-  const classes = profileStyles();
+  const classes = OutReqsTabStyle();
 
   return <div style={{width: '100%'}}>
     {outReqs.map((req: any) => {

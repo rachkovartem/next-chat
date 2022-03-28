@@ -5,22 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/inReqsTab/InReqsTab.style.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/styledAvatar/StyledAvatar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/outReqsTab/OutReqsTab.style.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/friendRoomItem/FriendRoomItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatFriendsList/groupRoomItem/GroupRoomItem.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatWindow/ChatWindow.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/chatWindow/message/Message.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatWindow/message/Message.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/crop/Crop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/crop/Crop.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/friendsTab/FriendsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/friendsTab/FriendsTab.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/friendsTab/friendsListItem/FriendsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/friendsTab/friendsListItem/FriendsListItem.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/groupsTab/GroupsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/groupsTab/GroupsTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/header/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/header/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/inReqsTab/InReqsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/inReqsTab/InReqsTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/profile/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/profile/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/outReqsTab/OutReqsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/outReqsTab/OutReqsTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/friends/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/friends/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/room/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/room/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles/profile.styles.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/styles/profile.styles.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -182,7 +175,7 @@
       <workItem from="1648017600657" duration="8341000" />
       <workItem from="1648035263675" duration="6062000" />
       <workItem from="1648191317731" duration="25409000" />
-      <workItem from="1648448898743" duration="14611000" />
+      <workItem from="1648448898743" duration="19431000" />
     </task>
     <servers />
   </component>

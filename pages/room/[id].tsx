@@ -73,7 +73,7 @@ export default function Room(props: any) {
     }
   }, [socket])
 
-  const chatSpinner = chatWindowLoading ? <CircularProgress sx={{margin: 'auto'}} /> : null;
+  const chatSpinner = chatWindowLoading ? <CircularProgress sx={{ margin: 'auto' }} /> : null;
   const chatView = currentRoom && socket && !chatWindowLoading ? <ChatWindow {...currentRoom} /> : null;
   const placeHolder = !currentRoom && socket && !chatWindowLoading
     ? <div
@@ -114,6 +114,7 @@ export default function Room(props: any) {
             </Box>
             <div
               style={{
+                display: 'flex',
                 borderLeft: '1px solid #e8e8e8'
               }}>
               {chatSpinner}

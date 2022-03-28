@@ -79,7 +79,13 @@ export const FriendsListItem = (
         marginLeft: 'auto',
         marginRight: '10px',
         width: '18px',
-        cursor: 'pointer'
+        height: '18px',
+        cursor: 'pointer',
+        borderRadius: '100%',
+        transition: 'background-color 0.3s',
+        '&:hover': {
+          backgroundColor: '#E8E8E8'
+        }
       }}
       onClick={handleClickMenuIcon}
     />

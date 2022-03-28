@@ -224,7 +224,6 @@ export default function Friends (props: {locale: string, id: string}) {
         <Paper
           sx={{
           padding: '13px 10px 10px 20px',
-
           borderRadius: '20px',
           height: '100%',
           ...scrollStyle,

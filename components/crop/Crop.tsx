@@ -1,13 +1,14 @@
 import ReactCrop from "react-image-crop";
 import * as React from "react";
 import {forwardRef, Ref, useEffect, useState} from "react";
-import ApiServices from "../../services/ApiServices";
 import SaveIcon from '@mui/icons-material/Save';
 import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
-import {setUserImagePath} from "../../redux/actions";
 import Resizer from "react-image-file-resizer";
 import CancelIcon from '@mui/icons-material/Cancel';
+
+import {setUserImagePath} from "../../redux/actions";
+import ApiServices from "../../services/ApiServices";
 
 interface imgBlob extends Blob {
   lastModifiedDate?: Date,
