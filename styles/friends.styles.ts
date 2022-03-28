@@ -1,8 +1,7 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {boxShadow} from "../helpers/constants";
-import {SxProps} from "@mui/material";
 
-const scrollStyle: SxProps<any> = {
+const scrollStyle: any = {
   overflowY: 'scroll',
   scrollbarColor: '#a8a8a8 rgba(255,255,255,0)',     /* «цвет ползунка» «цвет полосы скроллбара» */
   scrollbarWidth: 'thin',  /* толщина */
