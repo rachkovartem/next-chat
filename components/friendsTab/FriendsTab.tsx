@@ -22,6 +22,13 @@ export const FriendsTab = (
     {
       isBrowser ? objFriends
         .filter((user) => user.id !== props.id)
+        .sort((a, b) => {
+          const nameA = a.username.toLowerCase();
+          const nameB = b.username.toLowerCase();
+          if (nameA < nameB) return -1
+          if (nameA > nameB) return 1
+          return 0
+        })
         .map((user) => (
           <FriendsListItem key={user.id} user={user} {...props}/>
         )) : null

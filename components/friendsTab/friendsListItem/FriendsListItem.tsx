@@ -11,6 +11,7 @@ import {useSelector} from "react-redux";
 import {InitialState} from "../../../redux/reducers";
 import {friendListItemStyles} from "./friendListItem.styles";
 import {url} from "../../../helpers/constants";
+import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
 
 export const FriendsListItem = (
   {
@@ -40,12 +41,6 @@ export const FriendsListItem = (
     setMenuAnchorEl(event.currentTarget);
   };
 
-  // const onClickUser = async (id1: string, id2: string) => {
-  //   const res = await createRoom([id1, id2])
-  //   if (res.status === 201) {
-  //     await router.push(`/room/${res.data.roomId}`);
-  //   }
-  // }
   const menuProps = {user, id, menuAnchorEl, setMenuAnchorEl, groupChatMembers, setGroupChatMembers, enqueueSnackbar}
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
 
@@ -71,12 +66,12 @@ export const FriendsListItem = (
           }
         }}
         anchorOrigin={{
-        vertical: 'bottom',
-        horizontal: 'left',
+          vertical: 'bottom',
+          horizontal: 'left',
         }}
         color={isOnline(user.id) ? "success" : "secondary"}
         variant="dot">
-        <Avatar alt="Avatar" src={user.imagePath}/>
+        <StyledAvatar display={'flex'} username={user.username} imagePath={user.imagePath} />
       </Badge>
     <div style={{marginLeft: '12px'}}>{user.username}</div>
     <KeyboardArrowDownIcon

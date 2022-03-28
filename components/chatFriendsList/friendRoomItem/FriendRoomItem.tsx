@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import {ServerMessage} from "../../../hooks/useNotification";
 import {url} from "../../../helpers/constants";
 import {EllipseText} from "../../ellipseText/EllipseText";
+import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
 
 export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Function}) => {
   const { useChatState, currentRoomId, socket, user } = useSelector((state: InitialState)  => state);
@@ -71,13 +72,15 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
       }}
       color={isOnline(friend.id) ? "success" : "secondary"}
       variant="dot">
-      <Avatar alt="Avatar" src={friend.imagePath}/>
+      <StyledAvatar display={'flex'} username={friend.username} imagePath={friend.imagePath}/>
     </Badge>
-    <div style={{
-      display: 'grid',
-      gridTemplateRows: '1fr 1fr',
-      marginLeft: '12px'
-    }}>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateRows: '1fr 1fr',
+        marginLeft: '12px'
+      }}
+    >
       <div style={{
         fontSize: '12px',
         fontWeight: 'bold',
@@ -100,12 +103,10 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
                   }}>Вы:</span>
                 : null
               }
-              <EllipseText text={lastMessage.message} maxLine={1}/>
+              { lastMessage.message ? <EllipseText text={lastMessage.message} maxLine={1}/> : null }
             </>
           : null
-
         }
-
       </div>
     </div>
   </Paper>

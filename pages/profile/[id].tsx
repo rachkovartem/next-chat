@@ -18,7 +18,7 @@ import {setSocket, setUser} from "../../redux/actions";
 import {useSocket} from "../../hooks/useSocket";
 import {useNotification, ServerMessage} from "../../hooks/useNotification";
 import {profileStyles} from "../../styles/profile.styles";
-import {url} from "../../helpers/constants";
+import {StyledAvatar} from "../../components/styledAvatar/StyledAvatar";
 
 export interface User {
   id: string,
@@ -68,7 +68,7 @@ export default function Profile (props: {locale: string, id: string}) {
   const { getUserById, getRequests, getAllRoomsIds, check } = ApiServices();
   const { socket, user, useChatState } = useSelector((state: InitialState)  => state);
   const { username, imagePath } = user;
-  const { notification, usersOnline } = useChatState;
+  const { usersOnline } = useChatState;
   const inputRef = useRef(null);
   const { showNotification } = useNotification();
   const { onLoadingPage } = PagesServices();
@@ -77,7 +77,7 @@ export default function Profile (props: {locale: string, id: string}) {
     dispatch(setSocket(createSocket()))
     const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
     res.then(res => dispatch(setUser(res)))
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!socket) {
@@ -85,7 +85,7 @@ export default function Profile (props: {locale: string, id: string}) {
     }
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
-        showNotification(serverMessage[0])
+        showNotification(serverMessage[0]);
       })
       setOnlineListeners({socket, usersOnline});
     }
@@ -96,22 +96,27 @@ export default function Profile (props: {locale: string, id: string}) {
 
   const onChangeFile = (e: any) => {
     setFile(e.target.files[0]);
-  }
+  };
 
   return (
-    <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
+    <div style={{ display: 'grid', gridTemplateColumns: '88px 1fr' }}>
       <SideBar locale={locale}/>
       <div className={classes.profile}>
         <Box className={classes.userProfileBox}>
           <div className={classes.avatarWrapper}>
-            <Avatar
-              className='avatarProfile'
-              alt="Avatar"
-              src={imagePath}
+            <StyledAvatar
+              display={'flex'}
+              username={username}
+              imagePath={imagePath}
+              sx={{
+                marginLeft: '6px',
+                width: '100px',
+                height: '100px'
+              }}
             />
             <p className={classes.username}>{username}</p>
             <Button
-              className={classes.avatarButton}
+              sx={{marginTop: '10px'}}
               variant="contained"
               component="label"
             >

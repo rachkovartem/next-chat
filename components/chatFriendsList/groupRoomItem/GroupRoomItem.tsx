@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import {FriendRoom, InitialState} from "../../../redux/reducers";
 import {useSelector} from "react-redux";
 import {ServerMessage} from "../../../hooks/useNotification";
+import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
 
 
 export const GroupRoomItem = (
@@ -61,23 +62,17 @@ export const GroupRoomItem = (
     elevation={0}
     data-testid="roomItem"
   >
-    <Avatar
-      key={room.roomId}
-      sx={{marginLeft: '6px'}}
-      alt={room.roomId}
-      src={''}
-    >
-      {room.roomId[0]+room.roomId[1]}
-    </Avatar>
-    <div style={{
-      display: 'grid',
-      gridTemplateRows: '1fr 1fr',
-      paddingRight: '5px',
-      maxHeight: '100%',
-      marginLeft: '12px',
-      overflow: 'hidden',
-      fontSize: '12px'
-    }}
+    <StyledAvatar key={room.roomId} display={'flex'} username={room.roomId} imagePath={''} sx={{marginLeft: '6px'}}/>
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateRows: '1fr 1fr',
+        paddingRight: '5px',
+        maxHeight: '100%',
+        marginLeft: '12px',
+        overflow: 'hidden',
+        fontSize: '12px'
+      }}
     >
       <div
         style={{

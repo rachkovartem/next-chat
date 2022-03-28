@@ -69,7 +69,7 @@ export const ChatWindow = (props: Room) => {
   return <>
     {initial ? null : <Box
     sx={{
-      borderLeft: '1px solid #e8e8e8',
+
       width: '100%',
       height: '100vh',
       display: 'flex',

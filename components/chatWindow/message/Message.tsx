@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 import * as React from "react";
 import {User} from "../../../redux/reducers";
 import {ServerMessage} from "../../../hooks/useNotification";
-
+import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
 
 export const Message = (
   { user, avatars, item, groupRoom }:
@@ -16,6 +16,24 @@ export const Message = (
     return hours + ':' + minutes.slice(-2)
   }
 
+  const stringToColor = (string: string) => {
+    let hash = 0;
+    let i;
+
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+
+    return color;
+  }
+
   return <div
     style={{
       display: 'flex',
@@ -24,14 +42,14 @@ export const Message = (
       alignSelf: user.id === item.senderId ? 'flex-end' : 'inherit'
     }}
   >
-    <Avatar
+    <StyledAvatar
+      display={user.id === item.senderId || !groupRoom ? 'none' : 'flex'}
+      username={item.senderUsername}
+      imagePath={avatars[item.senderId]}
       sx={{
         marginRight: '5px',
-        display: user.id === item.senderId || !groupRoom ? 'none' : 'initial',
         alignSelf: 'end',
       }}
-      alt="Avatar"
-      src={avatars[item.senderId]}
     />
     <Paper
       sx={{
@@ -73,7 +91,7 @@ export const Message = (
         right: 0
       }}
       >
-        {getTime(item.sendingDate)}
+        { getTime(item.sendingDate) }
       </p>
     </Paper>
   </div>

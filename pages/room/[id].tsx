@@ -75,6 +75,17 @@ export default function Room(props: any) {
 
   const chatSpinner = chatWindowLoading ? <CircularProgress sx={{margin: 'auto'}} /> : null;
   const chatView = currentRoom && socket && !chatWindowLoading ? <ChatWindow {...currentRoom} /> : null;
+  const placeHolder = !currentRoom && socket && !chatWindowLoading
+    ? <div
+      style={{
+        width: '50%',
+        margin: '50% auto'
+      }}
+    >
+      Выберите чат, чтобы начать переписку. Или добавьте кого нибудь в друзья, если ещё не сделали этого.
+    </div>
+    : null;
+
   return (
     <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
       <SideBar locale={locale}/>
@@ -82,27 +93,33 @@ export default function Room(props: any) {
         pageLoading
           ? <CircularProgress sx={{position: 'absolute', top: '50%', left: '50%'}} />
           : <div style={{display: 'grid', gridTemplateColumns: '300px 1fr'}}>
-              <Box sx={{
-                paddingLeft: '3px',
-                height: '100vh',
-                overflowY: 'scroll',
-                scrollbarColor: '#a8a8a8 #fff',     /* «цвет ползунка» «цвет полосы скроллбара» */
-                scrollbarWidth: 'thin',  /* толщина */
-                '&::-webkit-scrollbar': {
-                  width: '3px', /* ширина для вертикального скролла */
-                  height: '3px', /* высота для горизонтального скролла */
-                  backgroundColor: '#fff',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: '#a8a8a8',
-                  borderRadius: '9px',
-                  boxShadow: 'inset 1px 1px 10px #a8a8a8',
-                },
+            <Box sx={{
+              paddingLeft: '3px',
+              height: '100vh',
+              overflowY: 'scroll',
+              scrollbarColor: '#a8a8a8 #fff',     /* «цвет ползунка» «цвет полосы скроллбара» */
+              scrollbarWidth: 'thin',  /* толщина */
+              '&::-webkit-scrollbar': {
+                width: '3px', /* ширина для вертикального скролла */
+                height: '3px', /* высота для горизонтального скролла */
+                backgroundColor: '#fff',
+              },
+              '&::-webkit-scrollbar-thumb': {
+                backgroundColor: '#a8a8a8',
+                borderRadius: '9px',
+                boxShadow: 'inset 1px 1px 10px #a8a8a8',
+              },
+            }}>
+              <ChatFriendList/>
+            </Box>
+            <div
+              style={{
+                borderLeft: '1px solid #e8e8e8'
               }}>
-                <ChatFriendList/>
-              </Box>
               {chatSpinner}
               {chatView}
+              {placeHolder}
+            </div>
           </div>
       }
     </div>

@@ -7,6 +7,7 @@ import {Button} from "@mui/material";
 import {useDispatch} from "react-redux";
 import {setUserImagePath} from "../../redux/actions";
 import Resizer from "react-image-file-resizer";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 interface imgBlob extends Blob {
   lastModifiedDate?: Date,
@@ -37,7 +38,6 @@ export const Crop = forwardRef(
   const [src, setSrc] = useState<string>('');
   const [imageRef, setImageRef] = useState('');
   const [blob, setBlob] = useState<imgBlob>();
-  const [croppedImageUrl, setCroppedImageUrl] = useState<string | unknown>('');
 
   useEffect(() => {
     const reader = new FileReader();
@@ -74,7 +74,6 @@ export const Crop = forwardRef(
         crop,
         'newAvatar.jpeg'
       );
-      setCroppedImageUrl(croppedImageUrl);
     }
   }
 
@@ -159,16 +158,34 @@ export const Crop = forwardRef(
   }
 
   return (
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '100px'}}>
+    <div
+      style={{
+        width: 'fit-content',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        margin: '100px auto 0',
+      }}
+    >
+        <CancelIcon
+          sx={{
+            margin: '0 0 15px auto',
+            cursor: 'pointer'
+          }}
+          onClick={() => setFile(null)}
+        />
         <ReactCrop
-          style={{width: '50vh'}}
+          style={{
+            maxWidth: '50vw',
+            maxHeight: '90vh',
+            overflowY: 'scroll'
+          }}
           src={src}
           crop={crop}
           ruleOfThirds
           onImageLoaded={onImageLoaded}
           onChange={onCropChange}
         />
-        {/*<img alt="Crop" style={{ maxWidth: '100%' }} src={croppedImageUrl} />*/}
       <Button
         sx={{marginTop: '50px'}}
         variant="contained"

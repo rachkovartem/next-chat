@@ -8,7 +8,7 @@ import {useDispatch} from "react-redux";
 import ApiServices from "../../services/ApiServices";
 import {useTranslation} from "next-i18next";
 import {InReq} from "../../redux/reducers";
-import {profileStyles} from "../../styles/profile.styles";
+import {InReqsTabStyle} from "./InReqsTab.style";
 
 export const InReqsTab =
   ({
@@ -24,7 +24,7 @@ export const InReqsTab =
   }) => {
   const dispatch = useDispatch();
   const { approveFriendReq, createRoom } = ApiServices();
-  const classes = profileStyles();
+  const classes = InReqsTabStyle();
   const { t } = useTranslation('common');
 
   const onClickApproveReq = async (idUser: string, idFriend: string, idReq: string) => {

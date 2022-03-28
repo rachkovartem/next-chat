@@ -3,18 +3,19 @@ import * as React from 'react';
 
 import {useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
-import {url} from "../../helpers/constants";
+import {StyledAvatar} from "../styledAvatar/StyledAvatar";
 
 export default function Header(props: { room: any | null}) {
   const { user } = useSelector((state: InitialState)  => state);
   const { room } = props;
 
-  const avatar = (participant: {id: string, imagePath: string}) =>
-    <Avatar
+  const avatar = (participant: {id: string, imagePath: string, username: string}) =>
+    <StyledAvatar
       key={participant.id}
+      display={'flex'}
+      username={participant.username}
+      imagePath={participant.imagePath}
       sx={{marginLeft: '6px'}}
-      alt="Avatar"
-      src={participant.imagePath}
     />
 
   return room && user.id

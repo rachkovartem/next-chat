@@ -7,6 +7,8 @@ import {EllipseText} from "../ellipseText/EllipseText";
 import {ArrowTooltips} from "../tooltip/Tooltip";
 import {profileStyles} from "../../styles/profile.styles";
 import {url} from "../../helpers/constants";
+import {Style} from "@mui/icons-material";
+import {StyledAvatar} from "../styledAvatar/StyledAvatar";
 
 export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
   const isBrowser = typeof window !== 'undefined';
@@ -32,17 +34,13 @@ export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
             onClick={() => onClickRoom(room.roomId)}
             elevation={0}
           >
-            <AvatarGroup sx={{paddingLeft: '20px'}} max={4} spacing={'small'} total={room.fullParticipants.length}>
+            <AvatarGroup max={3} spacing={'small'} total={room.fullParticipants.length}>
               {room.fullParticipants
                 .sort((a, b) => (a.id === user.id ? 0 : 1))
                 .map(user => {
                   return (
-                    <Avatar
-                      key={user.id}
-                      sx={{marginLeft: '6px'}}
-                      alt="Avatar"
-                      src={user.imagePath}
-                    />)
+                    <StyledAvatar key={user.id} display={'flex'} username={user.username} imagePath={user.imagePath} sx={{marginLeft: '6px'}}/>
+                  )
                 })}
             </AvatarGroup>
             <div style={{

@@ -2,10 +2,11 @@ import {makeStyles} from "@material-ui/core/styles";
 
 export const profileStyles = makeStyles({
     profile: {
-        display: 'flex', flexDirection: 'column'
+        display: 'flex',
+        flexDirection: 'column',
     },
     userProfileBox: {
-        margin: '50px auto 0',
+        margin: '50px 0 0',
         display: 'grid',
         gridTemplateColumns: '250px 400px',
         gap: '200px',
@@ -27,9 +28,6 @@ export const profileStyles = makeStyles({
     },
     username: {
         margin: '20px 0 0 0'
-    },
-    avatarButton: {
-        marginTop: '10px'
     },
     buttonsGroup: {
         width: '100%',
