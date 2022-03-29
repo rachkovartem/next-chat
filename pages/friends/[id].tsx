@@ -11,7 +11,7 @@ import {AppContext} from "next/app";
 
 import ApiServices from "../../services/ApiServices";
 import {InitialState} from "../../redux/reducers";
-import {SideBar} from "../../components/sideBar/sideBar";
+import {SideBar} from "../../components/sideBar/SideBar";
 import {PagesServices} from "../../services/PagesServices";
 import {setFullRooms, setSocket, setUser, setUserInReqs, setUserOutReqs, updateFullRooms} from "../../redux/actions";
 import {FriendsTab} from "../../components/friendsTab/FriendsTab";
@@ -24,6 +24,8 @@ import {friendsStyles} from "../../styles/friends.styles";
 import {RecentsTab} from "../../components/recentsTab/RecentsTab";
 import {GroupChatInput} from "../../components/groupChatInput/GroupChatInput";
 import {CircularProgress} from "@mui/material";
+import {theme} from "../../styles/theme";
+import {BottomNavigationMobile} from "../../components/bottomNavigation/BottomNavigationMobile";
 
 interface Context extends AppContext {
   locale: string,
@@ -35,7 +37,7 @@ export default function Friends (props: {locale: string, id: string}) {
   const {locale, id} = props;
   const { t } = useTranslation('common');
   const { rejectFriendReq, createGroupRoom } = ApiServices();
-  const classes = friendsStyles();
+  const classes = friendsStyles(theme);
   const [groupChatMembers, setGroupChatMembers] = useState<{username: string, id: string}[]>([]);
   const [userLoading, setUserLoading] = useState(true);
   const [fullRoomsLoading, setFullRoomsLoading] = useState(true);
@@ -113,6 +115,14 @@ export default function Friends (props: {locale: string, id: string}) {
     await router.push(`/room/${roomId}`);
   }
 
+  const onClickLogout = async () => {
+    socket?.disconnect();
+    localStorage.clear();
+    document.cookie = 'access_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = 'refresh_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    await router.push(`/`);
+  }
+
   const friendsTabProps = {isBrowser, objFriends, id, groupChatMembers, setGroupChatMembers, enqueueSnackbar, onClickUser};
 
   const groupChatInput = groupChatMembers.length > 0
@@ -125,7 +135,8 @@ export default function Friends (props: {locale: string, id: string}) {
     : null;
 
   return <div className={classes.friendsPage}>
-    <SideBar locale={locale}/>
+    <SideBar locale={locale} onClickLogout={onClickLogout}/>
+    <BottomNavigationMobile onClickLogout={onClickLogout}/>
     <div className={classes.friendsWrapper}>
       <div className={classes.groupsInputPaperWrapper}>
         <Paper

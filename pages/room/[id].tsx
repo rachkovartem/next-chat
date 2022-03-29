@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
 
 import {ChatWindow} from "../../components/chatWindow/ChatWindow";
-import {SideBar} from "../../components/sideBar/sideBar";
+import {SideBar} from "../../components/sideBar/SideBar";
 import {InitialState} from "../../redux/reducers";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";

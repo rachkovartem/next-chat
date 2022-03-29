@@ -11,7 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 import { Crop } from '../../components/crop/Crop';
 import {InitialState} from "../../redux/reducers";
-import {SideBar} from "../../components/sideBar/sideBar";
+import {SideBar} from "../../components/sideBar/SideBar";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";
 import {setSocket, setUser} from "../../redux/actions";

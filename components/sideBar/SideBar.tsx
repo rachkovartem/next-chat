@@ -10,84 +10,49 @@ import LanguageIcon from '@mui/icons-material/Language';
 import * as React from "react";
 import {useRouter} from "next/router";
 import {useTranslation} from "next-i18next";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
-import {InitialState} from "../../redux/reducers";
 import {setCurrentRoom} from "../../redux/actions";
+import {sideBarStyles} from "./SideBar.styles";
 
-export const SideBar = ({locale}: {locale: string}) => {
-  const drawerWidth = 88;
+export const SideBar = ({locale, onClickLogout}: {locale: string, onClickLogout: Function}) => {
   const router = useRouter();
   const { pathname, asPath, query } = router;
-  const { socket } = useSelector((state: InitialState)  => state);
   const routerOptionLocale = locale === 'ru' ? 'en' : 'ru';
   const { t } = useTranslation('common');
+  const classes = sideBarStyles();
   const dispatch = useDispatch();
-
-  const onClickLogout = async () => {
-    socket?.disconnect();
-    localStorage.clear();
-    document.cookie = 'access_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = 'refresh_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    await router.push(`/`);
-  }
 
   return <Box
     component="nav"
-    sx={{ width: drawerWidth,
-      height: '100vh',
-      boxShadow: '0px 0px 24px rgba(0, 0, 0, 0.08)'
-    }}
+    className={classes.sideBarBox}
     aria-label="mailbox folders"
   >
-
     <Drawer
       variant="permanent"
-      sx={{
-        '& .MuiDrawer-paper':
-          {
-            boxSizing: 'border-box',
-            width: drawerWidth
-          },
-      }}
+      className={classes.sideBarDrawer}
       open
     >
       <List
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-      }}
+      className={classes.sideBarList}
       >
         <ListItem
           button
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '10px'
-          }}
+          className={classes.sideBarListItem}
           onClick={() => router.push(`/profile/${localStorage.getItem('id')}`)}
         >
           <HomeTwoToneIcon fontSize={'large'} />
         </ListItem>
         <ListItem
           button
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '10px'
-          }}
+          className={classes.sideBarListItem}
           onClick={() => router.push(`/friends/${localStorage.getItem('id')}`)}
         >
           <PeopleAltTwoToneIcon fontSize={'large'} />
         </ListItem>
         <ListItem
           button
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginTop: '10px'
-          }}
+          className={classes.sideBarListItem}
           onClick={() => {
             router.push(`/room/${localStorage.getItem('id')}`)
             dispatch(setCurrentRoom(null))
@@ -98,12 +63,7 @@ export const SideBar = ({locale}: {locale: string}) => {
         <ListItem
           onClick={() => router.push({ pathname, query }, asPath, { locale: routerOptionLocale })}
           button
-          sx={{
-            marginTop: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}
+          className={classes.sideBarListItemEnd}
         >
           <LanguageIcon/>
           <div>
@@ -112,11 +72,8 @@ export const SideBar = ({locale}: {locale: string}) => {
         </ListItem>
         <ListItem
           button
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-          onClick={onClickLogout}
+          className={classes.sideBarListItemLogout}
+          onClick={() => onClickLogout()}
         >
           <LogoutIcon />
         </ListItem>

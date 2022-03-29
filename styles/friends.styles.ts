@@ -1,5 +1,6 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {boxShadow} from "../helpers/constants";
+import {Theme} from "@mui/system";
 
 const scrollStyle: any = {
   overflowY: 'scroll',
@@ -17,25 +18,55 @@ const scrollStyle: any = {
   }
 }
 
-export const friendsStyles = makeStyles({
+export const friendsStyles = makeStyles((theme)=> ({
   friendsPage: {
     display: 'grid',
     gridTemplateColumns: '88px 1fr',
+    maxHeight: '100vh',
     backgroundColor: '#EAEAEA',
+    [theme.breakpoints.down(1000)]: {
+      display: 'flex',
+      flexDirection: 'column-reverse'
+    },
+    [theme.breakpoints.down(550)]: {
+      maxHeight: '100%'
+    },
   },
   friendsWrapper: {
-    maxHeight: '100vh',
+    maxHeight: 'calc(100vh - 56px)',
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
     gridTemplateAreas: `
-            'groups friends inreqs'
-            'groups friends inreqs'
-            'recents friends outreqs'
-            'recents friends outreqs'
+      'groups friends inreqs'
+      'groups friends inreqs'
+      'recents friends outreqs'
+      'recents friends outreqs'
     `,
     gap: '22px',
     padding: '22px',
+    [theme.breakpoints.down(750)]: {
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gridTemplateAreas: `
+      'groups friends'
+      'groups friends'
+      'recents inreqs'
+      'recents outreqs'
+    `,
+    },
+    [theme.breakpoints.down(550)]: {
+      maxHeight: '100%',
+      marginBottom: 56,
+      gridTemplateColumns: '1fr',
+      gridTemplateRows: 'auto',
+      gridTemplateAreas: `
+      'groups'
+      'recents'
+      'friends'
+      'inreqs'
+      'outreqs'
+    `,
+    },
   },
   groupsInputPaperWrapper: {
     height: '100%',
@@ -108,4 +139,4 @@ export const friendsStyles = makeStyles({
     height: '100%',
     ...scrollStyle
   }
-});
+}));
