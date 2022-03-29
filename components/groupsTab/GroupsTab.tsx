@@ -5,14 +5,12 @@ import {useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
 import {EllipseText} from "../ellipseText/EllipseText";
 import {ArrowTooltips} from "../tooltip/Tooltip";
-import {profileStyles} from "../../styles/profile.styles";
-import {url} from "../../helpers/constants";
-import {Style} from "@mui/icons-material";
 import {StyledAvatar} from "../styledAvatar/StyledAvatar";
+import {groupsTabsStyles} from "./GroupsTabs.styles";
 
 export const GroupsTab = ({ onClickRoom }: { onClickRoom: Function }) => {
   const isBrowser = typeof window !== 'undefined';
-  const classes = profileStyles();
+  const classes = groupsTabsStyles();
   const { user } = useSelector((state: InitialState)  => state);
   const { fullGroupRooms } = user;
 

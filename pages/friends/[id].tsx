@@ -25,7 +25,7 @@ import {RecentsTab} from "../../components/recentsTab/RecentsTab";
 import {GroupChatInput} from "../../components/groupChatInput/GroupChatInput";
 import {CircularProgress} from "@mui/material";
 import {theme} from "../../styles/theme";
-import {BottomNavigationMobile} from "../../components/bottomNavigation/BottomNavigationMobile";
+import {BottomNavigationMobile} from "../../components/bottomNavigationMobile/BottomNavigationMobile";
 
 interface Context extends AppContext {
   locale: string,
@@ -115,14 +115,6 @@ export default function Friends (props: {locale: string, id: string}) {
     await router.push(`/room/${roomId}`);
   }
 
-  const onClickLogout = async () => {
-    socket?.disconnect();
-    localStorage.clear();
-    document.cookie = 'access_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = 'refresh_token' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    await router.push(`/`);
-  }
-
   const friendsTabProps = {isBrowser, objFriends, id, groupChatMembers, setGroupChatMembers, enqueueSnackbar, onClickUser};
 
   const groupChatInput = groupChatMembers.length > 0
@@ -135,8 +127,8 @@ export default function Friends (props: {locale: string, id: string}) {
     : null;
 
   return <div className={classes.friendsPage}>
-    <SideBar locale={locale} onClickLogout={onClickLogout}/>
-    <BottomNavigationMobile onClickLogout={onClickLogout}/>
+    <SideBar locale={locale}/>
+    <BottomNavigationMobile/>
     <div className={classes.friendsWrapper}>
       <div className={classes.groupsInputPaperWrapper}>
         <Paper

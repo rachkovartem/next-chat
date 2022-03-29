@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import Box from "@mui/material/Box";
 import CircularProgress from '@mui/material/CircularProgress';
+import {useMediaQuery} from "@mui/material";
 
 import {ChatWindow} from "../../components/chatWindow/ChatWindow";
 import {SideBar} from "../../components/sideBar/SideBar";
@@ -12,6 +13,8 @@ import {InitialState} from "../../redux/reducers";
 import {PagesServices} from "../../services/PagesServices";
 import ApiServices from "../../services/ApiServices";
 import {ChatFriendList} from "../../components/chatFriendsList/ChatFriendsList";
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+
 import {
   setChatWindowLoading,
   setCurrentRoomId,
@@ -19,8 +22,13 @@ import {
 } from "../../redux/actions";
 import {setCurrentRoom} from "../../redux/actions";
 import {useSocket} from "../../hooks/useSocket";
+import {roomStyles} from "../../styles/room.styles";
+import {BottomNavigationMobile} from "../../components/bottomNavigationMobile/BottomNavigationMobile";
 
 export default function Room(props: any) {
+  const mobile = useMediaQuery('(max-width:900px)');
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const classes = roomStyles();
   const { locale, id } = props;
   const {
     getRoomInfo,
@@ -86,37 +94,33 @@ export default function Room(props: any) {
     </div>
     : null;
 
+  const chatFriendListElement = mobile
+    ? <SwipeableDrawer
+      className={classes.roomDrawer}
+      anchor='left'
+      open={drawerOpen}
+      disableSwipeToOpen={false}
+      onClose={() => setDrawerOpen(false)}
+      onOpen={() => setDrawerOpen(true)}
+    >
+      <ChatFriendList/>
+    </SwipeableDrawer>
+    : <Box className={classes.roomBox}>
+      <ChatFriendList/>
+    </Box>
+
   return (
-    <div style={{display: 'grid', gridTemplateColumns: '88px 1fr'}}>
+    <div className={classes.roomPage}>
       <SideBar locale={locale}/>
+      <BottomNavigationMobile/>
       {
         pageLoading
           ? <CircularProgress sx={{position: 'absolute', top: '50%', left: '50%'}} />
-          : <div style={{display: 'grid', gridTemplateColumns: '300px 1fr'}}>
-            <Box sx={{
-              paddingLeft: '3px',
-              height: '100vh',
-              overflowY: 'scroll',
-              scrollbarColor: '#a8a8a8 #fff',     /* «цвет ползунка» «цвет полосы скроллбара» */
-              scrollbarWidth: 'thin',  /* толщина */
-              '&::-webkit-scrollbar': {
-                width: '3px', /* ширина для вертикального скролла */
-                height: '3px', /* высота для горизонтального скролла */
-                backgroundColor: '#fff',
-              },
-              '&::-webkit-scrollbar-thumb': {
-                backgroundColor: '#a8a8a8',
-                borderRadius: '9px',
-                boxShadow: 'inset 1px 1px 10px #a8a8a8',
-              },
-            }}>
-              <ChatFriendList/>
-            </Box>
+          : <div className={classes.roomBoxWrapper}>
+            {chatFriendListElement}
             <div
-              style={{
-                display: 'flex',
-                borderLeft: '1px solid #e8e8e8'
-              }}>
+              className={classes.chatViewWrapper}
+            >
               {chatSpinner}
               {chatView}
               {placeHolder}

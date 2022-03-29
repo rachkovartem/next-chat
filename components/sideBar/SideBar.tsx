@@ -10,12 +10,15 @@ import LanguageIcon from '@mui/icons-material/Language';
 import * as React from "react";
 import {useRouter} from "next/router";
 import {useTranslation} from "next-i18next";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {setCurrentRoom} from "../../redux/actions";
 import {sideBarStyles} from "./SideBar.styles";
+import {onClickLogout} from "../../helpers/onClickLogout";
+import {InitialState} from "../../redux/reducers";
 
-export const SideBar = ({locale, onClickLogout}: {locale: string, onClickLogout: Function}) => {
+export const SideBar = ({locale}: {locale: string}) => {
+  const { socket } = useSelector((state: InitialState)  => state);
   const router = useRouter();
   const { pathname, asPath, query } = router;
   const routerOptionLocale = locale === 'ru' ? 'en' : 'ru';
@@ -73,7 +76,7 @@ export const SideBar = ({locale, onClickLogout}: {locale: string, onClickLogout:
         <ListItem
           button
           className={classes.sideBarListItemLogout}
-          onClick={() => onClickLogout()}
+          onClick={() => onClickLogout({router, socket})}
         >
           <LogoutIcon />
         </ListItem>

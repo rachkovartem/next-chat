@@ -1,9 +1,23 @@
 import {makeStyles} from "@material-ui/core/styles";
 
-export const profileStyles = makeStyles({
+export const profileStyles = makeStyles(theme => ({
+    profilePage: {
+        display: 'grid',
+        gridTemplateColumns: '88px 1fr',
+        maxHeight: '100vh',
+        backgroundColor: '#EAEAEA',
+        [theme.breakpoints.down(1000)]: {
+            display: 'flex',
+            flexDirection: 'column-reverse'
+        },
+        [theme.breakpoints.down(550)]: {
+            maxHeight: '100%'
+        },
+    },
     profile: {
         display: 'flex',
         flexDirection: 'column',
+        height: 'calc(100vh - 56px)',
     },
     userProfileBox: {
         margin: '50px 0 0',
@@ -87,4 +101,4 @@ export const profileStyles = makeStyles({
             },
         }
     },
-});
+}));

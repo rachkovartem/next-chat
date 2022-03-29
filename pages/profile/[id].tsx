@@ -19,6 +19,7 @@ import {useSocket} from "../../hooks/useSocket";
 import {useNotification, ServerMessage} from "../../hooks/useNotification";
 import {profileStyles} from "../../styles/profile.styles";
 import {StyledAvatar} from "../../components/styledAvatar/StyledAvatar";
+import {BottomNavigationMobile} from "../../components/bottomNavigationMobile/BottomNavigationMobile";
 
 export interface User {
   id: string,
@@ -99,8 +100,9 @@ export default function Profile (props: {locale: string, id: string}) {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '88px 1fr' }}>
+    <div className={classes.profilePage}>
       <SideBar locale={locale}/>
+      <BottomNavigationMobile/>
       <div className={classes.profile}>
         <Box className={classes.userProfileBox}>
           <div className={classes.avatarWrapper}>

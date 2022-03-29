@@ -1,8 +1,7 @@
 import {makeStyles} from "@material-ui/core/styles";
 import {boxShadow} from "../helpers/constants";
-import {Theme} from "@mui/system";
 
-const scrollStyle: any = {
+export const scrollStyle: any = {
   overflowY: 'scroll',
   scrollbarColor: '#a8a8a8 rgba(255,255,255,0)',     /* «цвет ползунка» «цвет полосы скроллбара» */
   scrollbarWidth: 'thin',  /* толщина */
@@ -33,7 +32,7 @@ export const friendsStyles = makeStyles((theme)=> ({
     },
   },
   friendsWrapper: {
-    maxHeight: 'calc(100vh - 56px)',
+    maxHeight: '100vh',
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',
@@ -45,6 +44,9 @@ export const friendsStyles = makeStyles((theme)=> ({
     `,
     gap: '22px',
     padding: '22px',
+    [theme.breakpoints.down(1000)]: {
+      maxHeight: 'calc(100vh - 56px)',
+    },
     [theme.breakpoints.down(750)]: {
       gridTemplateColumns: 'repeat(2, 1fr)',
       gridTemplateAreas: `

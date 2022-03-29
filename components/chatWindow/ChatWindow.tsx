@@ -12,12 +12,14 @@ import {useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
 import {ServerMessage} from "../../hooks/useNotification";
 import {Message} from "./message/Message";
+import {chatWindowStyle} from "./ChatWindow.style";
 
 export const ChatWindow = (props: Room) => {
   const {roomId, groupRoom, avatars} = props;
   const { user, socket } = useSelector((state: InitialState)  => state);
   const [initial, setInitial] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const classes = chatWindowStyle();
   const [messages, setMessages] = useState<ServerMessage[]>(
   [
     {
@@ -68,41 +70,11 @@ export const ChatWindow = (props: Room) => {
 
   return <>
     {initial ? null : <Box
-    sx={{
-      width: '100%',
-      height: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}
+    className={classes.chatWindowWrapper}
   >
     <Header room={props}/>
     <Paper
-      sx={{
-        marginTop: 0,
-        marginBottom: 0,
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column-reverse',
-        overflowY: 'scroll',
-        padding: '10px',
-        scrollbarColor: '#a8a8a8 #fff',     /* «цвет ползунка» «цвет полосы скроллбара» */
-        scrollbarWidth: 'thin',  /* толщина */
-        '&::-webkit-scrollbar': {
-          width: '3px', /* ширина для вертикального скролла */
-          height: '3px', /* высота для горизонтального скролла */
-          backgroundColor: '#fff',
-        },
-        '&::-webkit-scrollbar-thumb': {
-          backgroundColor: '#a8a8a8',
-          borderRadius: '9px',
-          boxShadow: 'inset 1px 1px 10px #a8a8a8',
-        },
-      }}
+      className={classes.chatPaper}
       elevation={0}
     >
       <Stack

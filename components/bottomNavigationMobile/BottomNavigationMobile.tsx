@@ -2,24 +2,24 @@ import {useState} from "react";
 import Box from '@mui/material/Box';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import HomeTwoToneIcon from "@mui/icons-material/HomeTwoTone";
 import * as React from "react";
 import PeopleAltTwoToneIcon from "@mui/icons-material/PeopleAltTwoTone";
 import ForumTwoToneIcon from "@mui/icons-material/ForumTwoTone";
 import LogoutIcon from "@mui/icons-material/Logout";
-import {sideBarStyles} from "./BottomNavigation.styles";
+import {sideBarStyles} from "./BottomNavigationMobile.styles";
 import {useRouter} from "next/router";
 import {setCurrentRoom} from "../../redux/actions";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {onClickLogout} from "../../helpers/onClickLogout";
+import {InitialState} from "../../redux/reducers";
 
-export const BottomNavigationMobile = ({onClickLogout} : {onClickLogout: Function}) => {
+export const BottomNavigationMobile = () => {
   const router = useRouter();
   const [value, setValue] = useState(0);
   const classes = sideBarStyles();
   const dispatch = useDispatch();
+  const { socket } = useSelector((state: InitialState)  => state);
 
   return (
     <Box className={classes.bottomNavigationBox}>
@@ -47,7 +47,7 @@ export const BottomNavigationMobile = ({onClickLogout} : {onClickLogout: Functio
         />
         <BottomNavigationAction
           icon={<LogoutIcon />}
-          onClick={() => onClickLogout()}
+          onClick={() => onClickLogout({router, socket})}
         />
       </BottomNavigation>
     </Box>
