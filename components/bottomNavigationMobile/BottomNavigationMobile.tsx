@@ -13,13 +13,25 @@ import {setCurrentRoom} from "../../redux/actions";
 import {useDispatch, useSelector} from "react-redux";
 import {onClickLogout} from "../../helpers/onClickLogout";
 import {InitialState} from "../../redux/reducers";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import LanguageIcon from "@mui/icons-material/Language";
+import SettingsIcon from '@mui/icons-material/Settings';
 
-export const BottomNavigationMobile = () => {
+export const BottomNavigationMobile = ({locale}: {locale: string}) => {
   const router = useRouter();
-  const [value, setValue] = useState(0);
+  const { pathname, asPath, query } = router;
+  const [value, setValue] = useState(router.pathname);
   const classes = sideBarStyles();
   const dispatch = useDispatch();
   const { socket } = useSelector((state: InitialState)  => state);
+  const [anchorEl, setAnchorEl] = useState(null)
+  const routerOptionLocale = locale === 'ru' ? 'en' : 'ru';
+
+  const handleClickOption = (event: any) => {
+    event.stopPropagation()
+    setAnchorEl(event.currentTarget);
+  }
 
   return (
     <Box className={classes.bottomNavigationBox}>
@@ -27,18 +39,22 @@ export const BottomNavigationMobile = () => {
         showLabels
         value={value}
         onChange={(event, newValue) => {
+          if (newValue === 'options') return
           setValue(newValue);
         }}
       >
         <BottomNavigationAction
+          value={'/profile/[id]'}
           icon={<HomeTwoToneIcon fontSize={'large'} />}
           onClick={() => router.push(`/profile/${localStorage.getItem('id')}`)}
         />
         <BottomNavigationAction
+          value={'/friends/[id]'}
           icon={<PeopleAltTwoToneIcon fontSize={'large'} />}
           onClick={() => router.push(`/friends/${localStorage.getItem('id')}`)}
         />
         <BottomNavigationAction
+          value={'/room/[id]'}
           icon={<ForumTwoToneIcon  fontSize={'large'} />}
           onClick={() => {
             router.push(`/room/${localStorage.getItem('id')}`)
@@ -46,10 +62,39 @@ export const BottomNavigationMobile = () => {
           }}
         />
         <BottomNavigationAction
-          icon={<LogoutIcon />}
-          onClick={() => onClickLogout({router, socket})}
+          value={'options'}
+          icon={<SettingsIcon />}
+          onClick={handleClickOption}
         />
       </BottomNavigation>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+        MenuListProps={{
+          'aria-labelledby': 'options-button',
+        }}
+        sx={{zIndex: 5001}}
+      >
+        <MenuItem
+          onClick={() => {
+            router.push({pathname, query}, asPath, {locale: routerOptionLocale})
+          }}
+        >
+          <LanguageIcon/>
+          <span
+            style={{marginLeft: 5}}
+          >
+              {routerOptionLocale.toUpperCase()}
+            </span>
+        </MenuItem>
+        <MenuItem
+          onClick={() => onClickLogout({router, socket})}
+        >
+          <LogoutIcon /><span style={{marginLeft: 5}}>Logout</span>
+        </MenuItem>
+      </Menu>
     </Box>
   );
 }

@@ -128,7 +128,7 @@ export default function Friends (props: {locale: string, id: string}) {
 
   return <div className={classes.friendsPage}>
     <SideBar locale={locale}/>
-    <BottomNavigationMobile/>
+    <BottomNavigationMobile locale={locale}/>
     <div className={classes.friendsWrapper}>
       <div className={classes.groupsInputPaperWrapper}>
         <Paper
@@ -167,7 +167,7 @@ export default function Friends (props: {locale: string, id: string}) {
           elevation={3}
         >
           <h3>{t('recents')}</h3>
-          <div>
+          <div style={{display: loading ? 'flex' : 'block'}}>
             {
               loading
               ? <CircularProgress sx={{margin: 'auto'}}/>

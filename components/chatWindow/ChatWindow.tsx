@@ -1,7 +1,7 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {RefObject, useEffect, useRef, useState} from "react";
 import Stack from '@mui/material/Stack';
 
 import {ChatInput} from "../chatInput/ChatInput";
@@ -14,8 +14,9 @@ import {ServerMessage} from "../../hooks/useNotification";
 import {Message} from "./message/Message";
 import {chatWindowStyle} from "./ChatWindow.style";
 
-export const ChatWindow = (props: Room) => {
-  const {roomId, groupRoom, avatars} = props;
+export const ChatWindow = (props: {room: Room, setDrawerOpen: Function}) => {
+  const {room, setDrawerOpen} = props;
+  const {roomId, groupRoom, avatars} = room;
   const { user, socket } = useSelector((state: InitialState)  => state);
   const [initial, setInitial] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -68,11 +69,15 @@ export const ChatWindow = (props: Room) => {
     }
   }, [socket, isMounted])
 
+
   return <>
-    {initial ? null : <Box
+    { initial ? null : <Box
+    sx={{
+      paddingBottom: `calc(100vh - ${window.innerHeight}px)`
+    }}
     className={classes.chatWindowWrapper}
   >
-    <Header room={props}/>
+    <Header room={room} setDrawerOpen={setDrawerOpen}/>
     <Paper
       className={classes.chatPaper}
       elevation={0}

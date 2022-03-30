@@ -33,6 +33,7 @@ export const friendsStyles = makeStyles((theme)=> ({
   },
   friendsWrapper: {
     maxHeight: '100vh',
+    minHeight: 'calc(100vh - 56px)',
     display: 'grid',
     gridTemplateColumns: 'repeat(3, 1fr)',
     gridTemplateRows: 'repeat(4, 1fr)',

@@ -1,5 +1,4 @@
 import {makeStyles} from "@material-ui/core/styles";
-import {scrollStyle} from "./friends.styles";
 
 export const roomStyles = makeStyles(theme => ({
   roomPage: {
@@ -12,7 +11,8 @@ export const roomStyles = makeStyles(theme => ({
       flexDirection: 'column-reverse'
     },
     [theme.breakpoints.down(550)]: {
-      maxHeight: '100vh'
+      maxHeight: '100vh',
+      display: 'block'
     },
   },
   roomBoxWrapper: {

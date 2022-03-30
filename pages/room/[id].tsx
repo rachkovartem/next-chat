@@ -25,6 +25,7 @@ import {useSocket} from "../../hooks/useSocket";
 import {roomStyles} from "../../styles/room.styles";
 import {BottomNavigationMobile} from "../../components/bottomNavigationMobile/BottomNavigationMobile";
 
+
 export default function Room(props: any) {
   const mobile = useMediaQuery('(max-width:900px)');
   const [drawerOpen, setDrawerOpen] = useState(true);
@@ -82,20 +83,23 @@ export default function Room(props: any) {
   }, [socket])
 
   const chatSpinner = chatWindowLoading ? <CircularProgress sx={{ margin: 'auto' }} /> : null;
-  const chatView = currentRoom && socket && !chatWindowLoading ? <ChatWindow {...currentRoom} /> : null;
+  const chatView = currentRoom && socket && !chatWindowLoading ? <ChatWindow room={currentRoom} setDrawerOpen={setDrawerOpen} /> : null;
   const placeHolder = !currentRoom && socket && !chatWindowLoading
     ? <div
       style={{
         width: '50%',
         margin: '50% auto'
       }}
-    >
-      {t('unselectedChatText')}
-    </div>
+      >
+        {mobile ? <div>{t('swipeText')}</div> : null}
+        <div>{t('unselectedChatText')}</div>
+      </div>
     : null;
 
   const chatFriendListElement = mobile
     ? <SwipeableDrawer
+      swipeAreaWidth={500}
+      SwipeAreaProps={{sx: {zIndex: 0}}}
       className={classes.roomDrawer}
       anchor='left'
       open={drawerOpen}
@@ -112,10 +116,10 @@ export default function Room(props: any) {
   return (
     <div className={classes.roomPage}>
       <SideBar locale={locale}/>
-      <BottomNavigationMobile/>
+      <BottomNavigationMobile locale={locale}/>
       {
         pageLoading
-          ? <CircularProgress sx={{position: 'absolute', top: '50%', left: '50%'}} />
+          ? <CircularProgress sx={{position: 'absolute', top: '45%', left: '45%'}} />
           : <div className={classes.roomBoxWrapper}>
             {chatFriendListElement}
             <div
