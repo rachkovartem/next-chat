@@ -102,7 +102,7 @@ export default function Profile (props: {locale: string, id: string}) {
   return (
     <div className={classes.profilePage}>
       <SideBar locale={locale}/>
-      <BottomNavigationMobile/>
+      <BottomNavigationMobile locale={locale}/>
       <div className={classes.profile}>
         <Box className={classes.userProfileBox}>
           <div className={classes.avatarWrapper}>
