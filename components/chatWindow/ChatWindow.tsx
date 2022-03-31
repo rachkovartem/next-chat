@@ -73,7 +73,7 @@ export const ChatWindow = (props: {room: Room, setDrawerOpen: Function}) => {
   return <>
     { initial ? null : <Box
     sx={{
-      paddingBottom: `calc(100vh - ${window.innerHeight}px)`
+      paddingBottom: `calc(100vh - ${window.innerHeight}px)`,
     }}
     className={classes.chatWindowWrapper}
   >

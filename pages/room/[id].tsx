@@ -98,7 +98,7 @@ export default function Room(props: any) {
 
   const chatFriendListElement = mobile
     ? <SwipeableDrawer
-      swipeAreaWidth={500}
+      swipeAreaWidth={100}
       SwipeAreaProps={{sx: {zIndex: 0}}}
       className={classes.roomDrawer}
       anchor='left'
