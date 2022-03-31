@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 import store from "../redux/store/store";
 import { appWithTranslation } from 'next-i18next';
 import {SnackbarProvider} from "notistack";
+import {useEffect, useState} from "react";
 
 function SafeHydrate({ children }: any) {
   return (

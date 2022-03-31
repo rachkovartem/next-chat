@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack';
 
 import {ChatInput} from "../chatInput/ChatInput";
 import {Room} from "../../pages/profile/[id]";
-import {Avatar} from "@mui/material";
+import {Avatar, debounce} from "@mui/material";
 import Header from "../header/Header";
 import {useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
@@ -33,9 +33,24 @@ export const ChatWindow = (props: {room: Room, setDrawerOpen: Function}) => {
       senderAvatar: 'initial'
     }
   ]);
+  const [dimensions, setDimensions] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth
+  })
+
+  function handleResize() {
+    console.log('resize')
+    setDimensions({
+      height: window.innerHeight,
+      width: window.innerWidth
+    })
+  }
+
+  const debouncedResize = debounce(() => handleResize(), 100)
 
   useEffect(() => {
     setIsMounted(true);
+    window?.addEventListener('resize', debouncedResize)
     return () => setIsMounted(false);
   }, [])
 
@@ -68,7 +83,6 @@ export const ChatWindow = (props: {room: Room, setDrawerOpen: Function}) => {
       });
     }
   }, [socket, isMounted])
-
 
   return <>
     { initial ? null : <Box
