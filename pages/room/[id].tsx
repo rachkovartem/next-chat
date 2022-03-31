@@ -121,7 +121,7 @@ export default function Room(props: any) {
         pageLoading
           ? <CircularProgress sx={{position: 'absolute', top: '45%', left: '45%'}} />
           : <div className={classes.roomBoxWrapper}>
-            {chatFriendListElement}
+              {chatFriendListElement}
             <div
               className={classes.chatViewWrapper}
             >

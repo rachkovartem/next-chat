@@ -33,6 +33,9 @@ export const roomStyles = makeStyles(theme => ({
     paddingLeft: '3px',
     height: '100vh',
     overflowY: 'scroll',
+    [theme.breakpoints.between(900, 1000)]: {
+      marginTop: 56,
+    },
     scrollbarColor: '#a8a8a8 #fff',     /* «цвет ползунка» «цвет полосы скроллбара» */
     scrollbarWidth: 'thin',  /* толщина */
     '&::-webkit-scrollbar': {
