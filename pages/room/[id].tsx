@@ -58,22 +58,22 @@ export default function Room(props: any) {
   }
 
   useEffect(() => {
-    if (initialRender) {
-      loadRoom(id)
-      setInitialRender(false);
-    }
+    const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
+    res.then(res => {
+      if (!res) return
+      dispatch(setUser(res))
+      const socket = createSocket();
+      dispatch(setSocket(socket));
+      if (initialRender) {
+        loadRoom(id)
+        setInitialRender(false);
+      }
+    })
     return () => {
       if (socket) socket.removeAllListeners();
       dispatch(setCurrentRoomId(null));
       dispatch(setCurrentRoom(null));
     };
-  }, [])
-
-  useEffect(() => {
-    const socket = createSocket();
-    dispatch(setSocket(socket));
-    const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
-    res.then(res => dispatch(setUser(res)))
   }, [])
 
   useEffect(() => {

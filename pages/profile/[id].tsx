@@ -78,13 +78,16 @@ export default function Profile (props: {locale: string, id: string}) {
   useEffect(() => {
     dispatch(setSocket(createSocket()))
     const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
-    res.then(res => dispatch(setUser(res)))
+    res.then(res => {
+      if (!res) return
+      dispatch(setUser(res))
+      if (!socket) {
+        dispatch(setSocket(createSocket()));
+      }
+    })
   }, []);
 
   useEffect(() => {
-    if (!socket) {
-      dispatch(setSocket(createSocket()));
-    }
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
         if (!mobile) {

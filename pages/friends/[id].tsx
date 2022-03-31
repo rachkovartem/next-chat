@@ -69,12 +69,12 @@ export default function Friends (props: {locale: string, id: string}) {
       dispatch(setFullRooms(res.data))
       setFullRoomsLoading(false);
     })
-  }, [user.id])
-
-  useEffect(() => {
     if (!socket) {
       dispatch(setSocket(createSocket()));
     }
+  }, [user.id])
+
+  useEffect(() => {
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
         if (!mobile) {
