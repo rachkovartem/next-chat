@@ -23,7 +23,7 @@ import {ServerMessage, useNotification} from "../../hooks/useNotification";
 import {friendsStyles} from "../../styles/friends.styles";
 import {RecentsTab} from "../../components/recentsTab/RecentsTab";
 import {GroupChatInput} from "../../components/groupChatInput/GroupChatInput";
-import {CircularProgress} from "@mui/material";
+import {CircularProgress, useMediaQuery} from "@mui/material";
 import {theme} from "../../styles/theme";
 import {BottomNavigationMobile} from "../../components/bottomNavigationMobile/BottomNavigationMobile";
 
@@ -52,6 +52,7 @@ export default function Friends (props: {locale: string, id: string}) {
   const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
   const { getUserById, getRequests, getAllRoomsIds, check, getAllUserRooms, createRoom } = ApiServices();
+  const mobile = useMediaQuery('(max-width:1000px)');
 
   useEffect(() => {
     const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
@@ -76,7 +77,9 @@ export default function Friends (props: {locale: string, id: string}) {
     }
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
-        showNotification(serverMessage[0])
+        if (!mobile) {
+          showNotification(serverMessage[0])
+        }
         dispatch(updateFullRooms(serverMessage[0].roomId))
       })
       setOnlineListeners({socket, usersOnline});

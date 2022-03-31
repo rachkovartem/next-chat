@@ -12,7 +12,7 @@ import {FriendRoomItem} from "./friendRoomItem/FriendRoomItem";
 import {GroupRoomItem} from "./groupRoomItem/GroupRoomItem";
 import {ServerMessage} from "../../hooks/useNotification";
 
-export const ChatFriendList = () => {
+export const ChatFriendList = ({setDrawerOpen} : {setDrawerOpen?: Function}) => {
   const dispatch = useDispatch();
   const { getAllUserRooms, getRoomInfo } = ApiServices();
   const router = useRouter();
@@ -26,6 +26,7 @@ export const ChatFriendList = () => {
   }
 
   const clickItem = async (roomId: string) => {
+    if (setDrawerOpen) setDrawerOpen(false);
     if (roomId === currentRoomId) return
     dispatch(setCurrentRoomId(roomId));
     dispatch(setChatWindowLoading(true));

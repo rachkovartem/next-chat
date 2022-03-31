@@ -28,7 +28,6 @@ import {BottomNavigationMobile} from "../../components/bottomNavigationMobile/Bo
 
 export default function Room(props: any) {
   const mobile = useMediaQuery('(max-width:900px)');
-  const [drawerOpen, setDrawerOpen] = useState(true);
   const classes = roomStyles();
   const { locale, id } = props;
   const {
@@ -43,8 +42,9 @@ export default function Room(props: any) {
   const { t } = useTranslation('common');
   const { onLoadingPage, pageLoading } = PagesServices();
   const dispatch = useDispatch();
-  const { socket, currentRoom, useChatState, chatWindowLoading } = useSelector((state: InitialState)  => state);
+  const { user, socket, currentRoom, useChatState, chatWindowLoading } = useSelector((state: InitialState)  => state);
   const { usersOnline } = useChatState;
+  const [drawerOpen, setDrawerOpen] = useState(user?.id === id);
   const [initialRender, setInitialRender] = useState(true);
 
   const loadRoom = async (id: string) => {
@@ -107,10 +107,10 @@ export default function Room(props: any) {
       onClose={() => setDrawerOpen(false)}
       onOpen={() => setDrawerOpen(true)}
     >
-      <ChatFriendList/>
+      <ChatFriendList setDrawerOpen={setDrawerOpen}/>
     </SwipeableDrawer>
     : <Box className={classes.roomBox}>
-      <ChatFriendList/>
+      <ChatFriendList />
     </Box>
 
   return (

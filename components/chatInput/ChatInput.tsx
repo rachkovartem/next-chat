@@ -37,6 +37,7 @@ export const ChatInput = ({roomId}: { roomId: string }) => {
       <Paper
         elevation={3}
         sx={{
+          position: 'sticky',
           display: 'flex',
           justifyContent: 'space-between',
           paddingLeft: '5px',

@@ -1,5 +1,5 @@
 import 'react-image-crop/dist/ReactCrop.css';
-import {Avatar, Button, Modal} from "@mui/material";
+import {Avatar, Button, Modal, useMediaQuery} from "@mui/material";
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import {serverSideTranslations} from "next-i18next/serverSideTranslations";
@@ -73,6 +73,7 @@ export default function Profile (props: {locale: string, id: string}) {
   const inputRef = useRef(null);
   const { showNotification } = useNotification();
   const { onLoadingPage } = PagesServices();
+  const mobile = useMediaQuery('(max-width:1000px)');
 
   useEffect(() => {
     dispatch(setSocket(createSocket()))
@@ -86,7 +87,9 @@ export default function Profile (props: {locale: string, id: string}) {
     }
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
-        showNotification(serverMessage[0]);
+        if (!mobile) {
+          showNotification(serverMessage[0])
+        }
       })
       setOnlineListeners({socket, usersOnline});
     }
