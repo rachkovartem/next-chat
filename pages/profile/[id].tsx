@@ -73,7 +73,6 @@ export default function Profile (props: {locale: string, id: string}) {
   const inputRef = useRef(null);
   const { showNotification } = useNotification();
   const { onLoadingPage } = PagesServices();
-  const mobile = useMediaQuery('(max-width:1000px)');
 
   useEffect(() => {
     dispatch(setSocket(createSocket()))
@@ -90,9 +89,7 @@ export default function Profile (props: {locale: string, id: string}) {
   useEffect(() => {
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
-        if (!mobile) {
-          showNotification(serverMessage[0])
-        }
+        showNotification(serverMessage[0])
       })
       setOnlineListeners({socket, usersOnline});
     }

@@ -52,7 +52,6 @@ export default function Friends (props: {locale: string, id: string}) {
   const { onLoadingPage } = PagesServices();
   const { enqueueSnackbar } = useSnackbar();
   const { getUserById, getRequests, getAllRoomsIds, check, getAllUserRooms, createRoom } = ApiServices();
-  const mobile = useMediaQuery('(max-width:1000px)');
 
   useEffect(() => {
     const res = onLoadingPage(getUserById, getRequests, getAllRoomsIds, check);
@@ -77,9 +76,7 @@ export default function Friends (props: {locale: string, id: string}) {
   useEffect(() => {
     if (socket) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
-        if (!mobile) {
-          showNotification(serverMessage[0])
-        }
+        showNotification(serverMessage[0])
         dispatch(updateFullRooms(serverMessage[0].roomId))
       })
       setOnlineListeners({socket, usersOnline});

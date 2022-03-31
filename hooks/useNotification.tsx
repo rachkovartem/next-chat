@@ -1,5 +1,5 @@
 import {useCallback} from "react";
-import {Avatar} from "@mui/material";
+import {Avatar, useMediaQuery} from "@mui/material";
 import * as React from "react";
 import {useSnackbar} from "notistack";
 import {useRouter} from "next/router";
@@ -18,9 +18,10 @@ export interface ServerMessage {
 export const useNotification= () => {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
+  const mobile = useMediaQuery('(max-width:1000px)');
 
   const showNotification = useCallback((notification: ServerMessage | null) => {
-    if (notification) {
+    if (notification && !mobile) {
       enqueueSnackbar(<div
       style={{
         cursor: 'pointer',
