@@ -1,4 +1,3 @@
-import {Avatar} from "@mui/material";
 import {EllipseText} from "../../ellipseText/EllipseText";
 import Paper from "@mui/material/Paper";
 import * as React from "react";
@@ -8,7 +7,7 @@ import {FriendRoom, InitialState} from "../../../redux/reducers";
 import {useSelector} from "react-redux";
 import {ServerMessage} from "../../../hooks/useNotification";
 import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
-
+import {itemStyle} from "../ChatFriendList.style";
 
 export const GroupRoomItem = (
   {
@@ -23,7 +22,7 @@ export const GroupRoomItem = (
 
   const [lastMessage, setLastMessage] = useState(room.lastMessage);
   const [isMounted, setIsMounted] = useState(false);
-  const { currentRoomId, socket, useChatState } = useSelector((state: InitialState)  => state);
+  const { currentRoomId, socket } = useSelector((state: InitialState)  => state);
 
   useEffect(() => {
     setIsMounted(true);
@@ -41,15 +40,7 @@ export const GroupRoomItem = (
   }, [socket, isMounted]);
 
   return <Paper
-    sx={{
-      display: 'flex',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      cursor: 'pointer',
-      marginTop: '5px',
-      height: 50,
-      backgroundColor: currentRoomId === room.roomId ? '#e8e8e8' : 'rgba(232,232,232,0)',
-    }}
+    sx={itemStyle(currentRoomId, room)}
     key={room.roomId}
     onClick={() => clickItem(room.roomId)}
     elevation={0}

@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import {ServerMessage} from "../../../hooks/useNotification";
 import {EllipseText} from "../../ellipseText/EllipseText";
 import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
+import {itemStyle} from "../ChatFriendList.style";
 
 export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Function}) => {
   const { useChatState, currentRoomId, socket, user } = useSelector((state: InitialState)  => state);
@@ -31,15 +32,7 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
   }, [socket, isMounted])
 
   return <Paper
-    sx={{
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        cursor: 'pointer',
-        marginTop: '5px',
-        height: 50,
-        backgroundColor: currentRoomId === friend.roomId ? '#e8e8e8' : 'rgba(232,232,232,0)',
-    }}
+    sx={itemStyle(currentRoomId, friend)}
     key={friend.id}
     elevation={0}
     onClick={() => clickItem(friend.roomId)}

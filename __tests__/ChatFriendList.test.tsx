@@ -3,11 +3,9 @@ import { Provider } from 'react-redux';
 import '@testing-library/jest-dom';
 import {withTestRouter} from "../helpers/withTestRouter";
 import {ChatFriendList} from "../components/chatFriendsList/ChatFriendsList";
-import axios from "axios";
 import {testState} from "../helpers/constants";
-import * as actions from '../redux/actions/index';
 import configureStore from 'redux-mock-store'
-import createMockStore from "redux-mock-store";
+import mockAxios from './../__mocks__/axios';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
@@ -20,51 +18,37 @@ jest.mock('react-i18next', () => ({
   },
 }));
 
-jest.mock(
-  'axios',
-  () => {
-    return {
-      create: jest.fn(
-        () => ({
-          get: jest.fn(),
-          post: jest.fn(),
-          interceptors: {
-            request: { use: jest.fn(), eject: jest.fn() },
-            response: { use: jest.fn(), eject: jest.fn() }
-          }
-        })
-      )
-    }
-  }
-)
-
 describe('ChatFriendList element', () => {
-  // const axiosMock = axios.create()
-  // const mockStore = configureStore();
-  // let response: any;
-  // beforeEach(() => {
-  //   const store = mockStore(testState)
-  //   response = {
-  //     data: {
-  //       fullRooms: testState.fullRooms,
-  //       roomId: testState.currentRoomId
-  //     }
-  //   }
-  //   render(
-  //     withTestRouter(
-  //       <Provider store={store}>
-  //         <ChatFriendList/>
-  //       </Provider>
-  //     )
-  //   );
-  // })
+  const mockStore = configureStore();
+  beforeEach(() => {
+    const store = mockStore(testState)
+    render(
+      withTestRouter(
+        <Provider store={store}>
+          <ChatFriendList/>
+        </Provider>
+      )
+    );
+  })
+
+  afterEach(() => {
+    mockAxios.reset()
+  })
 
   test('Friends list',  async () => {
-    // // @ts-ignore
-    // axiosMock.post.mockReturnValue(response);
-    // // @ts-ignore
-    // axiosMock.get.mockReturnValue(response);
-    // const rooms = await screen.findAllByTestId('roomItem')
+    const postResponse = {
+      data: {
+        fullRooms: testState.fullRooms,
+      },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {},
+    }
+
+    mockAxios.mockResponseFor({url: '/rooms/getAllUserRooms'}, {data: postResponse.data});
+    const rooms = await screen.findAllByTestId('roomItem')
+    expect(rooms).toHaveLength(10);
   });
 
 })

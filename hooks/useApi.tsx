@@ -9,20 +9,25 @@ const api = axios.create({
 api.interceptors.response.use(
   response => Promise.resolve(response),
   async (error) => {
-    if (error.response.status === 401) {
-      const res = await useApi().getRequest(`/auth/refresh`);
-      if ('data' in res && 'access_token' in res.data) {
-        localStorage.setItem('access_token', res.data.access_token);
+    try {
+      console.log(123, error.response)
+      if (error.response.status === 401) {
+        const res = await useApi().getRequest(`/auth/refresh`);
+        if ('data' in res && 'access_token' in res.data) {
+          localStorage.setItem('access_token', res.data.access_token);
+        }
+        if (res.status === 403) {
+          return Promise.reject(res);
+        }
+        return Promise.reject(error.response)
       }
-      if (res.status === 403) {
-        return Promise.reject(res);
+      if (error.response.status === 403) {
+        return Promise.reject(error.response);
       }
-      return Promise.reject(error.response)
+      return Promise.reject(error);
+    } catch (e) {
+      console.error(e)
     }
-    if (error.response.status === 403) {
-      return Promise.reject(error.response);
-    }
-    return Promise.reject(error);
   });
 
 export const useApi = () => {
