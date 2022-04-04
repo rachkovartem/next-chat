@@ -59,7 +59,8 @@ export const Message = (
           : null
       }
       <div style={{
-        paddingTop: '2px'
+        paddingTop: '2px',
+        whiteSpace: 'pre-line'
       }}>
         {item.message}
       </div>

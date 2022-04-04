@@ -8,6 +8,7 @@ import {useSelector} from "react-redux";
 import {ServerMessage} from "../../../hooks/useNotification";
 import {StyledAvatar} from "../../styledAvatar/StyledAvatar";
 import {itemStyle} from "../ChatFriendList.style";
+import {useMediaQuery} from "@mui/material";
 
 export const GroupRoomItem = (
   {

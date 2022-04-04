@@ -1,12 +1,12 @@
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import * as React from "react";
-import {RefObject, useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import Stack from '@mui/material/Stack';
 
 import {ChatInput} from "../chatInput/ChatInput";
 import {Room} from "../../pages/profile/[id]";
-import {Avatar, debounce} from "@mui/material";
+import {debounce} from "@mui/material";
 import Header from "../header/Header";
 import {useSelector} from "react-redux";
 import {InitialState} from "../../redux/reducers";
@@ -39,7 +39,6 @@ export const ChatWindow = (props: {room: Room, setDrawerOpen: Function}) => {
   })
 
   function handleResize() {
-    console.log('resize')
     setDimensions({
       height: window.innerHeight,
       width: window.innerWidth
@@ -70,8 +69,9 @@ export const ChatWindow = (props: {room: Room, setDrawerOpen: Function}) => {
     if (socket && isMounted) {
       socket.on('messages:add', (serverMessage: ServerMessage[]) => {
         setMessages(prev => {
-          if (!prev[0]) return  [...serverMessage]
-          if (prev[0].roomId === serverMessage[0].roomId) {
+          if (!prev[0]) {
+            return [...serverMessage]
+          } else if (prev[0].roomId === serverMessage[0].roomId) {
             return [...prev, ...serverMessage]
           } else {
             return  [...prev]

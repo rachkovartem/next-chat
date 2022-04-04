@@ -82,17 +82,37 @@ export default function Room(props: any) {
     }
   }, [socket])
 
+  const options = {
+    "body": "Did you make a $1,000,000 purchase at Dr. Evil...",
+    "icon": "images/ccard.png",
+    "vibrate": [200, 100, 200, 100, 200, 100, 400],
+    "tag": "request",
+    "actions": [
+      { "action": "yes", "title": "Yes", "icon": "images/yes.png" },
+      { "action": "no", "title": "No", "icon": "images/no.png" }
+    ]
+  }
+  const serviceWorkerRegistration = new ServiceWorkerRegistration()
+  serviceWorkerRegistration?.showNotification('title', options);
+
+
   const chatSpinner = chatWindowLoading ? <CircularProgress sx={{ margin: 'auto' }} /> : null;
   const chatView = currentRoom && socket && !chatWindowLoading ? <ChatWindow room={currentRoom} setDrawerOpen={setDrawerOpen} /> : null;
   const placeHolder = !currentRoom && socket && !chatWindowLoading
     ? <div
       style={{
-        width: '50%',
-        margin: '50% auto'
+        display: 'flex',
+        width: '100%',
+        height: '100%'
       }}
       >
-        {mobile ? <div>{t('swipeText')}</div> : null}
-        <div>{t('unselectedChatText')}</div>
+        <div style={{
+          margin: 'auto',
+          padding: '20px'
+        }}>
+          {mobile ? <div>{t('swipeText')}</div> : null}
+          <div>{t('unselectedChatText')}</div>
+        </div>
       </div>
     : null;
 

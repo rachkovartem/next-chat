@@ -7,7 +7,7 @@ export const itemStyle = (currentRoomId: string | null, room: any): SxProps => (
   alignItems: 'center',
   cursor: 'pointer',
   marginTop: '5px',
-  height: 50,
+  minHeight: '50px',
   backgroundColor: currentRoomId === room.roomId ? '#e8e8e8' : 'rgba(232,232,232,0)',
   '&::after': {
     content: '""',

@@ -19,6 +19,7 @@ export const roomStyles = makeStyles(theme => ({
     display: 'grid',
     gridTemplateColumns: '300px 1fr',
     maxHeight: '100vh',
+    height: '100vh',
     [theme.breakpoints.down(901)]: {
       gridTemplateColumns: '1fr',
     },

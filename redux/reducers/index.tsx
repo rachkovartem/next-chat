@@ -1,4 +1,4 @@
-import {Message, Room} from "../../pages/profile/[id]";
+import {Room} from "../../pages/profile/[id]";
 import {ServerMessage} from "../../hooks/useNotification";
 import {Socket} from "socket.io-client";
 

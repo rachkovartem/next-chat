@@ -21,7 +21,6 @@ export const ChatFriendList = ({setDrawerOpen} : {setDrawerOpen?: Function}) => 
   const loadRoomsInfo = async () => {
     if (user.id) {
       const res = await getAllUserRooms(user.id);
-      console.log(res.data)
       dispatch(setFullRooms(res.data))
     }
   }

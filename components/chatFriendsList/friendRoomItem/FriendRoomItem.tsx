@@ -1,4 +1,4 @@
-import {Avatar, Badge} from "@mui/material";
+import {Avatar, Badge, useMediaQuery} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import * as React from "react";
 import {InitialState} from "../../../redux/reducers";
@@ -15,6 +15,7 @@ export const FriendRoomItem = ({friend, clickItem}: {friend: any, clickItem: Fun
   const [isMounted, setIsMounted] = useState(false);
   const [lastMessage, setLastMessage] = useState(friend.lastMessage)
   const isOnline = (id: string) => usersOnline.some(idOnline => idOnline === id);
+
 
   useEffect(() => {
     setIsMounted(true);
