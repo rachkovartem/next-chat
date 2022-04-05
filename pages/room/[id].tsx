@@ -24,6 +24,7 @@ import {setCurrentRoom} from "../../redux/actions";
 import {useSocket} from "../../hooks/useSocket";
 import {roomStyles} from "../../styles/room.styles";
 import {BottomNavigationMobile} from "../../components/bottomNavigationMobile/BottomNavigationMobile";
+import { ErrorBoundary } from "../../components/errorBoundary/ErrorBoundary";
 
 
 export default function Room(props: any) {
@@ -82,19 +83,17 @@ export default function Room(props: any) {
     }
   }, [socket])
 
-  const options = {
-    "body": "Did you make a $1,000,000 purchase at Dr. Evil...",
-    "icon": "images/ccard.png",
-    "vibrate": [200, 100, 200, 100, 200, 100, 400],
-    "tag": "request",
-    "actions": [
-      { "action": "yes", "title": "Yes", "icon": "images/yes.png" },
-      { "action": "no", "title": "No", "icon": "images/no.png" }
-    ]
-  }
-  const serviceWorkerRegistration = new ServiceWorkerRegistration()
-  serviceWorkerRegistration?.showNotification('title', options);
-
+  // if ('serviceWorker' in navigator) {
+  //   window.addEventListener('load', function() {
+  //     navigator.serviceWorker.register('/sw.js').then(function(registration) {
+  //       // Успешная регистрация
+  //       console.log('ServiceWorker registration successful');
+  //     }, function(err) {
+  //       // При регистрации произошла ошибка
+  //       console.log('ServiceWorker registration failed: ', err);
+  //     });
+  //   });
+  // }
 
   const chatSpinner = chatWindowLoading ? <CircularProgress sx={{ margin: 'auto' }} /> : null;
   const chatView = currentRoom && socket && !chatWindowLoading ? <ChatWindow room={currentRoom} setDrawerOpen={setDrawerOpen} /> : null;
@@ -135,22 +134,28 @@ export default function Room(props: any) {
 
   return (
     <div className={classes.roomPage}>
-      <SideBar locale={locale}/>
-      <BottomNavigationMobile locale={locale}/>
-      {
-        pageLoading
-          ? <CircularProgress sx={{position: 'absolute', top: '45%', left: '45%'}} />
-          : <div className={classes.roomBoxWrapper}>
-              {chatFriendListElement}
-            <div
-              className={classes.chatViewWrapper}
-            >
-              {chatSpinner}
-              {chatView}
-              {placeHolder}
+      <ErrorBoundary>
+        <SideBar locale={locale}/>
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <BottomNavigationMobile locale={locale}/>
+      </ErrorBoundary>
+      <ErrorBoundary>
+        {
+          pageLoading
+            ? <CircularProgress sx={{position: 'absolute', top: '45%', left: '45%'}} />
+            : <div className={classes.roomBoxWrapper}>
+                {chatFriendListElement}
+              <div
+                className={classes.chatViewWrapper}
+              >
+                {chatSpinner}
+                {chatView}
+                {placeHolder}
+              </div>
             </div>
-          </div>
-      }
+        }
+      </ErrorBoundary>
     </div>
   )
 }
