@@ -4,7 +4,9 @@ import {useRouter} from "next/router";
 import {Button, TextField} from "@mui/material";
 import {useTranslation} from "next-i18next";
 import {ChangeLocal} from "../changeLocal/ChangeLocal";
-
+import {useSnackbar} from "notistack";
+import LoadingButton from '@mui/lab/LoadingButton';
+import {LoginStyle} from "./Login.style";
 
 const Login = ({locale} : {locale: string}) => {
     const { t } = useTranslation('common');
@@ -13,13 +15,21 @@ const Login = ({locale} : {locale: string}) => {
     const [error, setError] = useState(false);
     const [valid, setValid] = useState(false);
     const [email, setEmail] = useState('');
+    const [logging, setLogging] = useState(false);
+    const [registration, setRegistration] = useState(false);
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [onRegistration, setOnRegistration] = useState(false);
     const { login, register, check } = ApiServices();
+    const classes = LoginStyle();
+    const { enqueueSnackbar } = useSnackbar();
 
     const onLoading = async () => {
-        const res = await check()
+        const res = await check();
+        if (!res) {
+          enqueueSnackbar(t('smthWrong'), {variant: 'warning'});
+          return
+        }
         if (res.status === 403) return
         if (res.status >= 200 && res.status < 300) {
             router.push(`/profile/${res.data.id}`);
@@ -53,58 +63,91 @@ const Login = ({locale} : {locale: string}) => {
     }
 
     const onClickLogin = async () => {
+      setLogging(true)
         if (!valid) {
             setError(true);
+            setLogging(false)
+            enqueueSnackbar(t('userDoesNotExist'));
             return
         }
         if (!password) {
             setLoginError(true);
             setError(true);
+            setLogging(false)
+            enqueueSnackbar(t('userDoesNotExist'));
             return
         }
-        const res = await login(email, password);
-        const resBody = res.data;
-        if ('id' in resBody) {
+
+        try {
+          const res = await login(email, password);
+          const resBody = res.data;
+          if ('id' in resBody) {
             localStorage.setItem('email', resBody.email);
             localStorage.setItem('id', resBody.id);
             localStorage.setItem('username', resBody.username);
             setLoginError(false);
             router.push(`/profile/${resBody.id}`);
-        } else {
+          } else {
             setLoginError(true);
+            enqueueSnackbar(t('userDoesNotExist'));
             localStorage.clear();
+          }
+        }
+        catch (err) {
+          console.error(err)
+          enqueueSnackbar(t('smthWrong'), {variant: 'warning'});
+        }
+        finally {
+          setLogging(false)
         }
     }
 
     const onClickRegister = async (e: any) => {
-            if (!onRegistration) {
-              setOnRegistration(true)
-              return
-            }
-            setLoginError(false);
-            if (!password || !email || !password) {
-              setError(true);
-              return
-            }
-            const res = await register(email, password, username);
-            if (res.status === 'successfully') {
-                await onClickLogin();
-                setEmail('');
-                setPassword('');
-                setUsername('');
-            } else if (res.status === 'already exist') {
-                setError(true)
-            }
+        if (!onRegistration) {
+          setOnRegistration(true)
+          return
+        }
+        setRegistration(true)
+        setLoginError(false);
+        if (!password || !email || !username) {
+          setError(true);
+          enqueueSnackbar(t('userAlreadyExist'));
+          setRegistration(false);
+          return
+        }
+        try {
+          const res = await register(email, password, username);
+          if (res.status === 'successfully') {
+            await onClickLogin();
+            setEmail('');
+            setPassword('');
+            setUsername('');
+          } else if (res.status === 'already exist') {
+            setError(true)
+            enqueueSnackbar(t('userAlreadyExist'));
+          }
+        }
+        catch (err) {
+          console.error(err)
+          enqueueSnackbar(t('smthWrong'), {variant: 'warning'});
+        }
+        finally {
+          setRegistration(false);
+        }
     }
 
-    const errorVisibility = error || loginError ? 'visible' : 'hidden';
     const displayOnRegistration = onRegistration ? 'inline-flex' : 'none';
 
     return (
       <>
         <ChangeLocal locale={locale}/>
-        <form onSubmit={onSubmit} style={{width: '30%', margin: '0 auto'}}>
-          <div style={{display: 'flex', flexDirection: 'column', gap: '15px', padding: '15px 0'}}>
+        <form
+          onSubmit={onSubmit}
+          className={classes.loginForm}
+        >
+          <div
+            className={classes.inputsWrapper}
+          >
             <TextField
               required
               id="outlined-required-email"
@@ -140,36 +183,29 @@ const Login = ({locale} : {locale: string}) => {
               data-testid="inputPassword"
             />
           </div>
-          <Button
-            sx={{margin: '0 auto', background: 'rgba(168,237,234,0)', color: '#3b3b3b'}}
+          <LoadingButton
+            className={classes.loginButton}
             onClick={onClickLogin}
             variant="contained"
             data-testid="buttonLogin"
+            loading={logging}
           >
               {t('login')}
-          </Button>
+          </LoadingButton>
           <span
             style={{color: '#5d5d5d', padding: '0 10px'}}
           >
               {t('or')}
           </span>
-          <Button
-            sx={{margin: '0 auto', background: 'rgba(168,237,234,0)', color: '#3b3b3b'}}
+          <LoadingButton
+            className={classes.registrationButton}
             onClick={onClickRegister}
             variant="contained"
             data-testid="buttonRegister"
+            loading={registration}
           >
               {t('register')}
-          </Button>
-          <p
-            style={{color: 'red', visibility: errorVisibility}}
-          >
-              {
-                  loginError
-                    ? t('userDoesNotExist')
-                    : t('userAlreadyExist')
-              }
-          </p>
+          </LoadingButton>
         </form>
       </>
 

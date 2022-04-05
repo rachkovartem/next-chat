@@ -36,5 +36,6 @@
   "groupAlreadyExists": "The group already exist",
   "recents": "Recents",
   "unselectedChatText": "Select a chat to start a conversation. Or add someone as a friend if you haven't already.",
-  "swipeText": "Swipe right to open the chat list."
+  "swipeText": "Swipe right to open the chat list.",
+  "noFriends": "This is a list of chats. Add someone to your friends list to appear chats here."
 }

@@ -25,7 +25,6 @@ export const SideBar = ({locale}: {locale: string}) => {
   const { t } = useTranslation('common');
   const classes = sideBarStyles();
   const dispatch = useDispatch();
-
   return <Box
     component="nav"
     className={classes.sideBarBox}

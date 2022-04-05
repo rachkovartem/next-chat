@@ -12,7 +12,8 @@ export const PagesServices = () => {
   ) => {
     setPageLoading(true);
     const resCheck = await check();
-    if ('status' in resCheck && resCheck.status !== 200) {
+    console.log('test', resCheck)
+    if (('data' in resCheck && resCheck.status !== 200) || ('data' in resCheck && typeof resCheck.data === "string")) {
       await router.push('/')
       return
     } else {

@@ -5,10 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/components/errorBoundary/ErrorBoundary.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sw.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/login/Login.style.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/sw.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/errorBoundary/ErrorBoundary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/errorBoundary/ErrorBoundary.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/login/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/login/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/sideBar/SideBar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/sideBar/SideBar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/room/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/pages/room/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/locales/en/common.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/locales/en/common.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/locales/ru/common.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/locales/ru/common.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/services/PagesServices.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/services/PagesServices.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,7 +184,7 @@
       <workItem from="1648738277277" duration="3000" />
       <workItem from="1648795650266" duration="16940000" />
       <workItem from="1649051616553" duration="20842000" />
-      <workItem from="1649140102782" duration="5942000" />
+      <workItem from="1649140102782" duration="22062000" />
     </task>
     <servers />
   </component>

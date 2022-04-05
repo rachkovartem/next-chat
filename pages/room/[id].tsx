@@ -83,21 +83,80 @@ export default function Room(props: any) {
     }
   }, [socket])
 
-  // if ('serviceWorker' in navigator) {
-  //   window.addEventListener('load', function() {
-  //     navigator.serviceWorker.register('/sw.js').then(function(registration) {
-  //       // Успешная регистрация
-  //       console.log('ServiceWorker registration successful');
-  //     }, function(err) {
-  //       // При регистрации произошла ошибка
-  //       console.log('ServiceWorker registration failed: ', err);
-  //     });
-  //   });
-  // }
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        // Успешная регистрация
+        console.log('ServiceWorker registration successful with scope:', registration.scope);
+      }, function(err) {
+        // При регистрации произошла ошибка
+        console.log('ServiceWorker registration failed: ', err);
+      });
+    });
+  }
+
+  function requestPermission() {
+    return new Promise(function(resolve, reject) {
+      const permissionResult = Notification.requestPermission(function(result) {
+        // Поддержка устаревшей версии с функцией обратного вызова.
+        resolve(result);
+      });
+
+      if (permissionResult) {
+        permissionResult.then(resolve, reject);
+      }
+    })
+      .then(function(permissionResult) {
+        if (permissionResult !== 'granted') {
+          throw new Error('Permission not granted.');
+        }
+      });
+  }
+
+  function subscribeUserToPush() {
+    return navigator.serviceWorker.register('../sw.js')
+      .then(function(registration) {
+        const subscribeOptions = {
+          userVisibleOnly: true,
+          applicationServerKey: process.env.NEXT_PUBLIC_SERVICE_WORKER_PUBLIC_KEY || process.env.SERVICE_WORKER_PUBLIC_KEY
+        };
+        return registration.pushManager.subscribe(subscribeOptions);
+      })
+      .then(function(pushSubscription) {
+        return JSON.stringify(pushSubscription);
+      });
+  }
+
+  useEffect(() => {
+    handleSW();
+  }, []);
+
+  const handleSW =  async () => {
+    await requestPermission()
+    subscribeUserToPush()
+      .then(res => console.log(res))
+      .catch(err => console.error(`Произошла ошибка: ${err}`))
+  }
 
   const chatSpinner = chatWindowLoading ? <CircularProgress sx={{ margin: 'auto' }} /> : null;
   const chatView = currentRoom && socket && !chatWindowLoading ? <ChatWindow room={currentRoom} setDrawerOpen={setDrawerOpen} /> : null;
-  const placeHolder = !currentRoom && socket && !chatWindowLoading
+  const noFriends = !currentRoom && socket && !chatWindowLoading && user.friends.length === 0
+    ? <div
+      style={{
+        display: 'flex',
+        width: '100%',
+        height: '100%'
+      }}
+    >
+      <div style={{
+        margin: 'auto',
+        padding: '20px'
+      }}>
+        {mobile ? <div>{t('noFriends')}</div> : <div style={{width: '100%'}}>{t('noFriends')}</div>}
+      </div>
+    </div>
+    : null;
+  const placeHolder = !currentRoom && socket && !chatWindowLoading && user.friends.length > 0
     ? <div
       style={{
         display: 'flex',
@@ -145,13 +204,14 @@ export default function Room(props: any) {
           pageLoading
             ? <CircularProgress sx={{position: 'absolute', top: '45%', left: '45%'}} />
             : <div className={classes.roomBoxWrapper}>
-                {chatFriendListElement}
+                {user.friends.length > 0 ? chatFriendListElement : null}
               <div
                 className={classes.chatViewWrapper}
               >
                 {chatSpinner}
                 {chatView}
                 {placeHolder}
+                {noFriends}
               </div>
             </div>
         }
