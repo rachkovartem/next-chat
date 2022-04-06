@@ -27,6 +27,7 @@ export const roomStyles = makeStyles(theme => ({
   roomDrawer: {
     '& .MuiDrawer-paper': {
       maxWidth: '300px',
+      width: '300px',
       paddingBottom: 56
     }
   },
