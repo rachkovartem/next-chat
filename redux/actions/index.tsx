@@ -73,13 +73,6 @@ export const setUserImagePath = (value: string) => {
     }
 }
 
-export const setRequestError = (value: string | null) => {
-    return {
-        type: 'SET_REQUEST_ERROR',
-        payload: value
-    }
-}
-
 export const setUseChatSateUsersOnline = (users: string[]) => {
     return {
         type: 'SET_USECHATSTATE_USERSONLINE',
@@ -94,4 +87,24 @@ export const setSocket = (value: Socket) => {
     }
 }
 
+export const setFullRoomsRequested = (value: string) => {
+    return {
+        type: 'SET_FULL_ROOMS_REQUESTED',
+        payload: value
+    }
+}
+
+export const setFullRoomsSucceeded = (value: (FriendRoom | Room)[]) => {
+    return {
+        type: 'SET_FULL_ROOMS',
+        payload: value
+    }
+}
+
+export const setFullRoomsFailed = (value: boolean) => {
+    return {
+        type: 'SET_FULL_ROOMS_FAILED',
+        payload: value
+    }
+}
 

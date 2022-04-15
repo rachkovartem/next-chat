@@ -49,6 +49,7 @@ interface InitialState {
     currentRoom: Room | null,
     currentRoomId: string | null,
     error: string | null,
+    fullRoomsLoadingError: boolean,
     useChatState: {
         usersOnline: string[],
     },
@@ -72,6 +73,7 @@ export const initialState : InitialState = {
        fullRooms:[],
    },
     fullRooms: [],
+    fullRoomsLoadingError: false,
     chatWindowLoading: true,
     currentRoom: null,
     currentRoomId: null,
@@ -93,6 +95,11 @@ const reducer = (state = initialState, action: { type: string, payload: any }) =
             return {
                 ...state,
                 fullRooms: [...action.payload],
+            }
+        case 'SET_FULL_ROOMS_FAILED':
+            return {
+                ...state,
+                fullRoomsLoadingError: true,
             }
         case 'SET_CHAT_WINDOW_LOADING':
             return {

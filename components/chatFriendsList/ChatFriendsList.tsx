@@ -5,7 +5,13 @@ import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
 
 import ApiServices from "../../services/ApiServices";
-import {setChatWindowLoading, setCurrentRoomId, setFullRooms, updateFullRooms} from "../../redux/actions";
+import {
+  setChatWindowLoading,
+  setCurrentRoomId,
+  setFullRooms,
+  setFullRoomsRequested,
+  updateFullRooms
+} from "../../redux/actions";
 import {setCurrentRoom} from "../../redux/actions";
 import {InitialState} from "../../redux/reducers";
 import {FriendRoomItem} from "./friendRoomItem/FriendRoomItem";
@@ -20,8 +26,9 @@ export const ChatFriendList = ({setDrawerOpen} : {setDrawerOpen?: Function}) => 
 
   const loadRoomsInfo = async () => {
     if (user.id) {
-      const res = await getAllUserRooms(user.id);
-      dispatch(setFullRooms(res.data))
+      // const res = await getAllUserRooms(user.id);
+      // dispatch(setFullRooms(res.data))
+      dispatch(setFullRoomsRequested(user.id))
     }
   }
 
