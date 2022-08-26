@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="da3e9781-fbce-4b92-9f8f-986f69e060a5" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,11 +41,14 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/artemrachkov/WebstormProjects/next-chat",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/home/user/WebstormProjects/next-chat/node_modules/typescript/lib",
+    "ts.external.directory.path": "/Users/artemrachkov/WebstormProjects/next-chat/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -172,6 +176,7 @@
       <workItem from="1649399313988" duration="1201000" />
       <workItem from="1649659320532" duration="853000" />
       <workItem from="1649756228991" duration="154000" />
+      <workItem from="1661509283310" duration="76000" />
     </task>
     <servers />
   </component>

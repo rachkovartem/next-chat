@@ -1,34 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Онлайн чат
 
-## Getting Started
+## Next.js приложение для онлайн переписки
 
-First, run the development server:
+### Intro
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Фронтенд часть веб приложения для онлайн переписки с будущими наметками полноценной социальной сети. Есть функционал запросов на добавления в друзья, индивидуальные и групповые чаты, изменение автаров пользователей, аутентификация через куки (но так как heroku не поддерживает их, заменил на ls). Локализация на русский и английский. Стили оформлены с помощтью MUI. Работает с собственным [Api](https://github.com/rachkovartem/nest.js-chat-server).
+Крутится на [heroku](https://nextchat-app.herokuapp.com/), можно потестить с учеткой test@test пароль test. Ну или создать свою и добавить кого нибудь в друзья.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Технологии и API
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+* JavaScript
+* Nest.js
+* JWT-аутентификация
+* локализация с i18n
+* деплой на [heroku](https://nextchat-app.herokuapp.com/)
+* [бэк](https://github.com/rachkovartem/nest.js-chat-server) также полностью собственной разработки
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### Функционал
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+* авторизация
+* загрузка автатра
+* переписка с пользователями
+* групповые чаты
+* уведомления при нахождении на страницах, отличной от окна чата
+* заявки на добавления в друзья
+* локализация на 2 языка
+* адаптировано для любых разрешений
 
-## Learn More
+### Планы по доработке
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+* уведомления о сообщениях через service worker (уже в процессе реализации)
+* оформление: доработать стили, так как дизайн оформлял на ходу, без макета
+* расширить функционал до приближенного к соц. сети (полноценные профили пользователей, лента с постами и т.д.)
