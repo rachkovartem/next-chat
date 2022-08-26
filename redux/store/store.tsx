@@ -1,5 +1,5 @@
-import {compose, createStore} from 'redux';
-import { reducer } from '../reducers';
+import { compose, createStore } from "redux";
+import { reducer } from "../reducers";
 
 declare global {
     interface Window {
@@ -7,13 +7,14 @@ declare global {
     }
 }
 
-let enhancer: any = '';
+let enhancer: any = "";
 
-if (typeof window !== 'undefined') {
-    enhancer = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+if (typeof window !== "undefined") {
+    enhancer =
+        window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__();
 }
 
-    const store = createStore(reducer, enhancer);
-
+const store = createStore(reducer, enhancer);
 
 export default store;

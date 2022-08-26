@@ -1,7 +1,7 @@
-import React, {ErrorInfo, ReactElement} from "react";
+import React, { ErrorInfo, ReactElement } from "react";
 
 interface IProps {
-  children: ReactElement
+  children: ReactElement;
 }
 interface IState {
   hasError: boolean;

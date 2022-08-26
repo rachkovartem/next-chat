@@ -1,17 +1,17 @@
-import React from 'react'
-import { NextRouter } from 'next/router'
-import {RouterContext} from "next/dist/shared/lib/router-context";
-import {serverSideTranslations} from "next-i18next/serverSideTranslations";
+import React from "react";
+import { NextRouter } from "next/router";
+import { RouterContext } from "next/dist/shared/lib/router-context";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 export function withTestRouter(
   tree: React.ReactElement,
   router: Partial<NextRouter> = {}
 ) {
   const {
-    route = '',
-    pathname = '',
+    route = "",
+    pathname = "",
     query = {},
-    asPath = '',
+    asPath = "",
     push = async () => true,
     replace = async () => true,
     reload = () => null,
@@ -24,8 +24,7 @@ export function withTestRouter(
       off: () => null,
       emit: () => null,
     },
-  } = router
-
+  } = router;
 
   return (
     <RouterContext.Provider
@@ -47,5 +46,5 @@ export function withTestRouter(
     >
       {tree}
     </RouterContext.Provider>
-  )
+  );
 }
